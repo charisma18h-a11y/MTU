@@ -1,5 +1,5 @@
 # MTU
-# MTU
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -189,6 +189,74 @@
             font-size: 1.2rem;
             font-weight: bold;
             box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+        }
+
+        /* 🏛️ تصميم هيكلة مجلس الإدارة */
+        .board-hierarchy {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .board-tier-1 {
+            display: flex;
+            justify-content: center;
+        }
+
+        .board-tier-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+        }
+
+        .board-tier-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .board-card {
+            background: var(--bg-card-solid);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        .board-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--gold-bright);
+        }
+
+        .board-card.supervisor {
+            background: linear-gradient(145deg, #131d35 0%, #0d1527 100%);
+            border: 1px solid rgba(251, 191, 36, 0.4);
+            max-width: 350px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .board-card.tech-lead {
+            background: linear-gradient(145deg, #0d1527 0%, #1a233a 100%);
+            border: 1px solid rgba(245, 158, 11, 0.5);
+            box-shadow: 0 0 15px rgba(245, 158, 11, 0.15);
+        }
+
+        .board-role {
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: var(--gold-bright);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .board-name {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: #ffffff;
         }
 
         /* النموذج */
@@ -468,6 +536,60 @@
 
     <div class="container">
 
+        <!-- 🏛️ قسم مجلس النادي وهيكلة الإدارة -->
+        <section class="card">
+            <h2 class="section-title">
+                <span class="icon">👑</span>
+                مجلس النادي وهيكلة الإدارة
+            </h2>
+            
+            <div class="board-hierarchy">
+                <!-- مشرف النادي -->
+                <div class="board-tier-1">
+                    <div class="board-card supervisor">
+                        <div class="board-role">مشرف النادي</div>
+                        <div class="board-name">د. حمزه فرج</div>
+                    </div>
+                </div>
+
+                <!-- رئيس ونائب الرئيس -->
+                <div class="board-tier-2">
+                    <div class="board-card">
+                        <div class="board-role">رئيس النادي</div>
+                        <div class="board-name">عبدالرحمن علي الزهراني</div>
+                    </div>
+                    <div class="board-card">
+                        <div class="board-role">نائب الرئيس</div>
+                        <div class="board-name">ماجد الشاطري</div>
+                    </div>
+                </div>
+
+                <!-- أعضاء مجلس الإدارة والتقنية -->
+                <div class="board-tier-3">
+                    <div class="board-card tech-lead">
+                        <div class="board-role">مسؤول تقنية المعلومات (IT)</div>
+                        <div class="board-name">خالد أحمد الهلال</div>
+                    </div>
+                    <div class="board-card">
+                        <div class="board-role">عضو مجلس الإدارة</div>
+                        <div class="board-name">نواف عبد الله المالكي</div>
+                    </div>
+                    <div class="board-card">
+                        <div class="board-role">عضو مجلس الإدارة</div>
+                        <div class="board-name">حمد عايض الحارثي</div>
+                    </div>
+                    <div class="board-card">
+                        <div class="board-role">عضو مجلس الإدارة</div>
+                        <div class="board-name">عبد الله مزيد السواط</div>
+                    </div>
+                    <div class="board-card">
+                        <div class="board-role">عضو مجلس الإدارة</div>
+                        <div class="board-name">عبد الرحمن نجم العتيبي</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- نموذج تقديم فكرة جديدة -->
         <section class="card">
             <h2 class="section-title">
@@ -530,7 +652,7 @@
                     
                     <div class="idea-header">
                         <div class="idea-title">🎬 ملتقى سينما الجامعة (رؤية سينمائية وإعلامية)</div>
-                        <div class="idea-author">المقترح: خالد الهلال</div>
+                        <div class="idea-author">المقترح: خالد أحمد الهلال</div>
                     </div>
 
                     <div class="idea-body">
@@ -579,7 +701,7 @@
         </section>
 
         <footer>
-            النادي الإعلامي (MTU) - جميع الحقوق محفوظة © 2026
+            النادي الإعلامي (MTU) - جميع الحقوق محفوظة ©️ 2026
         </footer>
 
     </div>
