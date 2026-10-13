@@ -1,4 +1,4 @@
-# MTU
+# MTU<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -40,7 +40,6 @@
             overflow-x: hidden;
         }
 
-        /* شريط التنقل العلوي الذكي */
         .quick-nav {
             position: sticky;
             top: 0;
@@ -77,7 +76,6 @@
             box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
         }
 
-        /* الهيدر والشعار الملكي */
         header {
             position: relative;
             text-align: center;
@@ -167,7 +165,6 @@
             padding: 0 10px;
         }
 
-        /* الحاوية والصفحات */
         .container {
             max-width: 950px;
             margin: 30px auto;
@@ -221,7 +218,6 @@
             box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
         }
 
-        /* مجلس الإدارة */
         .board-hierarchy {
             display: flex;
             flex-direction: column;
@@ -273,7 +269,6 @@
             color: #ffffff;
         }
 
-        /* نموذج تقديم فكرة */
         .form-row {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -338,7 +333,6 @@
             box-shadow: 0 6px 20px rgba(251, 191, 36, 0.45);
         }
 
-        /* الأرشيف السحابي */
         .archive-header {
             display: flex;
             justify-content: space-between;
@@ -494,14 +488,12 @@
 </head>
 <body>
 
-    <!-- شريط التنقل العلوي بين الصفحات -->
     <nav class="quick-nav">
         <button class="nav-btn active" onclick="switchPage('homePage', this)">🏛️ مجلس النادي</button>
         <button class="nav-btn" onclick="switchPage('formPage', this)">💡 تقديم فكرة</button>
         <button class="nav-btn" onclick="switchPage('archivePage', this)">📁 الأرشيف السحابي</button>
     </nav>
 
-    <!-- الهيدر الرئيسي والشعار -->
     <header>
         <div class="royal-crest-container">
             <div class="royal-crest" title="النادي الإعلامي MTU">
@@ -539,7 +531,6 @@
 
     <div class="container">
 
-        <!-- 1. صفحة مجلس النادي (الرئيسية) -->
         <section id="homePage" class="page-section active">
             <div class="card">
                 <h2 class="section-title">
@@ -592,7 +583,6 @@
             </div>
         </section>
 
-        <!-- 2. صفحة تقديم فكرة جديدة -->
         <section id="formPage" class="page-section">
             <div class="card">
                 <h2 class="section-title">
@@ -638,7 +628,6 @@
             </div>
         </section>
 
-        <!-- 3. صفحة الأرشيف السحابي -->
         <section id="archivePage" class="page-section">
             <div class="archive-header">
                 <h2 class="section-title" style="margin-bottom: 0;">
@@ -648,7 +637,6 @@
                 <span class="archive-counter" id="archiveCount">جاري التحميل من السحابة...</span>
             </div>
 
-            <!-- بطاقة المبادرة الموثقة الثابتة -->
             <div class="idea-card featured" style="margin-bottom: 20px;">
                 <span class="badge-featured">⭐ مشروع مقترح وموثّق بالتفاصيل</span>
                 <div class="idea-header">
@@ -673,9 +661,7 @@
                 </div>
             </div>
 
-            <!-- حاوية الأفكار المضافة من السحابة -->
             <div class="archive-grid" id="archiveContainer">
-                <!-- ستظهر الأفكار المسجلة من السحابة هنا فوراً -->
             </div>
         </section>
 
@@ -685,12 +671,12 @@
 
     </div>
 
-    <!-- كود الربط السحابي (Firebase) المحدث مع المجموعة الصحيحة mtu 1 -->
+    <!-- Firebase SDK - المحدث والمباشر بدون أخطاء استدعاء -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // مفاتيح مشروعك الفعلي
+        // إعدادات فايربيس الصحيحة ومجربة
         const firebaseConfig = {
             apiKey: "AIzaSyA831Ex0tSyAQaGUQAlIzAFb8fBH89Xktw",
             authDomain: "mtu-media-club.firebaseapp.com",
@@ -704,10 +690,9 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // اسم المجموعة المعتمدة في قاعدة بياناتك (mtu 1)
+        // اسم المجموعة المعتمدة في Firestore لديك
         const COLLECTION_NAME = "mtu 1";
 
-        // التنقل بين الصفحات السلس
         window.switchPage = function(pageId, btnElement) {
             document.querySelectorAll('.page-section').forEach(sec => sec.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
@@ -721,7 +706,7 @@
             }
         };
 
-        // إرسال الفكرة إلى السحابة
+        // زر التقديم وحفظ الفكرة
         document.getElementById('ideaForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
@@ -729,38 +714,39 @@
             submitBtn.disabled = true;
             submitBtn.innerHTML = '<span>جاري الحفظ في السحابة...</span> ⏳';
 
-            const author = document.getElementById('authorName').value;
-            const title = document.getElementById('ideaTitle').value;
-            const desc = document.getElementById('ideaDescription').value;
-            const location = document.getElementById('ideaLocation').value;
-            const members = document.getElementById('ideaMembers').value;
+            const author = document.getElementById('authorName').value.trim();
+            const title = document.getElementById('ideaTitle').value.trim();
+            const desc = document.getElementById('ideaDescription').value.trim();
+            const location = document.getElementById('ideaLocation').value.trim();
+            const members = document.getElementById('ideaMembers').value.trim();
 
             try {
+                // إرسال البيانات إلى السحابة مباشرة
                 await addDoc(collection(db, COLLECTION_NAME), {
                     author: author,
                     title: title,
                     desc: desc,
                     location: location,
                     members: members,
-                    createdAt: new Date()
+                    createdAt: new Date().toISOString()
                 });
 
                 alert('✅ تم حفظ الفكرة في سحابة النادي بنجاح!');
                 this.reset();
                 
-                // الانتقال تلقائياً للأرشيف لرؤية الفكرة
+                // الانتقال التلقائي لصفحة الأرشيف
                 const archiveBtn = document.querySelectorAll('.nav-btn')[2];
                 switchPage('archivePage', archiveBtn);
             } catch (error) {
-                console.error("خطأ أثناء الحفظ: ", error);
-                alert('❌ حدث خطأ أثناء الحفظ: ' + error.message);
+                console.error("Firebase Error: ", error);
+                alert('❌ تعذر الحفظ: ' + error.message);
             } finally {
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = '<span>حفظ الفكرة وإرسالها للسحابة</span> <span>🚀</span>';
             }
         });
 
-        // جلب الأفكار من سحابة فايربيس
+        // قراءة الأفكار من السحابة
         async function loadCloudIdeas() {
             const container = document.getElementById('archiveContainer');
             const counter = document.getElementById('archiveCount');
@@ -769,20 +755,20 @@
                 const querySnapshot = await getDocs(collection(db, COLLECTION_NAME));
                 
                 let cloudIdeasHTML = '';
-                let count = querySnapshot.size;
+                let validCount = 0;
 
                 querySnapshot.forEach((doc) => {
                     const idea = doc.data();
-                    // تجاهل المستند التجريبي media club 1 وعرض المستندات الفعلية
-                    if (idea.title || idea.desc) {
+                    if (idea.title || idea.desc || idea.author) {
+                        validCount++;
                         cloudIdeasHTML += `
                             <div class="idea-card">
                                 <div class="idea-header">
                                     <div class="idea-title">💡 ${idea.title || 'فكرة بدون عنوان'}</div>
-                                    <div class="idea-author">المقترح: ${idea.author || 'فاعل خير'}</div>
+                                    <div class="idea-author">المقترح: ${idea.author || 'عضو بالمجلس'}</div>
                                 </div>
                                 <div class="idea-body">
-                                    ${idea.desc || ''}
+                                    ${idea.desc || 'لا يوجد تفاصيل.'}
                                 </div>
                                 <div class="idea-footer-info">
                                     <div>📍 الموقع: <span>${idea.location || 'غير محدد'}</span></div>
@@ -793,20 +779,19 @@
                     }
                 });
 
-                if (cloudIdeasHTML === '') {
-                    container.innerHTML = '<p style="text-align:center; color: var(--text-muted);">لا توجد أفكار جديدة مضافة حتى الآن في السحابة.</p>';
+                if (validCount === 0) {
+                    container.innerHTML = '<p style="text-align:center; color: var(--text-muted);">لا توجد أفكار مضافة حتى الآن في السحابة.</p>';
                 } else {
                     container.innerHTML = cloudIdeasHTML;
                 }
 
-                counter.textContent = `الأفكار المضافة: ${count}`;
+                counter.textContent = `الأفكار المضافة: ${validCount}`;
             } catch (error) {
-                console.error("خطأ في جلب البيانات: ", error);
+                console.error("Error fetching data: ", error);
                 counter.textContent = 'خطأ في الاتصال بالسحابة';
             }
         }
 
-        // تحميل الأفكار عند فتح الصفحة لأول مرة
         loadCloudIdeas();
     </script>
 </body>
