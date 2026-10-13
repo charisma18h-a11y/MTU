@@ -4,16 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>بنك الأفكار وأرشيف المشاريع - ميديا كلب MTU</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Cinzel:wght@700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-dark: #0a0a0c;
             --bg-deep: #050507;
-            --bg-card: rgba(18, 18, 24, 0.82);
+            --bg-card: rgba(18, 18, 24, 0.85);
             --bg-card-solid: #121218;
             --accent-primary: #3b82f6;
             --accent-glow: #60a5fa;
-            --accent-gold: #f59e0b;
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
             --border: rgba(255, 255, 255, 0.12);
@@ -39,7 +38,7 @@
             position: relative;
         }
 
-        /* خلفية فيديو يوتيوب الثابتة (أوضح وبدون خضرة) */
+        /* خلفية فيديو يوتيوب الثابتة (تدعم الجوال والكمبيوتر) */
         .bg-video-container {
             position: fixed;
             top: 0;
@@ -62,7 +61,6 @@
             min-height: 100vh;
             min-width: 177.77vh;
             pointer-events: none;
-            /* تم زيادة الوضوح وإلغاء التعتيم الشديد */
             filter: brightness(0.65) contrast(1.15) saturate(1.1);
         }
 
@@ -72,12 +70,12 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            background: rgba(10, 10, 12, 0.75); /* طبقة تعتيم خفيفة جداً لتظهر تفاصيل الفيديو بوضوح */
+            background: rgba(10, 10, 12, 0.75);
             z-index: -98;
             pointer-events: none;
         }
 
-        /* شاشة الترحيب الحديثة */
+        /* شاشة الترحيب بتصميم هادئ وبسيط */
         #welcomeScreen {
             position: fixed;
             inset: 0;
@@ -144,56 +142,21 @@
             overflow: hidden;
         }
 
-        /* تصميم الشعار الجديد (عدسة وشاشة إعلامية) */
-        .media-crest-container {
+        /* ش شعار بسيط ونظيف (ميديا كلب) */
+        .simple-logo-box {
             display: inline-flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
-            margin-bottom: 10px;
-            position: relative;
-        }
-
-        .media-crest {
-            width: 100px;
-            height: 100px;
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            filter: drop-shadow(0 0 15px rgba(59, 130, 246, 0.4));
-        }
-
-        .crest-svg {
-            width: 100%;
-            height: 100%;
-        }
-
-        .crest-center-text {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-family: 'Cinzel', 'Cairo', serif;
-            font-size: 1.15rem;
-            font-weight: 900;
-            letter-spacing: 2px;
-            background: linear-gradient(180deg, #ffffff 20%, #60a5fa 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .media-title-tag {
-            font-size: 0.68rem;
-            font-weight: 800;
-            letter-spacing: 3px;
-            color: var(--accent-glow);
-            text-transform: uppercase;
-            margin-top: 4px;
             background: rgba(59, 130, 246, 0.1);
-            padding: 2px 14px;
-            border-radius: 12px;
             border: 1px solid rgba(59, 130, 246, 0.3);
+            color: var(--accent-glow);
+            padding: 10px 24px;
+            border-radius: 12px;
+            font-size: 1.3rem;
+            font-weight: 900;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.15);
         }
 
         .site-badge {
@@ -596,41 +559,21 @@
 </head>
 <body>
 
-    <!-- خلفية فيديو يوتيوب الجديدة المحدثة (أوضح وبدون خضرة) -->
+    <!-- خلفية فيديو يوتيوب تعمل على الكمبيوتر والهواتف -->
     <div class="bg-video-container">
-        <iframe class="bg-youtube-video" src="https://www.youtube.com/embed/_TkXgy18J_g?autoplay=1&mute=1&loop=1&playlist=_TkXgy18J_g&controls=0&showinfo=0&autohide=1&modestbranding=1" frameborder="0" allow="autoplay; encrypted-media"></iframe>
+        <iframe class="bg-youtube-video" src="https://www.youtube.com/embed/_TkXgy18J_g?autoplay=1&mute=1&loop=1&playlist=_TkXgy18J_g&controls=0&showinfo=0&autohide=1&modestbranding=1&playsinline=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
     </div>
     <div class="bg-overlay"></div>
 
-    <!-- شاشة الترحيب -->
+    <!-- شاشة الترحيب بتصميم بسيط ونظيف -->
     <div id="welcomeScreen">
-        <div class="media-crest-container">
-            <div class="media-crest" title="ميديا كلب MTU">
-                <svg class="crest-svg" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <defs>
-                        <linearGradient id="blueGradW" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stop-color="#60a5fa" />
-                            <stop offset="100%" stop-color="#1e40af" />
-                        </linearGradient>
-                    </defs>
-                    <!-- تصميم عدسة كاميرا وشاشة إعلامية حديثة -->
-                    <circle cx="100" cy="100" r="70" fill="#0f172a" stroke="url(#blueGradW)" stroke-width="6"/>
-                    <circle cx="100" cy="100" r="45" fill="none" stroke="url(#blueGradW)" stroke-width="2" stroke-dasharray="6 4"/>
-                    <circle cx="100" cy="100" r="22" fill="url(#blueGradW)" opacity="0.8"/>
-                    <!-- زوايا الإطار الإعلامي -->
-                    <path d="M50 60 H70 M50 60 V80" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
-                    <path d="M150 60 H130 M150 60 V80" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
-                    <path d="M50 140 H70 M50 140 V120" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
-                    <path d="M150 140 H130 M150 140 V120" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
-                </svg>
-                <div class="crest-center-text">MTU</div>
-            </div>
-            <div class="media-title-tag">MEDIA CLUB</div>
+        <div class="simple-logo-box">
+            🎬 MTU Media Club
         </div>
 
-        <span class="site-badge" style="margin-top: 10px;">🎥 إبداع بصري وإنتاج إعلامي</span>
+        <span class="site-badge" style="margin-top: 5px;">مرحباً بكم في منصة الأفكار</span>
         <h1 style="font-size: 1.5rem; margin-top: 5px;">أهلاً بكم في بنك الأفكار والمشاريع</h1>
-        <p class="subtitle" style="margin-bottom: 25px;">بوابة الإبداع والريادة لطلاب جامعة الطائف بروح الإنتاج الإعلامي الحديث</p>
+        <p class="subtitle" style="margin-bottom: 25px;">بوابة الإبداع والريادة لطلاب جامعة الطائف</p>
         
         <button onclick="enterSite()" class="btn-submit" style="max-width: 220px; font-size: 1rem;">
             <span>دخول المنصة</span>
@@ -645,30 +588,12 @@
     </nav>
 
     <header>
-        <div class="media-crest-container">
-            <div class="media-crest" title="ميديا كلب MTU">
-                <svg class="crest-svg" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <defs>
-                        <linearGradient id="blueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stop-color="#60a5fa" />
-                            <stop offset="100%" stop-color="#1e40af" />
-                        </linearGradient>
-                    </defs>
-                    <circle cx="100" cy="100" r="70" fill="#0f172a" stroke="url(#blueGrad)" stroke-width="6"/>
-                    <circle cx="100" cy="100" r="45" fill="none" stroke="url(#blueGrad)" stroke-width="2" stroke-dasharray="6 4"/>
-                    <circle cx="100" cy="100" r="22" fill="url(#blueGrad)" opacity="0.8"/>
-                    <path d="M50 60 H70 M50 60 V80" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
-                    <path d="M150 60 H130 M150 60 V80" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
-                    <path d="M50 140 H70 M50 140 V120" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
-                    <path d="M150 140 H130 M150 140 V120" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
-                </svg>
-                <div class="crest-center-text">MTU</div>
-            </div>
-            <div class="media-title-tag">MEDIA CLUB</div>
+        <div class="simple-logo-box" style="padding: 8px 20px; font-size: 1.1rem;">
+            🎬 MTU Media Club
         </div>
 
         <br>
-        <span class="site-badge">🎬 منصة النادي الإعلامي</span>
+        <span class="site-badge">منصة النادي الإعلامي</span>
         <h1>بنك الأفكار والأرشيف</h1>
         <p class="subtitle">المساحة السحابية لاستقبال وتوثيق مبادرات طلاب الجامعة</p>
     </header>
@@ -825,7 +750,7 @@
         </section>
 
         <footer>
-            النادي الإعلامي (MTU) ©️ 2026 | ميديا كلب
+            النادي الإعلامي (MTU) ©️ 2026 | Media Club
         </footer>
 
     </div>
