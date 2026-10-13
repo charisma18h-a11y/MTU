@@ -596,9 +596,11 @@
 <body>
 
     <!-- خلفية الفيديو المباشرة -->
-    <div class="bg-video-container">
-        <video id="bgVideo" class="bg-video" autoplay muted loop playsinline webkit-playsinline>
-            <source src="WhatsApp Video 2026-10-13 at 11.52.02 PM.mp4" type="video/mp4">
+   <div class="bg-video-container">
+    <video id="bgVideo" class="bg-video" autoplay muted loop playsinline webkit-playsinline>
+        <source src="bg.mp4" type="video/mp4">
+    </video>
+</div>
             متصفحك لا يدعم عرض الفيديو كخلفية.
         </video>
     </div>
