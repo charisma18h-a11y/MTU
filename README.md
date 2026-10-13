@@ -1,4 +1,4 @@
-# MTU<!DOCTYPE html>
+# MTU
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -587,7 +587,7 @@
             <div class="card">
                 <h2 class="section-title">
                     <span class="icon">💡</span>
-                    تقديم فكرة / مشروع جديد (تخزين سحابي مباشر)
+                    تقديم فكرة / مشروع جديد (جوجل شيت)
                 </h2>
                 
                 <form id="ideaForm">
@@ -621,7 +621,7 @@
                     </div>
 
                     <button type="submit" class="btn-submit" id="submitBtn">
-                        <span>حفظ الفكرة وإرسالها للسحابة</span>
+                        <span>حفظ الفكرة في جوجل شيت</span>
                         <span>🚀</span>
                     </button>
                 </form>
@@ -632,9 +632,9 @@
             <div class="archive-header">
                 <h2 class="section-title" style="margin-bottom: 0;">
                     <span class="icon">📁</span>
-                    أرشيف الأفكار والمشاريع (سحابي مباشر)
+                    أرشيف الأفكار والمشاريع (من جوجل شيت)
                 </h2>
-                <span class="archive-counter" id="archiveCount">جاري التحميل من السحابة...</span>
+                <span class="archive-counter" id="archiveCount">جاري التحميل...</span>
             </div>
 
             <div class="idea-card featured" style="margin-bottom: 20px;">
@@ -671,27 +671,9 @@
 
     </div>
 
-    <!-- Firebase SDK - المحدث والمباشر بدون أخطاء استدعاء -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-        // إعدادات فايربيس الصحيحة ومجربة
-        const firebaseConfig = {
-            apiKey: "AIzaSyA831Ex0tSyAQaGUQAlIzAFb8fBH89Xktw",
-            authDomain: "mtu-media-club.firebaseapp.com",
-            projectId: "mtu-media-club",
-            storageBucket: "mtu-media-club.firebasestorage.app",
-            messagingSenderId: "95732996772",
-            appId: "1:95732996772:web:e6f2ed19f699e123ffa431",
-            measurementId: "G-KHQXQWTMZG"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-
-        // اسم المجموعة المعتمدة في Firestore لديك
-        const COLLECTION_NAME = "mtu 1";
+    <script>
+        // رابط تطبيق الويب الخاص بك في جوجل شيت
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwN5Ty-lRiwKN9lVy9F94l8C9mxgSK-uDkVT9JStVT0eHnWtETg6CFJRpmw5lObZwV6/exec";
 
         window.switchPage = function(pageId, btnElement) {
             document.querySelectorAll('.page-section').forEach(sec => sec.classList.remove('active'));
@@ -702,97 +684,91 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
 
             if(pageId === 'archivePage') {
-                loadCloudIdeas();
+                loadSheetIdeas();
             }
         };
 
-        // زر التقديم وحفظ الفكرة
+        // إرسال البيانات لجوجل شيت
         document.getElementById('ideaForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
             const submitBtn = document.getElementById('submitBtn');
             submitBtn.disabled = true;
-            submitBtn.innerHTML = '<span>جاري الحفظ في السحابة...</span> ⏳';
+            submitBtn.innerHTML = '<span>جاري الحفظ في جوجل شيت...</span> ⏳';
 
-            const author = document.getElementById('authorName').value.trim();
-            const title = document.getElementById('ideaTitle').value.trim();
-            const desc = document.getElementById('ideaDescription').value.trim();
-            const location = document.getElementById('ideaLocation').value.trim();
-            const members = document.getElementById('ideaMembers').value.trim();
+            const data = {
+                author: document.getElementById('authorName').value.trim(),
+                title: document.getElementById('ideaTitle').value.trim(),
+                desc: document.getElementById('ideaDescription').value.trim(),
+                location: document.getElementById('ideaLocation').value.trim(),
+                members: document.getElementById('ideaMembers').value.trim()
+            };
 
             try {
-                // إرسال البيانات إلى السحابة مباشرة
-                await addDoc(collection(db, COLLECTION_NAME), {
-                    author: author,
-                    title: title,
-                    desc: desc,
-                    location: location,
-                    members: members,
-                    createdAt: new Date().toISOString()
+                await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
                 });
 
-                alert('✅ تم حفظ الفكرة في سحابة النادي بنجاح!');
+                alert('✅ تم حفظ الفكرة في جوجل شيت بنجاح!');
                 this.reset();
                 
-                // الانتقال التلقائي لصفحة الأرشيف
                 const archiveBtn = document.querySelectorAll('.nav-btn')[2];
                 switchPage('archivePage', archiveBtn);
             } catch (error) {
-                console.error("Firebase Error: ", error);
+                console.error("Error: ", error);
                 alert('❌ تعذر الحفظ: ' + error.message);
             } finally {
                 submitBtn.disabled = false;
-                submitBtn.innerHTML = '<span>حفظ الفكرة وإرسالها للسحابة</span> <span>🚀</span>';
+                submitBtn.innerHTML = '<span>حفظ الفكرة في جوجل شيت</span> <span>🚀</span>';
             }
         });
 
-        // قراءة الأفكار من السحابة
-        async function loadCloudIdeas() {
+        // قراءة الأفكار وعرضها بالأرشيف
+        async function loadSheetIdeas() {
             const container = document.getElementById('archiveContainer');
             const counter = document.getElementById('archiveCount');
-            
+
             try {
-                const querySnapshot = await getDocs(collection(db, COLLECTION_NAME));
+                const response = await fetch(SCRIPT_URL);
+                const ideas = await response.json();
                 
-                let cloudIdeasHTML = '';
-                let validCount = 0;
-
-                querySnapshot.forEach((doc) => {
-                    const idea = doc.data();
-                    if (idea.title || idea.desc || idea.author) {
-                        validCount++;
-                        cloudIdeasHTML += `
-                            <div class="idea-card">
-                                <div class="idea-header">
-                                    <div class="idea-title">💡 ${idea.title || 'فكرة بدون عنوان'}</div>
-                                    <div class="idea-author">المقترح: ${idea.author || 'عضو بالمجلس'}</div>
-                                </div>
-                                <div class="idea-body">
-                                    ${idea.desc || 'لا يوجد تفاصيل.'}
-                                </div>
-                                <div class="idea-footer-info">
-                                    <div>📍 الموقع: <span>${idea.location || 'غير محدد'}</span></div>
-                                    <div>👥 المسارات: <span>${idea.members || 'غير محدد'}</span></div>
-                                </div>
-                            </div>
-                        `;
-                    }
-                });
-
-                if (validCount === 0) {
-                    container.innerHTML = '<p style="text-align:center; color: var(--text-muted);">لا توجد أفكار مضافة حتى الآن في السحابة.</p>';
-                } else {
-                    container.innerHTML = cloudIdeasHTML;
+                let html = '';
+                if (ideas.length === 0) {
+                    container.innerHTML = '<p style="text-align:center; color: var(--text-muted);">لا توجد أفكار مضافة حتى الآن في الجدول.</p>';
+                    counter.textContent = 'الأفكار: 0';
+                    return;
                 }
 
-                counter.textContent = `الأفكار المضافة: ${validCount}`;
+                ideas.forEach(idea => {
+                    html += `
+                        <div class="idea-card">
+                            <div class="idea-header">
+                                <div class="idea-title">💡 ${idea.title || 'بدون عنوان'}</div>
+                                <div class="idea-author">المقترح: ${idea.author || 'عضو'}</div>
+                            </div>
+                            <div class="idea-body">
+                                ${idea.desc || ''}
+                            </div>
+                            <div class="idea-footer-info">
+                                <div>📍 الموقع: <span>${idea.location || 'غير محدد'}</span></div>
+                                <div>👥 المسارات: <span>${idea.members || 'غير محدد'}</span></div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                container.innerHTML = html;
+                counter.textContent = `الأفكار المضافة: ${ideas.length}`;
             } catch (error) {
-                console.error("Error fetching data: ", error);
-                counter.textContent = 'خطأ في الاتصال بالسحابة';
+                console.error("Error loading data: ", error);
+                counter.textContent = 'خطأ في الاتصال بالجدول';
             }
         }
 
-        loadCloudIdeas();
+        loadSheetIdeas();
     </script>
 </body>
 </html>
