@@ -41,7 +41,7 @@
             position: relative;
         }
 
-        /* خلفية الفيديو الثابتة */
+        /* خلفية فيديو يوتيوب الثابتة */
         .bg-video-container {
             position: fixed;
             top: 0;
@@ -54,17 +54,17 @@
             background: #01100a;
         }
 
-        .bg-video {
+        .bg-youtube-video {
             position: absolute;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%);
-            min-width: 100%;
-            min-height: 100%;
-            width: auto;
-            height: auto;
-            object-fit: cover;
-            filter: brightness(0.28) contrast(1.15);
+            transform: translate(-50%, -50%) scale(1.35);
+            width: 100vw;
+            height: 56.25vw;
+            min-height: 100vh;
+            min-width: 177.77vh;
+            pointer-events: none;
+            filter: brightness(0.3) contrast(1.1);
         }
 
         .bg-overlay {
@@ -595,14 +595,9 @@
 </head>
 <body>
 
-    <!-- خلفية الفيديو المباشرة -->
-   <div class="bg-video-container">
-    <video id="bgVideo" class="bg-video" autoplay muted loop playsinline webkit-playsinline>
-        <source src="bg.mp4" type="video/mp4">
-    </video>
-</div>
-            متصفحك لا يدعم عرض الفيديو كخلفية.
-        </video>
+    <!-- خلفية فيديو يوتيوب المدمجة -->
+    <div class="bg-video-container">
+        <iframe class="bg-youtube-video" src="https://www.youtube.com/embed/Ge4Oh_m09r0?autoplay=1&mute=1&loop=1&playlist=Ge4Oh_m09r0&controls=0&showinfo=0&autohide=1&modestbranding=1" frameborder="0" allow="autoplay; encrypted-media"></iframe>
     </div>
     <div class="bg-overlay"></div>
 
@@ -847,15 +842,6 @@
     </div>
 
     <script>
-        window.addEventListener('DOMContentLoaded', () => {
-            const video = document.getElementById('bgVideo');
-            if(video) {
-                video.play().catch(error => {
-                    console.log("Autoplay prevented:", error);
-                });
-            }
-        });
-
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwN5Ty-lRiwKN9lVy9F94l8C9mxgSK-uDkVT9JStVT0eHnWtETg6CFJRpmw5lObZwV6/exec";
 
         window.enterSite = function() {
