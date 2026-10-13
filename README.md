@@ -3,23 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>بنك الأفكار وأرشيف المشاريع - النادي الإعلامي MTU</title>
+    <title>بنك الأفكار وأرشيف المشاريع - ميديا كلب MTU</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Cinzel:wght@700;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-dark: #021a11;
-            --bg-deep: #01100a;
-            --bg-card: rgba(3, 33, 21, 0.85);
-            --bg-card-solid: #032115;
-            --saudi-green: #006c35;
-            --saudi-green-light: #00984a;
-            --accent-gold: #d4af37;
-            --gold-bright: #fcd116;
-            --gold-dark: #aa8010;
-            --text-main: #f0fdf4;
-            --text-muted: #86efac;
-            --border: rgba(212, 175, 55, 0.3);
-            --input-bg: #01140d;
+            --bg-dark: #0a0a0c;
+            --bg-deep: #050507;
+            --bg-card: rgba(18, 18, 24, 0.82);
+            --bg-card-solid: #121218;
+            --accent-primary: #3b82f6;
+            --accent-glow: #60a5fa;
+            --accent-gold: #f59e0b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: rgba(255, 255, 255, 0.12);
+            --input-bg: #0c0c10;
         }
 
         * {
@@ -41,7 +39,7 @@
             position: relative;
         }
 
-        /* خلفية فيديو يوتيوب الثابتة */
+        /* خلفية فيديو يوتيوب الثابتة (أوضح وبدون خضرة) */
         .bg-video-container {
             position: fixed;
             top: 0;
@@ -51,7 +49,7 @@
             z-index: -99;
             overflow: hidden;
             pointer-events: none;
-            background: #01100a;
+            background: #000;
         }
 
         .bg-youtube-video {
@@ -64,7 +62,8 @@
             min-height: 100vh;
             min-width: 177.77vh;
             pointer-events: none;
-            filter: brightness(0.3) contrast(1.1);
+            /* تم زيادة الوضوح وإلغاء التعتيم الشديد */
+            filter: brightness(0.65) contrast(1.15) saturate(1.1);
         }
 
         .bg-overlay {
@@ -73,12 +72,12 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            background: rgba(2, 26, 17, 0.85);
+            background: rgba(10, 10, 12, 0.75); /* طبقة تعتيم خفيفة جداً لتظهر تفاصيل الفيديو بوضوح */
             z-index: -98;
             pointer-events: none;
         }
 
-        /* شاشة الترحيب الملكية السعودية */
+        /* شاشة الترحيب الحديثة */
         #welcomeScreen {
             position: fixed;
             inset: 0;
@@ -97,7 +96,7 @@
             position: sticky;
             top: 0;
             z-index: 1000;
-            background: rgba(2, 26, 17, 0.95);
+            background: rgba(15, 15, 20, 0.85);
             backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--border);
             padding: 10px 12px;
@@ -108,9 +107,9 @@
         }
 
         .nav-btn {
-            background: rgba(212, 175, 55, 0.1);
-            color: var(--gold-bright);
-            border: 1px solid rgba(212, 175, 55, 0.35);
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-main);
+            border: 1px solid var(--border);
             padding: 8px 14px;
             border-radius: 20px;
             font-size: 0.82rem;
@@ -128,23 +127,25 @@
         }
 
         .nav-btn:hover, .nav-btn.active {
-            background: linear-gradient(135deg, var(--gold-bright), var(--accent-gold));
-            color: #01100a;
+            background: var(--accent-primary);
+            color: #ffffff;
+            border-color: var(--accent-glow);
             transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
         }
 
         header {
             position: relative;
             text-align: center;
             padding: 30px 15px 20px;
-            background: rgba(3, 33, 21, 0.75);
+            background: rgba(18, 18, 24, 0.65);
             border-bottom: 1px solid var(--border);
             backdrop-filter: blur(12px);
             overflow: hidden;
         }
 
-        .royal-crest-container {
+        /* تصميم الشعار الجديد (عدسة وشاشة إعلامية) */
+        .media-crest-container {
             display: inline-flex;
             flex-direction: column;
             align-items: center;
@@ -153,14 +154,14 @@
             position: relative;
         }
 
-        .royal-crest {
-            width: 110px;
-            height: 110px;
+        .media-crest {
+            width: 100px;
+            height: 100px;
             position: relative;
             display: flex;
             align-items: center;
             justify-content: center;
-            filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.45));
+            filter: drop-shadow(0 0 15px rgba(59, 130, 246, 0.4));
         }
 
         .crest-svg {
@@ -170,48 +171,48 @@
 
         .crest-center-text {
             position: absolute;
-            top: 56%;
+            top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             font-family: 'Cinzel', 'Cairo', serif;
-            font-size: 1.1rem;
+            font-size: 1.15rem;
             font-weight: 900;
             letter-spacing: 2px;
-            background: linear-gradient(180deg, #ffffff 10%, #fcd116 50%, #d4af37 100%);
+            background: linear-gradient(180deg, #ffffff 20%, #60a5fa 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
-        .royal-title-tag {
-            font-size: 0.65rem;
+        .media-title-tag {
+            font-size: 0.68rem;
             font-weight: 800;
-            letter-spacing: 2px;
-            color: var(--gold-bright);
+            letter-spacing: 3px;
+            color: var(--accent-glow);
             text-transform: uppercase;
-            margin-top: -2px;
-            background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.2), transparent);
-            padding: 2px 18px;
-            border-bottom: 1px solid rgba(212, 175, 55, 0.4);
+            margin-top: 4px;
+            background: rgba(59, 130, 246, 0.1);
+            padding: 2px 14px;
+            border-radius: 12px;
+            border: 1px solid rgba(59, 130, 246, 0.3);
         }
 
         .site-badge {
-            background: rgba(0, 108, 53, 0.4);
-            color: var(--gold-bright);
+            background: rgba(59, 130, 246, 0.15);
+            color: var(--accent-glow);
             padding: 5px 18px;
             border-radius: 30px;
             font-size: 0.8rem;
             font-weight: 700;
             display: inline-block;
             margin-bottom: 8px;
-            border: 1px solid rgba(212, 175, 55, 0.4);
-            box-shadow: 0 4px 12px rgba(0, 108, 53, 0.3);
+            border: 1px solid rgba(59, 130, 246, 0.3);
         }
 
         h1 {
             font-size: 1.6rem;
             font-weight: 900;
             margin-bottom: 6px;
-            background: linear-gradient(180deg, #ffffff 0%, #a7f3d0 100%);
+            background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
@@ -252,7 +253,7 @@
             border-radius: 14px;
             padding: 18px 14px;
             margin-bottom: 20px;
-            box-shadow: 0 10px 30px -10px rgba(1, 20, 10, 0.8);
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.8);
         }
 
         .section-title {
@@ -266,8 +267,8 @@
         }
 
         .section-title span.icon {
-            background: linear-gradient(135deg, var(--gold-bright), var(--accent-gold));
-            color: #01100a;
+            background: var(--accent-primary);
+            color: #ffffff;
             width: 30px;
             height: 30px;
             border-radius: 8px;
@@ -275,7 +276,7 @@
             align-items: center;
             justify-content: center;
             font-size: 1rem;
-            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
             flex-shrink: 0;
         }
 
@@ -299,22 +300,22 @@
         }
 
         .board-card.supervisor {
-            background: linear-gradient(145deg, #043822 0%, #032115 100%);
-            border: 1px solid rgba(252, 209, 22, 0.5);
+            background: linear-gradient(145deg, #1e1b4b 0%, #0f172a 100%);
+            border: 1px solid rgba(96, 165, 250, 0.4);
             width: 100%;
             max-width: 280px;
             margin: 0 auto;
         }
 
         .board-card.tech-lead {
-            background: linear-gradient(145deg, #032115 0%, #064e3b 100%);
-            border: 1px solid rgba(212, 175, 55, 0.6);
+            background: linear-gradient(145deg, #0f172a 0%, #1e293b 100%);
+            border: 1px solid rgba(59, 130, 246, 0.5);
         }
 
         .board-role {
             font-size: 0.72rem;
             font-weight: 700;
-            color: var(--gold-bright);
+            color: var(--accent-glow);
             margin-bottom: 2px;
             text-transform: uppercase;
         }
@@ -345,7 +346,7 @@
             display: block;
             margin-bottom: 5px;
             font-weight: 700;
-            color: #e2e8f0;
+            color: #cbd5e1;
             font-size: 0.85rem;
         }
 
@@ -362,9 +363,9 @@
         }
 
         input[type="text"]:focus, input[type="url"]:focus, textarea:focus {
-            border-color: var(--gold-bright);
-            box-shadow: 0 0 10px rgba(252, 209, 22, 0.25);
-            background-color: #032115;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 10px rgba(59, 130, 246, 0.25);
+            background-color: #121218;
         }
 
         textarea {
@@ -373,8 +374,8 @@
         }
 
         button.btn-submit {
-            background: linear-gradient(135deg, var(--gold-bright) 0%, var(--accent-gold) 100%);
-            color: #01100a;
+            background: var(--accent-primary);
+            color: #ffffff;
             font-weight: 800;
             font-size: 0.95rem;
             padding: 12px 20px;
@@ -383,7 +384,7 @@
             cursor: pointer;
             width: 100%;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.35);
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.35);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -404,13 +405,13 @@
         }
 
         .archive-counter {
-            background: rgba(0, 108, 53, 0.4);
-            color: var(--gold-bright);
+            background: rgba(59, 130, 246, 0.15);
+            color: var(--accent-glow);
             padding: 4px 12px;
             border-radius: 16px;
             font-size: 0.78rem;
             font-weight: 700;
-            border: 1px solid rgba(212, 175, 55, 0.35);
+            border: 1px solid rgba(59, 130, 246, 0.3);
         }
 
         .archive-grid {
@@ -429,8 +430,8 @@
         }
 
         .idea-card.featured {
-            border: 1px solid rgba(212, 175, 55, 0.5);
-            background: linear-gradient(145deg, #032115 0%, #043822 100%);
+            border: 1px solid rgba(59, 130, 246, 0.4);
+            background: linear-gradient(145deg, #121218 0%, #172033 100%);
         }
 
         .idea-card.featured::before {
@@ -440,12 +441,12 @@
             right: 0;
             width: 4px;
             height: 100%;
-            background: linear-gradient(180deg, var(--gold-bright), var(--accent-gold));
+            background: var(--accent-primary);
         }
 
         .badge-featured {
-            background: linear-gradient(135deg, var(--gold-bright), var(--accent-gold));
-            color: #01100a;
+            background: var(--accent-primary);
+            color: #ffffff;
             font-size: 0.68rem;
             font-weight: 800;
             padding: 2px 8px;
@@ -478,11 +479,11 @@
 
         .idea-author {
             font-size: 0.75rem;
-            color: var(--gold-bright);
-            background: rgba(0, 108, 53, 0.4);
+            color: var(--accent-glow);
+            background: rgba(59, 130, 246, 0.12);
             padding: 2px 10px;
             border-radius: 15px;
-            border: 1px solid rgba(212, 175, 55, 0.3);
+            border: 1px solid rgba(59, 130, 246, 0.3);
             font-weight: 700;
             align-self: flex-start;
         }
@@ -527,15 +528,15 @@
         }
 
         .detail-box {
-            background: rgba(1, 20, 10, 0.8);
+            background: rgba(0, 0, 0, 0.4);
             border-radius: 8px;
             padding: 10px;
             margin-top: 10px;
-            border: 1px solid rgba(212, 175, 55, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.08);
         }
 
         .detail-box h4 {
-            color: var(--gold-bright);
+            color: var(--accent-glow);
             font-size: 0.82rem;
             margin-bottom: 6px;
         }
@@ -558,7 +559,7 @@
             border-radius: 6px;
             padding: 6px 8px;
             font-size: 0.78rem;
-            border-right: 3px solid var(--gold-bright);
+            border-right: 3px solid var(--accent-primary);
         }
 
         .track-item strong { color: #fff; display: block; margin-bottom: 1px; }
@@ -595,46 +596,41 @@
 </head>
 <body>
 
-    <!-- خلفية فيديو يوتيوب المدمجة -->
+    <!-- خلفية فيديو يوتيوب الجديدة المحدثة (أوضح وبدون خضرة) -->
     <div class="bg-video-container">
-        <iframe class="bg-youtube-video" src="https://www.youtube.com/embed/Ge4Oh_m09r0?autoplay=1&mute=1&loop=1&playlist=Ge4Oh_m09r0&controls=0&showinfo=0&autohide=1&modestbranding=1" frameborder="0" allow="autoplay; encrypted-media"></iframe>
+        <iframe class="bg-youtube-video" src="https://www.youtube.com/embed/_TkXgy18J_g?autoplay=1&mute=1&loop=1&playlist=_TkXgy18J_g&controls=0&showinfo=0&autohide=1&modestbranding=1" frameborder="0" allow="autoplay; encrypted-media"></iframe>
     </div>
     <div class="bg-overlay"></div>
 
-    <!-- شاشة الترحيب الملكية السعودية -->
+    <!-- شاشة الترحيب -->
     <div id="welcomeScreen">
-        <div class="royal-crest-container">
-            <div class="royal-crest" title="النادي الإعلامي MTU">
+        <div class="media-crest-container">
+            <div class="media-crest" title="ميديا كلب MTU">
                 <svg class="crest-svg" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <defs>
-                        <linearGradient id="goldGradW" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stop-color="#fffbeb" />
-                            <stop offset="40%" stop-color="#fcd116" />
-                            <stop offset="100%" stop-color="#aa8010" />
-                        </linearGradient>
-                        <linearGradient id="emeraldGradW" x1="0%" y1="0%" x2="0%" y2="100%">
-                            <stop offset="0%" stop-color="#043822" />
-                            <stop offset="100%" stop-color="#01140d" />
+                        <linearGradient id="blueGradW" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#60a5fa" />
+                            <stop offset="100%" stop-color="#1e40af" />
                         </linearGradient>
                     </defs>
-                    <path d="M60 45 H140 V115 Q140 160 100 185 Q60 160 60 115 Z" fill="url(#emeraldGradW)" stroke="url(#goldGradW)" stroke-width="4" />
-                    <path d="M68 53 H132 V113 Q132 150 100 172 Q68 150 68 113 Z" fill="none" stroke="url(#goldGradW)" stroke-width="1.5" stroke-dasharray="4 2" opacity="0.8" />
-                    
-                    <path d="M100 60 L100 120 M100 75 L85 68 M100 85 L115 78 M100 95 L88 90 M100 105 L112 100" stroke="url(#goldGradW)" stroke-width="3" stroke-linecap="round" />
-                    <circle cx="100" cy="56" r="5" fill="url(#goldGradW)" />
-
-                    <path d="M68 132 L132 152 M68 152 L132 132" stroke="url(#goldGradW)" stroke-width="3.5" stroke-linecap="round" />
-                    <circle cx="68" cy="132" r="3" fill="#ffffff" />
-                    <circle cx="132" cy="152" r="3" fill="#ffffff" />
+                    <!-- تصميم عدسة كاميرا وشاشة إعلامية حديثة -->
+                    <circle cx="100" cy="100" r="70" fill="#0f172a" stroke="url(#blueGradW)" stroke-width="6"/>
+                    <circle cx="100" cy="100" r="45" fill="none" stroke="url(#blueGradW)" stroke-width="2" stroke-dasharray="6 4"/>
+                    <circle cx="100" cy="100" r="22" fill="url(#blueGradW)" opacity="0.8"/>
+                    <!-- زوايا الإطار الإعلامي -->
+                    <path d="M50 60 H70 M50 60 V80" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
+                    <path d="M150 60 H130 M150 60 V80" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
+                    <path d="M50 140 H70 M50 140 V120" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
+                    <path d="M150 140 H130 M150 140 V120" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
                 </svg>
                 <div class="crest-center-text">MTU</div>
             </div>
-            <div class="royal-title-tag">SAUDI MEDIA CLUB</div>
+            <div class="media-title-tag">MEDIA CLUB</div>
         </div>
 
-        <span class="site-badge" style="margin-top: 10px;">🇸🇦 الهوية الوطنية والتميز الإعلامي</span>
+        <span class="site-badge" style="margin-top: 10px;">🎥 إبداع بصري وإنتاج إعلامي</span>
         <h1 style="font-size: 1.5rem; margin-top: 5px;">أهلاً بكم في بنك الأفكار والمشاريع</h1>
-        <p class="subtitle" style="margin-bottom: 25px;">بوابة الإبداع والريادة لطلاب جامعة الطائف بروح الهوية السعودية الفاخرة</p>
+        <p class="subtitle" style="margin-bottom: 25px;">بوابة الإبداع والريادة لطلاب جامعة الطائف بروح الإنتاج الإعلامي الحديث</p>
         
         <button onclick="enterSite()" class="btn-submit" style="max-width: 220px; font-size: 1rem;">
             <span>دخول المنصة</span>
@@ -649,37 +645,30 @@
     </nav>
 
     <header>
-        <div class="royal-crest-container">
-            <div class="royal-crest" title="النادي الإعلامي MTU">
+        <div class="media-crest-container">
+            <div class="media-crest" title="ميديا كلب MTU">
                 <svg class="crest-svg" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <defs>
-                        <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stop-color="#fffbeb" />
-                            <stop offset="40%" stop-color="#fcd116" />
-                            <stop offset="100%" stop-color="#aa8010" />
-                        </linearGradient>
-                        <linearGradient id="emeraldGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                            <stop offset="0%" stop-color="#043822" />
-                            <stop offset="100%" stop-color="#01140d" />
+                        <linearGradient id="blueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#60a5fa" />
+                            <stop offset="100%" stop-color="#1e40af" />
                         </linearGradient>
                     </defs>
-                    <path d="M60 45 H140 V115 Q140 160 100 185 Q60 160 60 115 Z" fill="url(#emeraldGrad)" stroke="url(#goldGrad)" stroke-width="4" />
-                    <path d="M68 53 H132 V113 Q132 150 100 172 Q68 150 68 113 Z" fill="none" stroke="url(#goldGrad)" stroke-width="1.5" stroke-dasharray="4 2" opacity="0.8" />
-                    
-                    <path d="M100 60 L100 120 M100 75 L85 68 M100 85 L115 78 M100 95 L88 90 M100 105 L112 100" stroke="url(#goldGrad)" stroke-width="3" stroke-linecap="round" />
-                    <circle cx="100" cy="56" r="5" fill="url(#goldGrad)" />
-
-                    <path d="M68 132 L132 152 M68 152 L132 132" stroke="url(#goldGrad)" stroke-width="3.5" stroke-linecap="round" />
-                    <circle cx="68" cy="132" r="3" fill="#ffffff" />
-                    <circle cx="132" cy="152" r="3" fill="#ffffff" />
+                    <circle cx="100" cy="100" r="70" fill="#0f172a" stroke="url(#blueGrad)" stroke-width="6"/>
+                    <circle cx="100" cy="100" r="45" fill="none" stroke="url(#blueGrad)" stroke-width="2" stroke-dasharray="6 4"/>
+                    <circle cx="100" cy="100" r="22" fill="url(#blueGrad)" opacity="0.8"/>
+                    <path d="M50 60 H70 M50 60 V80" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
+                    <path d="M150 60 H130 M150 60 V80" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
+                    <path d="M50 140 H70 M50 140 V120" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
+                    <path d="M150 140 H130 M150 140 V120" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
                 </svg>
                 <div class="crest-center-text">MTU</div>
             </div>
-            <div class="royal-title-tag">SAUDI MEDIA CLUB</div>
+            <div class="media-title-tag">MEDIA CLUB</div>
         </div>
 
         <br>
-        <span class="site-badge">🇸🇦 منصة النادي الإعلامي</span>
+        <span class="site-badge">🎬 منصة النادي الإعلامي</span>
         <h1>بنك الأفكار والأرشيف</h1>
         <p class="subtitle">المساحة السحابية لاستقبال وتوثيق مبادرات طلاب الجامعة</p>
     </header>
@@ -689,7 +678,7 @@
         <section id="homePage" class="page-section active">
             <div class="card">
                 <h2 class="section-title">
-                    <span class="icon">🇸🇦</span>
+                    <span class="icon">👥</span>
                     مجلس النادي وهيكلة الإدارة
                 </h2>
                 
@@ -836,7 +825,7 @@
         </section>
 
         <footer>
-            النادي الإعلامي (MTU) ©️ 2026 | الهوية السعودية الفاخرة
+            النادي الإعلامي (MTU) ©️ 2026 | ميديا كلب
         </footer>
 
     </div>
