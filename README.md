@@ -1,5 +1,4 @@
 # MTU
-
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -42,7 +41,7 @@
             position: relative;
         }
 
-        /* خلفية الفيديو مع طبقة التعتيم لئلا تكون مضيئة وتكون النصوص واضحة */
+        /* خلفية الفيديو الثابتة */
         .bg-video-container {
             position: fixed;
             top: 0;
@@ -65,7 +64,7 @@
             width: auto;
             height: auto;
             object-fit: cover;
-            filter: brightness(0.3) contrast(1.1); /* تظليل احترافي لتقليل الإضاءة */
+            filter: brightness(0.28) contrast(1.15);
         }
 
         .bg-overlay {
@@ -74,7 +73,7 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            background: rgba(2, 26, 17, 0.82);
+            background: rgba(2, 26, 17, 0.85);
             z-index: -98;
             pointer-events: none;
         }
@@ -596,9 +595,9 @@
 </head>
 <body>
 
-    <!-- خلفية الفيديو المباشرة المدمجة (بدون صوت، تكرار تلقائي، وطبقة تعتيم غير مضيئة) -->
+    <!-- خلفية الفيديو المباشرة -->
     <div class="bg-video-container">
-        <video class="bg-video" autoplay muted loop playsinline webkit-playsinline>
+        <video id="bgVideo" class="bg-video" autoplay muted loop playsinline webkit-playsinline>
             <source src="WhatsApp Video 2026-10-13 at 11.52.02 PM.mp4" type="video/mp4">
             متصفحك لا يدعم عرض الفيديو كخلفية.
         </video>
@@ -846,6 +845,15 @@
     </div>
 
     <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            const video = document.getElementById('bgVideo');
+            if(video) {
+                video.play().catch(error => {
+                    console.log("Autoplay prevented:", error);
+                });
+            }
+        });
+
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwN5Ty-lRiwKN9lVy9F94l8C9mxgSK-uDkVT9JStVT0eHnWtETg6CFJRpmw5lObZwV6/exec";
 
         window.enterSite = function() {
