@@ -637,7 +637,7 @@
         </div>
 
         <br>
-        <span class="site-badge">👑 المنصة الملكية للنادي الإعلامي</span>
+        <span class="site-badge">👑 منصة النادي الإعلامي</span>
         <h1>بنك الأفكار والأرشيف</h1>
         <p class="subtitle">المساحة السحابية لاستقبال وتوثيق مبادرات طلاب الجامعة</p>
     </header>
@@ -670,10 +670,6 @@
                         </div>
                     </div>
 
-                    <div class="board-tier-3">
-                        <div class="board-card tech-lead">
-                            <div class="board-role">مسؤول تقنية المعلومات (IT)</div>
-                            <div class="board-name">خالد أحمد الهلال</div>
                         </div>
                         <div class="board-card">
                             <div class="board-role">عضو مجلس الإدارة</div>
@@ -691,6 +687,10 @@
                             <div class="board-role">عضو مجلس الإدارة</div>
                             <div class="board-name">عبد الرحمن نجم العتيبي</div>
                         </div>
+                          <div class="board-tier-3">
+                        <div class="board-card tech-lead">
+                            <div class="board-role">مسؤول تقنية المعلومات (IT)</div>
+                            <div class="board-name">خالد أحمد الهلال</div>
                     </div>
                 </div>
             </div>
