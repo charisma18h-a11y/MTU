@@ -8,16 +8,19 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Cinzel:wght@700;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-dark: #060913;
-            --bg-card: rgba(15, 23, 42, 0.85);
-            --bg-card-solid: #0d1527;
-            --accent-gold: #f59e0b;
-            --gold-bright: #fbbf24;
-            --gold-dark: #b45309;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --border: rgba(245, 158, 11, 0.25);
-            --input-bg: #080e1a;
+            --bg-dark: #021a11;
+            --bg-deep: #01100a;
+            --bg-card: rgba(3, 33, 21, 0.82);
+            --bg-card-solid: #032115;
+            --saudi-green: #006c35;
+            --saudi-green-light: #00984a;
+            --accent-gold: #d4af37;
+            --gold-bright: #fcd116;
+            --gold-dark: #aa8010;
+            --text-main: #f0fdf4;
+            --text-muted: #86efac;
+            --border: rgba(212, 175, 55, 0.3);
+            --input-bg: #01140d;
         }
 
         * {
@@ -30,27 +33,51 @@
 
         body {
             background-color: var(--bg-dark);
-            background-image: 
-                radial-gradient(circle at 50% 10%, rgba(245, 158, 11, 0.12) 0%, transparent 50%),
-                radial-gradient(circle at 10% 80%, rgba(180, 83, 9, 0.08) 0%, transparent 40%),
-                radial-gradient(circle at 90% 90%, rgba(251, 191, 36, 0.06) 0%, transparent 50%);
-            background-attachment: fixed;
             color: var(--text-main);
             line-height: 1.7;
             padding-bottom: 40px;
             min-height: 100vh;
             overflow-x: hidden;
             width: 100%;
+            position: relative;
         }
 
-        /* شاشة الترحيب الملكية */
+        /* خلفية الفيديو مع طبقة تعتيم (Overlay) لتقليل الإضاءة وجعل النصوص واضحة */
+        .bg-video-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .bg-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.3) contrast(1.1); /* تقليل الإضاءة بشكل كبير لتكون الخلفية داكنة وغير مشتتة */
+        }
+
+        .bg-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(2, 26, 17, 0.85); /* طبقة تعتيم خضراء داكنة إضافية */
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* شاشة الترحيب الملكية السعودية */
         #welcomeScreen {
             position: fixed;
             inset: 0;
             z-index: 99999;
-            background: #060913;
-            background-image: 
-                radial-gradient(circle at 50% 30%, rgba(245, 158, 11, 0.18) 0%, transparent 60%);
+            background: var(--bg-deep);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -64,7 +91,7 @@
             position: sticky;
             top: 0;
             z-index: 1000;
-            background: rgba(6, 9, 19, 0.95);
+            background: rgba(2, 26, 17, 0.95);
             backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--border);
             padding: 10px 12px;
@@ -75,9 +102,9 @@
         }
 
         .nav-btn {
-            background: rgba(245, 158, 11, 0.1);
+            background: rgba(212, 175, 55, 0.1);
             color: var(--gold-bright);
-            border: 1px solid rgba(245, 158, 11, 0.35);
+            border: 1px solid rgba(212, 175, 55, 0.35);
             padding: 8px 14px;
             border-radius: 20px;
             font-size: 0.82rem;
@@ -95,17 +122,17 @@
         }
 
         .nav-btn:hover, .nav-btn.active {
-            background: linear-gradient(135deg, var(--gold-bright), var(--gold-dark));
-            color: #000;
+            background: linear-gradient(135deg, var(--gold-bright), var(--accent-gold));
+            color: #01100a;
             transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
         }
 
         header {
             position: relative;
             text-align: center;
             padding: 30px 15px 20px;
-            background: linear-gradient(180deg, rgba(12, 18, 34, 0.95) 0%, rgba(6, 9, 19, 0.6) 100%);
+            background: rgba(3, 33, 21, 0.75);
             border-bottom: 1px solid var(--border);
             backdrop-filter: blur(12px);
             overflow: hidden;
@@ -121,13 +148,13 @@
         }
 
         .royal-crest {
-            width: 100px;
-            height: 100px;
+            width: 110px;
+            height: 110px;
             position: relative;
             display: flex;
             align-items: center;
             justify-content: center;
-            filter: drop-shadow(0 0 18px rgba(245, 158, 11, 0.4));
+            filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.45));
         }
 
         .crest-svg {
@@ -137,14 +164,14 @@
 
         .crest-center-text {
             position: absolute;
-            top: 52%;
+            top: 56%;
             left: 50%;
             transform: translate(-50%, -50%);
             font-family: 'Cinzel', 'Cairo', serif;
-            font-size: 1.3rem;
+            font-size: 1.1rem;
             font-weight: 900;
             letter-spacing: 2px;
-            background: linear-gradient(180deg, #ffffff 10%, #fef08a 50%, #eab308 100%);
+            background: linear-gradient(180deg, #ffffff 10%, #fcd116 50%, #d4af37 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
@@ -155,29 +182,30 @@
             letter-spacing: 2px;
             color: var(--gold-bright);
             text-transform: uppercase;
-            margin-top: -4px;
-            background: linear-gradient(90deg, transparent, rgba(245, 158, 11, 0.15), transparent);
-            padding: 2px 15px;
-            border-bottom: 1px solid rgba(245, 158, 11, 0.35);
+            margin-top: -2px;
+            background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.2), transparent);
+            padding: 2px 18px;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.4);
         }
 
         .site-badge {
-            background: rgba(245, 158, 11, 0.1);
+            background: rgba(0, 108, 53, 0.4);
             color: var(--gold-bright);
-            padding: 4px 16px;
+            padding: 5px 18px;
             border-radius: 30px;
-            font-size: 0.78rem;
+            font-size: 0.8rem;
             font-weight: 700;
             display: inline-block;
             margin-bottom: 8px;
-            border: 1px solid rgba(245, 158, 11, 0.35);
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            box-shadow: 0 4px 12px rgba(0, 108, 53, 0.3);
         }
 
         h1 {
             font-size: 1.6rem;
             font-weight: 900;
             margin-bottom: 6px;
-            background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 100%);
+            background: linear-gradient(180deg, #ffffff 0%, #a7f3d0 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
@@ -218,7 +246,7 @@
             border-radius: 14px;
             padding: 18px 14px;
             margin-bottom: 20px;
-            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.6);
+            box-shadow: 0 10px 30px -10px rgba(1, 20, 10, 0.8);
         }
 
         .section-title {
@@ -232,8 +260,8 @@
         }
 
         .section-title span.icon {
-            background: linear-gradient(135deg, var(--gold-bright), var(--gold-dark));
-            color: #000;
+            background: linear-gradient(135deg, var(--gold-bright), var(--accent-gold));
+            color: #01100a;
             width: 30px;
             height: 30px;
             border-radius: 8px;
@@ -241,7 +269,7 @@
             align-items: center;
             justify-content: center;
             font-size: 1rem;
-            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
             flex-shrink: 0;
         }
 
@@ -265,16 +293,16 @@
         }
 
         .board-card.supervisor {
-            background: linear-gradient(145deg, #131d35 0%, #0d1527 100%);
-            border: 1px solid rgba(251, 191, 36, 0.4);
+            background: linear-gradient(145deg, #043822 0%, #032115 100%);
+            border: 1px solid rgba(252, 209, 22, 0.5);
             width: 100%;
             max-width: 280px;
             margin: 0 auto;
         }
 
         .board-card.tech-lead {
-            background: linear-gradient(145deg, #0d1527 0%, #1a233a 100%);
-            border: 1px solid rgba(245, 158, 11, 0.5);
+            background: linear-gradient(145deg, #032115 0%, #064e3b 100%);
+            border: 1px solid rgba(212, 175, 55, 0.6);
         }
 
         .board-role {
@@ -329,8 +357,8 @@
 
         input[type="text"]:focus, input[type="url"]:focus, textarea:focus {
             border-color: var(--gold-bright);
-            box-shadow: 0 0 10px rgba(251, 191, 36, 0.2);
-            background-color: #0d1527;
+            box-shadow: 0 0 10px rgba(252, 209, 22, 0.25);
+            background-color: #032115;
         }
 
         textarea {
@@ -339,8 +367,8 @@
         }
 
         button.btn-submit {
-            background: linear-gradient(135deg, var(--gold-bright) 0%, var(--gold-dark) 100%);
-            color: #060913;
+            background: linear-gradient(135deg, var(--gold-bright) 0%, var(--accent-gold) 100%);
+            color: #01100a;
             font-weight: 800;
             font-size: 0.95rem;
             padding: 12px 20px;
@@ -349,7 +377,7 @@
             cursor: pointer;
             width: 100%;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.35);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -370,13 +398,13 @@
         }
 
         .archive-counter {
-            background: rgba(245, 158, 11, 0.12);
+            background: rgba(0, 108, 53, 0.4);
             color: var(--gold-bright);
             padding: 4px 12px;
             border-radius: 16px;
             font-size: 0.78rem;
             font-weight: 700;
-            border: 1px solid rgba(245, 158, 11, 0.35);
+            border: 1px solid rgba(212, 175, 55, 0.35);
         }
 
         .archive-grid {
@@ -395,8 +423,8 @@
         }
 
         .idea-card.featured {
-            border: 1px solid rgba(245, 158, 11, 0.45);
-            background: linear-gradient(145deg, #0d1527 0%, #131d35 100%);
+            border: 1px solid rgba(212, 175, 55, 0.5);
+            background: linear-gradient(145deg, #032115 0%, #043822 100%);
         }
 
         .idea-card.featured::before {
@@ -406,12 +434,12 @@
             right: 0;
             width: 4px;
             height: 100%;
-            background: linear-gradient(180deg, var(--gold-bright), var(--gold-dark));
+            background: linear-gradient(180deg, var(--gold-bright), var(--accent-gold));
         }
 
         .badge-featured {
-            background: linear-gradient(135deg, var(--gold-bright), var(--gold-dark));
-            color: #000;
+            background: linear-gradient(135deg, var(--gold-bright), var(--accent-gold));
+            color: #01100a;
             font-size: 0.68rem;
             font-weight: 800;
             padding: 2px 8px;
@@ -445,10 +473,10 @@
         .idea-author {
             font-size: 0.75rem;
             color: var(--gold-bright);
-            background: rgba(245, 158, 11, 0.1);
+            background: rgba(0, 108, 53, 0.4);
             padding: 2px 10px;
             border-radius: 15px;
-            border: 1px solid rgba(245, 158, 11, 0.3);
+            border: 1px solid rgba(212, 175, 55, 0.3);
             font-weight: 700;
             align-self: flex-start;
         }
@@ -493,11 +521,11 @@
         }
 
         .detail-box {
-            background: rgba(6, 9, 19, 0.7);
+            background: rgba(1, 20, 10, 0.8);
             border-radius: 8px;
             padding: 10px;
             margin-top: 10px;
-            border: 1px solid rgba(245, 158, 11, 0.2);
+            border: 1px solid rgba(212, 175, 55, 0.2);
         }
 
         .detail-box h4 {
@@ -561,39 +589,49 @@
 </head>
 <body>
 
-    <!-- شاشة الترحيب الملكية الأولى -->
+    <!-- خلفية الفيديو المتحركة (بدون صوت، تكرار تلقائي، وتعتيم كامل لتناسب الموقع) -->
+    <div class="bg-video-container">
+        <video class="bg-video" autoplay muted loop playsinline>
+            <source src="رابط_الفيديو_المباشر_هنا.mp4" type="video/mp4">
+            متصفحك لا يدعم عرض الفيديو كخلفية.
+        </video>
+    </div>
+    <div class="bg-overlay"></div>
+
+    <!-- شاشة الترحيب الملكية السعودية -->
     <div id="welcomeScreen">
         <div class="royal-crest-container">
             <div class="royal-crest" title="النادي الإعلامي MTU">
                 <svg class="crest-svg" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <defs>
                         <linearGradient id="goldGradW" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stop-color="#fef08a" />
-                            <stop offset="30%" stop-color="#f59e0b" />
-                            <stop offset="70%" stop-color="#b45309" />
-                            <stop offset="100%" stop-color="#78350f" />
+                            <stop offset="0%" stop-color="#fffbeb" />
+                            <stop offset="40%" stop-color="#fcd116" />
+                            <stop offset="100%" stop-color="#aa8010" />
                         </linearGradient>
-                        <linearGradient id="shieldGradW" x1="0%" y1="0%" x2="0%" y2="100%">
-                            <stop offset="0%" stop-color="#0f172a" />
-                            <stop offset="100%" stop-color="#020617" />
+                        <linearGradient id="emeraldGradW" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" stop-color="#043822" />
+                            <stop offset="100%" stop-color="#01140d" />
                         </linearGradient>
                     </defs>
-                    <path d="M75 42 L85 55 L100 35 L115 55 L125 42 L120 65 L80 65 Z" fill="url(#goldGradW)" stroke="#fef08a" stroke-width="1.5" />
-                    <circle cx="75" cy="40" r="3" fill="#ffffff" />
-                    <circle cx="100" cy="33" r="4" fill="#ffffff" />
-                    <circle cx="125" cy="40" r="3" fill="#ffffff" />
-                    <path d="M60 65 H140 V115 Q140 160 100 180 Q60 160 60 115 Z" fill="url(#shieldGradW)" stroke="url(#goldGradW)" stroke-width="4" />
-                    <path d="M68 73 H132 V113 Q132 150 100 168 Q68 150 68 113 Z" fill="none" stroke="url(#goldGradW)" stroke-width="1.5" stroke-dasharray="4 2" opacity="0.8" />
-                    <path d="M100 182 L100 192 M90 185 Q100 190 110 185" stroke="url(#goldGradW)" stroke-width="2" />
+                    <path d="M60 45 H140 V115 Q140 160 100 185 Q60 160 60 115 Z" fill="url(#emeraldGradW)" stroke="url(#goldGradW)" stroke-width="4" />
+                    <path d="M68 53 H132 V113 Q132 150 100 172 Q68 150 68 113 Z" fill="none" stroke="url(#goldGradW)" stroke-width="1.5" stroke-dasharray="4 2" opacity="0.8" />
+                    
+                    <path d="M100 60 L100 120 M100 75 L85 68 M100 85 L115 78 M100 95 L88 90 M100 105 L112 100" stroke="url(#goldGradW)" stroke-width="3" stroke-linecap="round" />
+                    <circle cx="100" cy="56" r="5" fill="url(#goldGradW)" />
+
+                    <path d="M68 132 L132 152 M68 152 L132 132" stroke="url(#goldGradW)" stroke-width="3.5" stroke-linecap="round" />
+                    <circle cx="68" cy="132" r="3" fill="#ffffff" />
+                    <circle cx="132" cy="152" r="3" fill="#ffffff" />
                 </svg>
                 <div class="crest-center-text">MTU</div>
             </div>
-            <div class="royal-title-tag">MEDIA CLUB</div>
+            <div class="royal-title-tag">SAUDI MEDIA CLUB</div>
         </div>
 
-        <span class="site-badge" style="margin-top: 10px;">👑 منصة النادي الإعلامي</span>
+        <span class="site-badge" style="margin-top: 10px;">🇸🇦 الهوية الوطنية والتميز الإعلامي</span>
         <h1 style="font-size: 1.5rem; margin-top: 5px;">أهلاً بكم في بنك الأفكار والمشاريع</h1>
-        <p class="subtitle" style="margin-bottom: 25px;">البوابة الرسمية لاستقبال وتوثيق مبادرات طلاب جامعة الطائف</p>
+        <p class="subtitle" style="margin-bottom: 25px;">بوابة الإبداع والريادة لطلاب جامعة الطائف بروح الهوية السعودية الفاخرة</p>
         
         <button onclick="enterSite()" class="btn-submit" style="max-width: 220px; font-size: 1rem;">
             <span>دخول المنصة</span>
@@ -613,31 +651,32 @@
                 <svg class="crest-svg" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <defs>
                         <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stop-color="#fef08a" />
-                            <stop offset="30%" stop-color="#f59e0b" />
-                            <stop offset="70%" stop-color="#b45309" />
-                            <stop offset="100%" stop-color="#78350f" />
+                            <stop offset="0%" stop-color="#fffbeb" />
+                            <stop offset="40%" stop-color="#fcd116" />
+                            <stop offset="100%" stop-color="#aa8010" />
                         </linearGradient>
-                        <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                            <stop offset="0%" stop-color="#0f172a" />
-                            <stop offset="100%" stop-color="#020617" />
+                        <linearGradient id="emeraldGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" stop-color="#043822" />
+                            <stop offset="100%" stop-color="#01140d" />
                         </linearGradient>
                     </defs>
-                    <path d="M75 42 L85 55 L100 35 L115 55 L125 42 L120 65 L80 65 Z" fill="url(#goldGrad)" stroke="#fef08a" stroke-width="1.5" />
-                    <circle cx="75" cy="40" r="3" fill="#ffffff" />
-                    <circle cx="100" cy="33" r="4" fill="#ffffff" />
-                    <circle cx="125" cy="40" r="3" fill="#ffffff" />
-                    <path d="M60 65 H140 V115 Q140 160 100 180 Q60 160 60 115 Z" fill="url(#shieldGrad)" stroke="url(#goldGrad)" stroke-width="4" />
-                    <path d="M68 73 H132 V113 Q132 150 100 168 Q68 150 68 113 Z" fill="none" stroke="url(#goldGrad)" stroke-width="1.5" stroke-dasharray="4 2" opacity="0.8" />
-                    <path d="M100 182 L100 192 M90 185 Q100 190 110 185" stroke="url(#goldGrad)" stroke-width="2" />
+                    <path d="M60 45 H140 V115 Q140 160 100 185 Q60 160 60 115 Z" fill="url(#emeraldGrad)" stroke="url(#goldGrad)" stroke-width="4" />
+                    <path d="M68 53 H132 V113 Q132 150 100 172 Q68 150 68 113 Z" fill="none" stroke="url(#goldGrad)" stroke-width="1.5" stroke-dasharray="4 2" opacity="0.8" />
+                    
+                    <path d="M100 60 L100 120 M100 75 L85 68 M100 85 L115 78 M100 95 L88 90 M100 105 L112 100" stroke="url(#goldGrad)" stroke-width="3" stroke-linecap="round" />
+                    <circle cx="100" cy="56" r="5" fill="url(#goldGrad)" />
+
+                    <path d="M68 132 L132 152 M68 152 L132 132" stroke="url(#goldGrad)" stroke-width="3.5" stroke-linecap="round" />
+                    <circle cx="68" cy="132" r="3" fill="#ffffff" />
+                    <circle cx="132" cy="152" r="3" fill="#ffffff" />
                 </svg>
                 <div class="crest-center-text">MTU</div>
             </div>
-            <div class="royal-title-tag">MEDIA CLUB</div>
+            <div class="royal-title-tag">SAUDI MEDIA CLUB</div>
         </div>
 
         <br>
-        <span class="site-badge">👑 منصة النادي الإعلامي</span>
+        <span class="site-badge">🇸🇦 منصة النادي الإعلامي</span>
         <h1>بنك الأفكار والأرشيف</h1>
         <p class="subtitle">المساحة السحابية لاستقبال وتوثيق مبادرات طلاب الجامعة</p>
     </header>
@@ -647,7 +686,7 @@
         <section id="homePage" class="page-section active">
             <div class="card">
                 <h2 class="section-title">
-                    <span class="icon">👑</span>
+                    <span class="icon">🇸🇦</span>
                     مجلس النادي وهيكلة الإدارة
                 </h2>
                 
@@ -670,7 +709,7 @@
                         </div>
                     </div>
 
-                        </div>
+                    <div class="board-tier-3">
                         <div class="board-card">
                             <div class="board-role">عضو مجلس الإدارة</div>
                             <div class="board-name">نواف عبد الله المالكي</div>
@@ -687,10 +726,13 @@
                             <div class="board-role">عضو مجلس الإدارة</div>
                             <div class="board-name">عبد الرحمن نجم العتيبي</div>
                         </div>
-                          <div class="board-tier-3">
-                        <div class="board-card tech-lead">
+                    </div>
+
+                    <div class="board-tier-3">
+                        <div class="board-card tech-lead" style="grid-column: 1 / -1; max-width: 320px; margin: 0 auto; width: 100%;">
                             <div class="board-role">مسؤول تقنية المعلومات (IT)</div>
                             <div class="board-name">خالد أحمد الهلال</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -791,7 +833,7 @@
         </section>
 
         <footer>
-            النادي الإعلامي (MTU) ©️ 2026
+            النادي الإعلامي (MTU) ©️ 2026 | الهوية السعودية الفاخرة
         </footer>
 
     </div>
@@ -799,7 +841,6 @@
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwN5Ty-lRiwKN9lVy9F94l8C9mxgSK-uDkVT9JStVT0eHnWtETg6CFJRpmw5lObZwV6/exec";
 
-        // دالة الدخول للموقع من شاشة الترحيب
         window.enterSite = function() {
             const welcome = document.getElementById('welcomeScreen');
             welcome.style.opacity = '0';
@@ -878,47 +919,50 @@
             const counter = document.getElementById('archiveCount');
 
             try {
+                container.innerHTML = '<div style="text-align: center; color: var(--text-muted); padding: 20px;">جاري تحميل الأرشيف...</div>';
                 const response = await fetch(SCRIPT_URL);
                 const ideas = await response.json();
-                
-                let html = '';
+
+                counter.textContent = `إجمالي المشاركات: ${ideas.length}`;
+                container.innerHTML = '';
+
                 if (ideas.length === 0) {
-                    container.innerHTML = '<p style="text-align:center; color: var(--text-muted);">لا توجد أفكار مضافة حتى الآن.</p>';
-                    counter.textContent = 'الأفكار: 0';
+                    container.innerHTML = '<div style="text-align: center; color: var(--text-muted); padding: 20px;">لا توجد أفكار مسجلة حتى الآن.</div>';
                     return;
                 }
 
-                ideas.forEach(idea => {
-                    const embedVideo = getYouTubeEmbedUrl(idea.videoUrl);
-
-                    html += `
-                        <div class="idea-card">
-                            <div class="idea-header">
-                                <div class="idea-title">💡 ${idea.title || 'بدون عنوان'}</div>
-                                <div class="idea-author">المقترح: ${idea.author || 'عضو'}</div>
-                            </div>
-                            <div class="idea-body">
-                                ${idea.desc || ''}
-                            </div>
-
-                            ${(idea.imageUrl || embedVideo) ? `<div class="media-container">` : ''}
-                                ${idea.imageUrl ? `<img src="${idea.imageUrl}" class="media-image" alt="صورة الفكرة" onerror="this.style.display='none'">` : ''}
-                                ${embedVideo ? `<div class="video-wrapper"><iframe src="${embedVideo}" allowfullscreen></iframe></div>` : ''}
-                            ${(idea.imageUrl || embedVideo) ? `</div>` : ''}
-
-                            <div class="idea-footer-info">
-                                <div>📍 الموقع: <span>${idea.location || 'غير محدد'}</span></div>
-                                <div>👥 المسارات: <span>${idea.members || 'غير محدد'}</span></div>
-                            </div>
+                ideas.reverse().forEach((idea, index) => {
+                    const embedUrl = getYouTubeEmbedUrl(idea.videoUrl || idea.video);
+                    const card = document.createElement('div');
+                    card.className = 'idea-card';
+                    
+                    card.innerHTML = `
+                        <div class="idea-header">
+                            <div class="idea-title">${idea.title || 'بدون عنوان'}</div>
+                            <div class="idea-author">المقترح: ${idea.author || 'مجهول'}</div>
                         </div>
-                    `;
+                        <div class="idea-body">
+                            ${idea.desc || idea.description || ''}
+                        </div>
+                        ${idea.imageUrl || idea.image ? `
+                            <div class="media-container">
+                                <img src="${idea.imageUrl || idea.image}" class="media-image" alt="صورة المبادرة" onerror="this.style.display='none'">
+                            </div>
+                        ` : ''}
+                        ${embedUrl ? `
+                            <div class="media-container">
+                                <div class="video-wrapper">
+                                    <iframe src="${embedUrl}" allowfullscreen>` : ''}
+                                </div>
+                            </div>
+                        `;
+                    container.appendChild(card);
                 });
 
-                container.innerHTML = html;
-                counter.textContent = `الأفكار: ${ideas.length}`;
             } catch (error) {
-                console.error("Error loading data: ", error);
-                counter.textContent = 'خطأ بالاتصال';
+                console.error("Error loading archive:", error);
+                counter.textContent = 'خطأ في التحميل';
+                container.innerHTML = '<div style="text-align: center; color: #ef4444; padding: 20px;">تعذر استرجاع الأرشيف من السحابة.</div>';
             }
         }
     </script>
