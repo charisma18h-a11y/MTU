@@ -1,4 +1,5 @@
 # MTU
+
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -40,6 +41,23 @@
             min-height: 100vh;
             overflow-x: hidden;
             width: 100%;
+        }
+
+        /* شاشة الترحيب الملكية */
+        #welcomeScreen {
+            position: fixed;
+            inset: 0;
+            z-index: 99999;
+            background: #060913;
+            background-image: 
+                radial-gradient(circle at 50% 30%, rgba(245, 158, 11, 0.18) 0%, transparent 60%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            text-align: center;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
         }
 
         .quick-nav {
@@ -543,6 +561,46 @@
 </head>
 <body>
 
+    <!-- شاشة الترحيب الملكية الأولى -->
+    <div id="welcomeScreen">
+        <div class="royal-crest-container">
+            <div class="royal-crest" title="النادي الإعلامي MTU">
+                <svg class="crest-svg" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="goldGradW" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#fef08a" />
+                            <stop offset="30%" stop-color="#f59e0b" />
+                            <stop offset="70%" stop-color="#b45309" />
+                            <stop offset="100%" stop-color="#78350f" />
+                        </linearGradient>
+                        <linearGradient id="shieldGradW" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" stop-color="#0f172a" />
+                            <stop offset="100%" stop-color="#020617" />
+                        </linearGradient>
+                    </defs>
+                    <path d="M75 42 L85 55 L100 35 L115 55 L125 42 L120 65 L80 65 Z" fill="url(#goldGradW)" stroke="#fef08a" stroke-width="1.5" />
+                    <circle cx="75" cy="40" r="3" fill="#ffffff" />
+                    <circle cx="100" cy="33" r="4" fill="#ffffff" />
+                    <circle cx="125" cy="40" r="3" fill="#ffffff" />
+                    <path d="M60 65 H140 V115 Q140 160 100 180 Q60 160 60 115 Z" fill="url(#shieldGradW)" stroke="url(#goldGradW)" stroke-width="4" />
+                    <path d="M68 73 H132 V113 Q132 150 100 168 Q68 150 68 113 Z" fill="none" stroke="url(#goldGradW)" stroke-width="1.5" stroke-dasharray="4 2" opacity="0.8" />
+                    <path d="M100 182 L100 192 M90 185 Q100 190 110 185" stroke="url(#goldGradW)" stroke-width="2" />
+                </svg>
+                <div class="crest-center-text">MTU</div>
+            </div>
+            <div class="royal-title-tag">MEDIA CLUB</div>
+        </div>
+
+        <span class="site-badge" style="margin-top: 10px;">👑 منصة النادي الإعلامي</span>
+        <h1 style="font-size: 1.5rem; margin-top: 5px;">أهلاً بكم في بنك الأفكار والمشاريع</h1>
+        <p class="subtitle" style="margin-bottom: 25px;">البوابة الرسمية لاستقبال وتوثيق مبادرات طلاب جامعة الطائف</p>
+        
+        <button onclick="enterSite()" class="btn-submit" style="max-width: 220px; font-size: 1rem;">
+            <span>دخول المنصة</span>
+            <span>✨</span>
+        </button>
+    </div>
+
     <nav class="quick-nav">
         <button class="nav-btn active" onclick="switchPage('homePage', this)">🏛️ المجلس</button>
         <button class="nav-btn" onclick="switchPage('formPage', this)">💡 تقديم فكرة</button>
@@ -579,7 +637,7 @@
         </div>
 
         <br>
-        <span class="site-badge">👑 منصة النادي الإعلامي</span>
+        <span class="site-badge">👑 المنصة الملكية للنادي الإعلامي</span>
         <h1>بنك الأفكار والأرشيف</h1>
         <p class="subtitle">المساحة السحابية لاستقبال وتوثيق مبادرات طلاب الجامعة</p>
     </header>
@@ -741,6 +799,16 @@
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwN5Ty-lRiwKN9lVy9F94l8C9mxgSK-uDkVT9JStVT0eHnWtETg6CFJRpmw5lObZwV6/exec";
 
+        // دالة الدخول للموقع من شاشة الترحيب
+        window.enterSite = function() {
+            const welcome = document.getElementById('welcomeScreen');
+            welcome.style.opacity = '0';
+            welcome.style.visibility = 'hidden';
+            setTimeout(() => {
+                welcome.style.display = 'none';
+            }, 500);
+        }
+
         window.switchPage = function(pageId, btnElement) {
             document.querySelectorAll('.page-section').forEach(sec => sec.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
@@ -853,8 +921,6 @@
                 counter.textContent = 'خطأ بالاتصال';
             }
         }
-
-        loadSheetIdeas();
     </script>
 </body>
 </html>
