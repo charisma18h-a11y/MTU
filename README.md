@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>بنك الأفكار وأرشيف المشاريع - ميديا كلب MTU</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <title>بنك الأفكار وأرشيف المشاريع - MTU Media Club</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Montserrat:wght@800;900&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-dark: #0a0a0c;
@@ -17,6 +17,7 @@
             --text-muted: #94a3b8;
             --border: rgba(255, 255, 255, 0.12);
             --input-bg: #0c0c10;
+            --brand-red: #ff4d2d;
         }
 
         * {
@@ -61,7 +62,7 @@
             min-height: 100vh;
             min-width: 177.77vh;
             pointer-events: none;
-            filter: brightness(0.65) contrast(1.15) saturate(1.1);
+            filter: brightness(0.7) contrast(1.1);
         }
 
         .bg-overlay {
@@ -75,7 +76,39 @@
             pointer-events: none;
         }
 
-        /* شاشة الترحيب بتصميم هادئ وبسيط */
+        /* تصميم الشعار المطابق للصورة تماماً */
+        .mtu-logo-container {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .mtu-logo-text {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 3.2rem;
+            font-weight: 900;
+            letter-spacing: -1px;
+            color: #ffffff;
+            line-height: 1;
+            display: flex;
+            align-items: flex-start;
+            position: relative;
+        }
+
+        .mtu-dot {
+            width: 14px;
+            height: 14px;
+            background-color: var(--brand-red);
+            border-radius: 50%;
+            display: inline-block;
+            margin-left: 2px;
+            margin-top: 2px;
+            box-shadow: 0 0 10px rgba(255, 77, 45, 0.8);
+        }
+
+        /* شاشة الترحيب */
         #welcomeScreen {
             position: fixed;
             inset: 0;
@@ -140,23 +173,6 @@
             border-bottom: 1px solid var(--border);
             backdrop-filter: blur(12px);
             overflow: hidden;
-        }
-
-        /* ش شعار بسيط ونظيف (ميديا كلب) */
-        .simple-logo-box {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(59, 130, 246, 0.1);
-            border: 1px solid rgba(59, 130, 246, 0.3);
-            color: var(--accent-glow);
-            padding: 10px 24px;
-            border-radius: 12px;
-            font-size: 1.3rem;
-            font-weight: 900;
-            letter-spacing: 1px;
-            margin-bottom: 10px;
-            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.15);
         }
 
         .site-badge {
@@ -556,19 +572,24 @@
             margin-top: 25px;
         }
     </style>
+
+    <!-- تضمين مكتبة يوتيوب الرسمية لتفعيل تشغيل الفيديو على أجهزة الجوال تلقائياً -->
+    <script src="https://www.youtube.com/iframe_api"></script>
 </head>
 <body>
 
-    <!-- خلفية فيديو يوتيوب تعمل على الكمبيوتر والهواتف -->
+    <!-- حاوية خلفية يوتيوب مع ID مخصص للتحكم بالجوال -->
     <div class="bg-video-container">
-        <iframe class="bg-youtube-video" src="https://www.youtube.com/embed/_TkXgy18J_g?autoplay=1&mute=1&loop=1&playlist=_TkXgy18J_g&controls=0&showinfo=0&autohide=1&modestbranding=1&playsinline=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <div id="player" class="bg-youtube-video"></div>
     </div>
     <div class="bg-overlay"></div>
 
-    <!-- شاشة الترحيب بتصميم بسيط ونظيف -->
+    <!-- شاشة الترحيب مع الشعار الجديد المطابق للصورة -->
     <div id="welcomeScreen">
-        <div class="simple-logo-box">
-            🎬 MTU Media Club
+        <div class="mtu-logo-container">
+            <div class="mtu-logo-text">
+                MTU<span class="mtu-dot"></span>
+            </div>
         </div>
 
         <span class="site-badge" style="margin-top: 5px;">مرحباً بكم في منصة الأفكار</span>
@@ -588,8 +609,10 @@
     </nav>
 
     <header>
-        <div class="simple-logo-box" style="padding: 8px 20px; font-size: 1.1rem;">
-            🎬 MTU Media Club
+        <div class="mtu-logo-container" style="margin-bottom: 5px;">
+            <div class="mtu-logo-text" style="font-size: 2.2rem;">
+                MTU<span class="mtu-dot" style="width: 10px; height: 10px;"></span>
+            </div>
         </div>
 
         <br>
@@ -757,8 +780,39 @@
 
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwN5Ty-lRiwKN9lVy9F94l8C9mxgSK-uDkVT9JStVT0eHnWtETg6CFJRpmw5lObZwV6/exec";
+        let ytPlayer = null;
+
+        // تهيئة لاعب يوتيوب البرمجي لضمان التشغيل على الهواتف
+        function onYouTubeIframeAPIReady() {
+            ytPlayer = new YT.Player('player', {
+                videoId: '_TkXgy18J_g',
+                playerVars: {
+                    'autoplay': 1,
+                    'mute': 1,
+                    'controls': 0,
+                    'loop': 1,
+                    'playlist': '_TkXgy18J_g',
+                    'playsinline': 1,
+                    'showinfo': 0,
+                    'rel': 0,
+                    'modestbranding': 1
+                },
+                events: {
+                    'onReady': function(event) {
+                        event.target.mute();
+                        event.target.playVideo();
+                    }
+                }
+            });
+        }
 
         window.enterSite = function() {
+            // محاولة إجبار تشغيل الفيديو عند النقر على الشاشة الترحيبية للجوال
+            if (ytPlayer && typeof ytPlayer.playVideo === 'function') {
+                ytPlayer.mute();
+                ytPlayer.playVideo();
+            }
+
             const welcome = document.getElementById('welcomeScreen');
             welcome.style.opacity = '0';
             welcome.style.visibility = 'hidden';
@@ -766,6 +820,13 @@
                 welcome.style.display = 'none';
             }, 500);
         }
+
+        // تشغيل إضافي عند لمس الشاشة للجوال
+        document.addEventListener('touchstart', function() {
+            if (ytPlayer && typeof ytPlayer.playVideo === 'function') {
+                ytPlayer.playVideo();
+            }
+        }, { once: true });
 
         window.switchPage = function(pageId, btnElement) {
             document.querySelectorAll('.page-section').forEach(sec => sec.classList.remove('active'));
