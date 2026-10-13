@@ -10,7 +10,7 @@
         :root {
             --bg-dark: #021a11;
             --bg-deep: #01100a;
-            --bg-card: rgba(3, 33, 21, 0.82);
+            --bg-card: rgba(3, 33, 21, 0.85);
             --bg-card-solid: #032115;
             --saudi-green: #006c35;
             --saudi-green-light: #00984a;
@@ -42,33 +42,40 @@
             position: relative;
         }
 
-        /* خلفية الفيديو مع طبقة تعتيم (Overlay) لتقليل الإضاءة وجعل النصوص واضحة */
+        /* خلفية الفيديو مع طبقة التعتيم لئلا تكون مضيئة وتكون النصوص واضحة */
         .bg-video-container {
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -2;
+            width: 100vw;
+            height: 100vh;
+            z-index: -99;
             overflow: hidden;
             pointer-events: none;
+            background: #01100a;
         }
 
         .bg-video {
-            width: 100%;
-            height: 100%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
             object-fit: cover;
-            filter: brightness(0.3) contrast(1.1); /* تقليل الإضاءة بشكل كبير لتكون الخلفية داكنة وغير مشتتة */
+            filter: brightness(0.3) contrast(1.1); /* تظليل احترافي لتقليل الإضاءة */
         }
 
         .bg-overlay {
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(2, 26, 17, 0.85); /* طبقة تعتيم خضراء داكنة إضافية */
-            z-index: -1;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(2, 26, 17, 0.82);
+            z-index: -98;
             pointer-events: none;
         }
 
@@ -589,10 +596,10 @@
 </head>
 <body>
 
-    <!-- خلفية الفيديو المتحركة (بدون صوت، تكرار تلقائي، وتعتيم كامل لتناسب الموقع) -->
+    <!-- خلفية الفيديو المباشرة المدمجة (بدون صوت، تكرار تلقائي، وطبقة تعتيم غير مضيئة) -->
     <div class="bg-video-container">
-        <video class="bg-video" autoplay muted loop playsinline>
-            <source src="رابط_الفيديو_المباشر_هنا.mp4" type="video/mp4">
+        <video class="bg-video" autoplay muted loop playsinline webkit-playsinline>
+            <source src="WhatsApp Video 2026-10-13 at 11.52.02 PM.mp4" type="video/mp4">
             متصفحك لا يدعم عرض الفيديو كخلفية.
         </video>
     </div>
@@ -952,10 +959,15 @@
                         ${embedUrl ? `
                             <div class="media-container">
                                 <div class="video-wrapper">
-                                    <iframe src="${embedUrl}" allowfullscreen>` : ''}
+                                    <iframe src="${embedUrl}" allowfullscreen></iframe>
                                 </div>
                             </div>
-                        `;
+                        ` : ''}
+                        <div class="idea-footer-info">
+                            <div>📍 الموقع: <span>${idea.location || 'غير محدد'}</span></div>
+                            <div>👥 المسارات: <span>${idea.members || 'غير محدد'}</span></div>
+                        </div>
+                    `;
                     container.appendChild(card);
                 });
 
