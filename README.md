@@ -532,7 +532,7 @@
         </div>
 
         <br>
-        <span class="site-badge">👑 منصة النادي الإعلامي</span>
+        <span class="site-badge">👑 المنصة الملكية للنادي الإعلامي</span>
         <h1>بنك الأفكار وأرشيف المشاريع</h1>
         <p class="subtitle">المساحة السحابية المخصصة لاستقبال مبادرات الطلاب وتوثيقها بشكل مباشر للجميع</p>
     </header>
@@ -648,31 +648,34 @@
                 <span class="archive-counter" id="archiveCount">جاري التحميل من السحابة...</span>
             </div>
 
-            <div class="archive-grid" id="archiveContainer">
-                <!-- مشروع ملتقى سينما الجامعة الثابت -->
-                <div class="idea-card featured">
-                    <span class="badge-featured">⭐ مشروع مقترح وموثّق بالتفاصيل</span>
-                    <div class="idea-header">
-                        <div class="idea-title">🎬 ملتقى سينما الجامعة (رؤية سينمائية وإعلامية)</div>
-                        <div class="idea-author">المقترح: خالد أحمد الهلال</div>
-                    </div>
-                    <div class="idea-body">
-                        مشروع متكامل يهدف إلى دمج الفن البصري بالمهارات الخطابية والإعلامية لطلاب الجامعة. يُقيم النادي الإعلامي ملتقى سينمائي وثقافي تنظيمي يضم ورش عمل تفاعلية حية.
-                        <div class="detail-box">
-                            <h4>🎯 الورش التفاعلية ومسارات المشاركة:</h4>
-                            <div class="tracks-grid">
-                                <div class="track-item"><strong>1. مسار التقديم</strong>إدارة الجلسة الحوارية والنقدية.</div>
-                                <div class="track-item"><strong>2. مسار الإنتاج</strong>تحويل الفكرة إلى سيناريو.</div>
-                                <div class="track-item"><strong>3. مسار التصوير</strong>زوايا الكاميرا والإضاءة.</div>
-                                <div class="track-item"><strong>4. مسار التسويق</strong>صناعة الهوية والإعلانات.</div>
-                            </div>
+            <!-- بطاقة المبادرة الموثقة الثابتة -->
+            <div class="idea-card featured" style="margin-bottom: 20px;">
+                <span class="badge-featured">⭐ مشروع مقترح وموثّق بالتفاصيل</span>
+                <div class="idea-header">
+                    <div class="idea-title">🎬 ملتقى سينما الجامعة (رؤية سينمائية وإعلامية)</div>
+                    <div class="idea-author">المقترح: خالد أحمد الهلال</div>
+                </div>
+                <div class="idea-body">
+                    مشروع متكامل يهدف إلى دمج الفن البصري بالمهارات الخطابية والإعلامية لطلاب الجامعة. يُقيم النادي الإعلامي ملتقى سينمائي وثقافي تنظيمي يضم ورش عمل تفاعلية حية.
+                    <div class="detail-box">
+                        <h4>🎯 الورش التفاعلية ومسارات المشاركة:</h4>
+                        <div class="tracks-grid">
+                            <div class="track-item"><strong>1. مسار التقديم</strong>إدارة الجلسة الحوارية والنقدية.</div>
+                            <div class="track-item"><strong>2. مسار الإنتاج</strong>تحويل الفكرة إلى سيناريو.</div>
+                            <div class="track-item"><strong>3. مسار التصوير</strong>زوايا الكاميرا والإضاءة.</div>
+                            <div class="track-item"><strong>4. مسار التسويق</strong>صناعة الهوية والإعلانات.</div>
                         </div>
                     </div>
-                    <div class="idea-footer-info">
-                        <div>📍 الموقع: <span>مسرح الجامعة الرئيسي</span></div>
-                        <div>👥 المسارات: <span>جميع مسارات النادي الإعلامي</span></div>
-                    </div>
                 </div>
+                <div class="idea-footer-info">
+                    <div>📍 الموقع: <span>مسرح الجامعة الرئيسي</span></div>
+                    <div>👥 المسارات: <span>جميع مسارات النادي الإعلامي</span></div>
+                </div>
+            </div>
+
+            <!-- حاوية الأفكار المضافة من السحابة -->
+            <div class="archive-grid" id="archiveContainer">
+                <!-- ستظهر الأفكار المسجلة من السحابة هنا فوراً -->
             </div>
         </section>
 
@@ -682,12 +685,12 @@
 
     </div>
 
-    <!-- كود الربط السحابي (Firebase) -->
+    <!-- كود الربط السحابي (Firebase) المحدث مع المجموعة الصحيحة mtu 1 -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // مفاتيح مشروعك الفعلي على فايربيس
+        // مفاتيح مشروعك الفعلي
         const firebaseConfig = {
             apiKey: "AIzaSyA831Ex0tSyAQaGUQAlIzAFb8fBH89Xktw",
             authDomain: "mtu-media-club.firebaseapp.com",
@@ -700,6 +703,9 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
+
+        // اسم المجموعة المعتمدة في قاعدة بياناتك (mtu 1)
+        const COLLECTION_NAME = "mtu 1";
 
         // التنقل بين الصفحات السلس
         window.switchPage = function(pageId, btnElement) {
@@ -730,16 +736,16 @@
             const members = document.getElementById('ideaMembers').value;
 
             try {
-                await addDoc(collection(db, "ideas"), {
-                    author,
-                    title,
-                    desc,
-                    location,
-                    members,
+                await addDoc(collection(db, COLLECTION_NAME), {
+                    author: author,
+                    title: title,
+                    desc: desc,
+                    location: location,
+                    members: members,
                     createdAt: new Date()
                 });
 
-                alert('✅ تم حفظ الفكرة في سحابة النادي بنجاح وسيحراها الجميع الآن!');
+                alert('✅ تم حفظ الفكرة في سحابة النادي بنجاح!');
                 this.reset();
                 
                 // الانتقال تلقائياً للأرشيف لرؤية الفكرة
@@ -747,7 +753,7 @@
                 switchPage('archivePage', archiveBtn);
             } catch (error) {
                 console.error("خطأ أثناء الحفظ: ", error);
-                alert('❌ حدث خطأ أثناء الحفظ، تأكد من اتصالك بالإنترنت.');
+                alert('❌ حدث خطأ أثناء الحفظ: ' + error.message);
             } finally {
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = '<span>حفظ الفكرة وإرسالها للسحابة</span> <span>🚀</span>';
@@ -760,33 +766,40 @@
             const counter = document.getElementById('archiveCount');
             
             try {
-                const querySnapshot = await getDocs(collection(db, "ideas"));
+                const querySnapshot = await getDocs(collection(db, COLLECTION_NAME));
                 
-                // الاحتفاظ بالمشروع الثابت ومسح القديم المكرر إن وجد
                 let cloudIdeasHTML = '';
                 let count = querySnapshot.size;
 
                 querySnapshot.forEach((doc) => {
                     const idea = doc.data();
-                    cloudIdeasHTML += `
-                        <div class="idea-card">
-                            <div class="idea-header">
-                                <div class="idea-title">💡 ${idea.title}</div>
-                                <div class="idea-author">المقترح: ${idea.author}</div>
+                    // تجاهل المستند التجريبي media club 1 وعرض المستندات الفعلية
+                    if (idea.title || idea.desc) {
+                        cloudIdeasHTML += `
+                            <div class="idea-card">
+                                <div class="idea-header">
+                                    <div class="idea-title">💡 ${idea.title || 'فكرة بدون عنوان'}</div>
+                                    <div class="idea-author">المقترح: ${idea.author || 'فاعل خير'}</div>
+                                </div>
+                                <div class="idea-body">
+                                    ${idea.desc || ''}
+                                </div>
+                                <div class="idea-footer-info">
+                                    <div>📍 الموقع: <span>${idea.location || 'غير محدد'}</span></div>
+                                    <div>👥 المسارات: <span>${idea.members || 'غير محدد'}</span></div>
+                                </div>
                             </div>
-                            <div class="idea-body">
-                                ${idea.desc}
-                            </div>
-                            <div class="idea-footer-info">
-                                <div>📍 الموقع: <span>${idea.location}</span></div>
-                                <div>👥 المسارات: <span>${idea.members}</span></div>
-                            </div>
-                        </div>
-                    `;
+                        `;
+                    }
                 });
 
-                // تحديث العداد وعرض البطاقات السحابية أسفل المشروع الثابت
-                counter.textContent = `الأفكار السحابية: ${count + 1}`;
+                if (cloudIdeasHTML === '') {
+                    container.innerHTML = '<p style="text-align:center; color: var(--text-muted);">لا توجد أفكار جديدة مضافة حتى الآن في السحابة.</p>';
+                } else {
+                    container.innerHTML = cloudIdeasHTML;
+                }
+
+                counter.textContent = `الأفكار المضافة: ${count}`;
             } catch (error) {
                 console.error("خطأ في جلب البيانات: ", error);
                 counter.textContent = 'خطأ في الاتصال بالسحابة';
