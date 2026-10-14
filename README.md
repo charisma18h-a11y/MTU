@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>بنك الأفكار وأرشيف المشاريع - MTU Media Club</title>
+    <title>منصة النادي الإعلامي - جامعة الطائف</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Montserrat:wght@800;900&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
@@ -75,9 +75,10 @@
         .section-title { font-size: 1.15rem; font-weight: 800; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; color: var(--text-main); }
         .section-title span.icon { background: var(--accent-primary); color: #ffffff; width: 30px; height: 30px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; }
 
-        /* تنسيق البروفايل الشخصي */
         .profile-header-card { text-align: center; padding: 25px; }
-        .avatar-preview { width: 90px; height: 90px; border-radius: 50%; object-fit: cover; border: 3px solid var(--accent-primary); margin: 0 auto 12px; background: #1a1a24; display: flex; align-items: center; justify-content: center; font-size: 2rem; color: var(--text-muted); }
+        .avatar-container { position: relative; width: 95px; height: 95px; margin: 0 auto 12px; }
+        .avatar-preview { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 3px solid var(--accent-primary); background: #1a1a24; display: flex; align-items: center; justify-content: center; font-size: 2rem; color: var(--text-muted); }
+        .avatar-upload-btn { position: absolute; bottom: 0; left: 0; background: var(--accent-primary); color: #fff; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; border: 2px solid var(--bg-card); font-size: 0.9rem; }
         
         .board-hierarchy { display: flex; flex-direction: column; gap: 12px; }
         .board-tier-1 { display: flex; justify-content: center; }
@@ -93,8 +94,10 @@
         @media (min-width: 600px) { .form-row { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); } }
         .form-group { margin-bottom: 14px; text-align: right; }
         label { display: block; margin-bottom: 5px; font-weight: 700; color: #cbd5e1; font-size: 0.85rem; }
-        input, textarea { width: 100%; padding: 10px 12px; background-color: var(--input-bg); border: 1px solid var(--border); border-radius: 8px; color: var(--text-main); font-size: 0.9rem; outline: none; }
+        input, textarea, select { width: 100%; padding: 10px 12px; background-color: var(--input-bg); border: 1px solid var(--border); border-radius: 8px; color: var(--text-main); font-size: 0.9rem; outline: none; }
         button.btn-submit { background: var(--accent-primary); color: #ffffff; font-weight: 800; font-size: 0.95rem; padding: 12px 20px; border: none; border-radius: 8px; cursor: pointer; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; }
+
+        .member-row-item { background: rgba(255,255,255,0.03); border: 1px solid var(--border); padding: 12px; border-radius: 8px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
 
         .archive-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         .archive-counter { background: rgba(59, 130, 246, 0.15); color: var(--accent-glow); padding: 4px 12px; border-radius: 16px; font-size: 0.78rem; font-weight: 700; border: 1px solid rgba(59, 130, 246, 0.3); }
@@ -123,7 +126,7 @@
     <div id="welcomeScreen">
         <div class="mtu-logo-container"><div class="mtu-logo-text">MTU<span class="mtu-dot"></span></div></div>
         <span class="site-badge" style="margin-top: 5px;">منصة النادي الإعلامي</span>
-        <h1 id="authMainTitle" style="font-size: 1.4rem; margin-top: 5px;">تسجيل الدخول للبروفايل</h1>
+        <h1 id="authMainTitle" style="font-size: 1.3rem; margin-top: 5px;">تسجيل الدخول لمنصة النادي الإعلامي</h1>
         
         <div class="auth-card">
             <form id="authForm" onsubmit="handleSupabaseAuth(event)">
@@ -131,16 +134,26 @@
                     <label>الاسم الكامل:</label>
                     <input type="text" id="authFullName" placeholder="ادخل اسمك الكامل">
                 </div>
+                <div class="form-group" id="trackGroup" style="display: none;">
+                    <label>اختر مسارك في النادي:</label>
+                    <select id="authTrack">
+                        <option value="تصوير وإضاءة">📷 تصوير وإضاءة</option>
+                        <option value="مونتاج وموشن جرافيك">🎬 مونتاج وموشن جرافيك</option>
+                        <option value="إنتاج برامج وبودكاست">🎙️ إنتاج برامج وبودكاست</option>
+                        <option value="تصميم وهوية بصرية">🎨 تصميم وهوية بصرية</option>
+                        <option value="كتابة وصحافة إعلامية">✍️ كتابة وصحافة إعلامية</option>
+                    </select>
+                </div>
                 <div class="form-group"><label>البريد الإلكتروني:</label><input type="email" id="authEmail" placeholder="name@example.com" required></div>
                 <div class="form-group"><label>كلمة المرور:</label><input type="password" id="authPassword" placeholder="••••••••" required></div>
                 <button type="submit" class="btn-submit" id="authBtn"><span id="authBtnText">دخول المنصة</span><span>🚀</span></button>
                 <div id="authError" class="error-msg"></div>
             </form>
-            <div class="auth-switch"><span id="switchText">ليس لديك حساب؟</span> <a onclick="toggleAuthMode()" id="switchLink">انشئ بروفايل جديد</a></div>
+            <div class="auth-switch"><span id="switchText">ليس لديك حساب؟</span> <a onclick="toggleAuthMode()" id="switchLink">التسجيل في النادي الإعلامي</a></div>
         </div>
     </div>
 
-    <!-- شريط التنقل العلوي المحدث -->
+    <!-- شريط التنقل العلوي -->
     <nav class="quick-nav">
         <button class="nav-btn active" onclick="switchPage('homePage', this)">🏛️ المجلس</button>
         <button class="nav-btn" onclick="switchPage('profilePage', this)">👤 بروفايلي</button>
@@ -158,6 +171,13 @@
     </header>
 
     <div class="container">
+
+        <!-- شريط الحالة والترحيب الشخصي -->
+        <div class="card" style="padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+            <div>👤 أهلاً بك: <strong id="barUserName" style="color: var(--accent-glow);">...</strong></div>
+            <div>المسار: <span id="barUserTrack" style="background: rgba(59,130,246,0.15); padding: 2px 10px; border-radius: 10px; border: 1px solid rgba(59,130,246,0.3);">عضو</span></div>
+            <div>الرتبة: <span id="barUserRole" style="background: rgba(35,134,54,0.15); padding: 2px 10px; border-radius: 10px; color: #4ade80;">عضو</span></div>
+        </div>
 
         <!-- صفحة المجلس -->
         <section id="homePage" class="page-section active">
@@ -187,23 +207,29 @@
         <!-- صفحة بروفايلي الشخصي -->
         <section id="profilePage" class="page-section">
             <div class="card profile-header-card">
-                <div class="avatar-preview" id="avatarPreviewContainer">👤</div>
+                <div class="avatar-container">
+                    <div class="avatar-preview" id="avatarPreviewContainer">👤</div>
+                    <label for="fileUploadInput" class="avatar-upload-btn" title="رفع صورة شخصية">➕</label>
+                    <input type="file" id="fileUploadInput" accept="image/*" style="display: none;" onchange="uploadAvatarImage(this)">
+                </div>
                 <h2 id="profileDisplayName" style="font-size: 1.3rem; margin-bottom: 4px; color: #fff;">اسم العضو</h2>
                 <span id="profileRoleBadge" style="background: rgba(59,130,246,0.2); color: var(--accent-glow); padding: 3px 12px; border-radius: 12px; font-size: 0.75rem; font-weight: 700;">عضو</span>
                 
                 <form id="profileForm" onsubmit="updateProfile(event)" style="margin-top: 20px; text-align: right;">
-                    <div class="form-group">
-                        <label>رابط الصورة الشخصية (Avatar URL):</label>
-                        <input type="url" id="inputAvatar" placeholder="https://example.com/my-photo.jpg">
-                    </div>
                     <div class="form-group">
                         <label>نبذة تعريفية عنك (Bio):</label>
                         <textarea id="inputBio" placeholder="اكتب نبذة عن مهاراتك واهتماماتك الإعلامية..."></textarea>
                     </div>
                     <div class="form-row">
                         <div class="form-group">
-                            <label>المسارات والاهتمامات:</label>
-                            <input type="text" id="inputTracks" placeholder="مثال: تصوير، مونتاج، تصميم">
+                            <label>مسارك في النادي:</label>
+                            <select id="inputTrack">
+                                <option value="تصوير وإضاءة">📷 تصوير وإضاءة</option>
+                                <option value="مونتاج وموشن جرافيك">🎬 مونتاج وموشن جرافيك</option>
+                                <option value="إنتاج برامج وبودكاست">🎙️ إنتاج برامج وبودكاست</option>
+                                <option value="تصميم وهوية بصرية">🎨 تصميم وهوية بصرية</option>
+                                <option value="كتابة وصحافة إعلامية">✍️ كتابة وصحافة إعلامية</option>
+                            </select>
                         </div>
                         <div class="form-group">
                             <label>رابط معرض الأعمال (Portfolio / GitHub):</label>
@@ -247,13 +273,14 @@
             <div class="archive-grid" id="archiveContainer"></div>
         </section>
 
-        <!-- لوحة تحكم المشرف -->
+        <!-- لوحة تحكم المشرف المحمية -->
         <section id="adminPage" class="page-section">
             <div class="card">
-                <h2 class="section-title"><span class="icon">⚙️</span>لوحة تحكم المشرف</h2>
-                <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 15px;">أهلاً بك يا مشرف المنصة. يمكنك التحكم الكامل بمحتويات ואعضاء النادي.</p>
-                <div style="background: rgba(35, 134, 54, 0.1); border: 1px solid rgba(35, 134, 54, 0.3); padding: 15px; border-radius: 8px;">
-                    <strong>صلاحية الحساب:</strong> Admin (مشرف معتمد) ✅
+                <h2 class="section-title"><span class="icon">⚙️</span>لوحة تحكم المشرف وإدارة الأعضاء</h2>
+                <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 15px;">أهلاً بك يا مشرف المنصة. يمكنك استعراض جميع الأعضاء ونقلهم بين المسارات مباشرة.</p>
+                <div style="margin-top: 15px;">
+                    <h3 style="font-size: 1rem; margin-bottom: 10px; color: var(--accent-glow);">قائمة أعضاء النادي المسجلين:</h3>
+                    <div id="adminMembersList">جاري جلب الأعضاء...</div>
                 </div>
             </div>
         </section>
@@ -269,14 +296,16 @@
         
         let currentUser = null;
         let isRegisterMode = false;
+        let currentAvatarUrl = '';
 
         function toggleAuthMode() {
             isRegisterMode = !isRegisterMode;
-            document.getElementById('authMainTitle').innerText = isRegisterMode ? 'إنشاء بروفايل جديد' : 'تسجيل الدخول للبروفايل';
-            document.getElementById('authBtnText').innerText = isRegisterMode ? 'إنشاء البروفايل والدخول' : 'دخول المنصة';
+            document.getElementById('authMainTitle').innerText = isRegisterMode ? 'التسجيل في النادي الإعلامي' : 'تسجيل الدخول لمنصة النادي الإعلامي';
+            document.getElementById('authBtnText').innerText = isRegisterMode ? 'إتمام التسجيل والإنشاء' : 'دخول المنصة';
             document.getElementById('fullNameGroup').style.display = isRegisterMode ? 'block' : 'none';
+            document.getElementById('trackGroup').style.display = isRegisterMode ? 'block' : 'none';
             document.getElementById('switchText').innerText = isRegisterMode ? 'لديك حساب بالفعل؟' : 'ليس لديك حساب؟';
-            document.getElementById('switchLink').innerText = isRegisterMode ? 'سجل الدخول هنا' : 'انشئ بروفايل جديد';
+            document.getElementById('switchLink').innerText = isRegisterMode ? 'سجل الدخول هنا' : 'التسجيل في النادي الإعلامي';
             document.getElementById('authError').innerText = '';
         }
 
@@ -285,6 +314,7 @@
             const email = document.getElementById('authEmail').value.trim();
             const password = document.getElementById('authPassword').value.trim();
             const fullName = document.getElementById('authFullName').value.trim();
+            const track = document.getElementById('authTrack').value;
             const errorEl = document.getElementById('authError');
             const btn = document.getElementById('authBtn');
 
@@ -300,10 +330,10 @@
                     if (error) throw error;
                     if (data.user) {
                         await supabaseClient.from('profiles').upsert({
-                            id: data.user.id, full_name: fullName || 'عضو جديد', role: 'member'
+                            id: data.user.id, full_name: fullName || 'عضو جديد', role: 'member', track: track
                         });
                     }
-                    alert('✅ تم إنشاء البروفايل بنجاح!');
+                    alert('✅ تم التسجيل بنجاح!');
                 }
                 const { data: loginData, error: loginError } = await supabaseClient.auth.signInWithPassword({ email, password });
                 if (loginError) throw loginError;
@@ -331,24 +361,42 @@
 
             const name = profile?.full_name || user.email.split('@')[0];
             const role = profile?.role || 'member';
+            const track = profile?.track || 'عام';
 
-            // تعبئة البيانات في واجهة البروفايل
+            // تحديث الشريط العلوي والبروفايل
+            document.getElementById('barUserName').innerText = name;
+            document.getElementById('barUserTrack').innerText = track;
+            document.getElementById('barUserRole').innerText = role === 'admin' ? 'مشرف (Admin)' : 'عضو';
+            
             document.getElementById('profileDisplayName').innerText = name;
             document.getElementById('authorName').value = name;
             document.getElementById('inputBio').value = profile?.bio || '';
-            document.getElementById('inputTracks').value = profile?.tracks || '';
+            document.getElementById('inputTrack').value = track;
             document.getElementById('inputPortfolio').value = profile?.portfolio_url || '';
-            document.getElementById('inputAvatar').value = profile?.avatar_url || '';
-
-            if (profile?.avatar_url) {
-                document.getElementById('avatarPreviewContainer').innerHTML = `<img src="${profile.avatar_url}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">`;
+            
+            currentAvatarUrl = profile?.avatar_url || '';
+            if (currentAvatarUrl) {
+                document.getElementById('avatarPreviewContainer').innerHTML = `<img src="${currentAvatarUrl}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">`;
             }
 
             if (role === 'admin') {
                 document.getElementById('profileRoleBadge').innerText = 'مشرف (Admin)';
                 document.getElementById('adminNavBtn').style.display = 'inline-flex';
+                loadAdminMembers();
             } else {
                 document.getElementById('profileRoleBadge').innerText = 'عضو (Member)';
+            }
+        }
+
+        // تحويل الصورة المرفوعة إلى Base64 وتخزينها مباشرة
+        function uploadAvatarImage(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    currentAvatarUrl = e.target.result;
+                    document.getElementById('avatarPreviewContainer').innerHTML = `<img src="${currentAvatarUrl}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">`;
+                };
+                reader.readAsDataURL(input.files[0]);
             }
         }
 
@@ -360,24 +408,64 @@
             btn.innerHTML = '<span>جاري الحفظ...</span> ⏳';
 
             const bio = document.getElementById('inputBio').value.trim();
-            const tracks = document.getElementById('inputTracks').value.trim();
+            const track = document.getElementById('inputTrack').value;
             const portfolio_url = document.getElementById('inputPortfolio').value.trim();
-            const avatar_url = document.getElementById('inputAvatar').value.trim();
 
             const { error } = await supabaseClient.from('profiles').update({
-                bio, tracks, portfolio_url, avatar_url
+                bio, track, portfolio_url, avatar_url: currentAvatarUrl
             }).eq('id', currentUser.id);
 
             if (error) {
                 alert('❌ تعذر حفظ التعديلات: ' + error.message);
             } else {
                 alert('✅ تم حفظ التعديلات في بروفايلك بنجاح!');
-                if(avatar_url) {
-                    document.getElementById('avatarPreviewContainer').innerHTML = `<img src="${avatar_url}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">`;
-                }
+                document.getElementById('barUserTrack').innerText = track;
             }
             btn.disabled = false;
             btn.innerHTML = '<span>حفظ التعديلات في البروفايل</span><span>💾</span>';
+        }
+
+        // جلب ونقل الأعضاء (للأدمن)
+        async function loadAdminMembers() {
+            const container = document.getElementById('adminMembersList');
+            const { data: members, error } = await supabaseClient.from('profiles').select('*');
+            if (error || !members) {
+                container.innerHTML = 'تعذر جلب الأعضاء.';
+                return;
+            }
+            container.innerHTML = '';
+            members.forEach(m => {
+                const item = document.createElement('div');
+                item.className = 'member-row-item';
+                item.innerHTML = `
+                    <div>
+                        <strong>${m.full_name || 'بدون اسم'}</strong><br>
+                        <span style="font-size: 0.78rem; color: var(--text-muted);">التخصص الحالي: ${m.track || 'غير محدد'} | الرتبة: ${m.role}</span>
+                    </div>
+                    <div style="display:flex; gap:5px; align-items:center;">
+                        <select id="track_${m.id}" style="padding:4px 8px; font-size:0.8rem;">
+                            <option value="تصوير وإضاءة" ${m.track==='تصوير وإضاءة'?'selected':''}>تصوير وإضاءة</option>
+                            <option value="مونتاج وموشن جرافيك" ${m.track==='مونتاج وموشن جرافيك'?'selected':''}>مونتاج</option>
+                            <option value="إنتاج برامج وبودكاست" ${m.track==='إنتاج برامج وبودكاست'?'selected':''}>بودكاست</option>
+                            <option value="تصميم وهوية بصرية" ${m.track==='تصميم وهوية بصرية'?'selected':''}>تصميم</option>
+                            <option value="كتابة وصحافة إعلامية" ${m.track==='كتابة وصحافة إعلامية'?'selected':''}>كتابة</option>
+                        </select>
+                        <button onclick="changeMemberTrack('${m.id}')" style="background:var(--accent-primary); border:none; color:#fff; padding:5px 10px; border-radius:6px; cursor:pointer; font-size:0.75rem;">تحديث</button>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        async function changeMemberTrack(userId) {
+            const newTrack = document.getElementById(`track_${userId}`).value;
+            const { error } = await supabaseClient.from('profiles').update({ track: newTrack }).eq('id', userId);
+            if (error) {
+                alert('خطأ في التحديث');
+            } else {
+                alert('✅ تم نقل العضو للمسار الجديد بنجاح!');
+                loadAdminMembers();
+            }
         }
 
         async function logout() {
@@ -400,6 +488,7 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
 
             if(pageId === 'archivePage') { loadSheetIdeas(); }
+            if(pageId === 'adminPage') { loadAdminMembers(); }
         };
 
         function getYouTubeEmbedUrl(url) {
