@@ -137,7 +137,8 @@
                         🌟 أهلاً بك! تطابق اسمك مع الهيكلة الإدارية، وتم إعفاؤك من المسارات.
                     </div>
                 </div>
-                <div class="form-group" id="trackGroup">
+                <!-- مخفي افتراضياً عند تسجيل الدخول ويظهر فقط أثناء إنشاء حساب جديد للأعضاء العاديين -->
+                <div class="form-group" id="trackGroup" style="display: none;">
                     <label>اختر مسارك الرئيسي في النادي:</label>
                     <select id="authTrack">
                         <option value="تصوير وإضاءة">📷 تصوير وإضاءة</option>
@@ -306,7 +307,7 @@
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwN5Ty-lRiwKN9lVy9F94l8C9mxgSK-uDkVT9JStVT0eHnWtETg6CFJRpmw5lObZwV6/exec";
         
-        // المشرفون (Admins): أنت (خالد الهلال)، الدكتور، الرئيس، النائب
+        // المشرفون (Admins)
         const ADMIN_NAMES = [
             "خالد الهلال", "خالد أحمد الهلال",
             "حمزه فرج", "حمزة فرج", "د. حمزه فرج", "د. حمزة فرج",
@@ -327,6 +328,7 @@
         let uploadedAvatarBase64 = '';
 
         function checkBoardIdentity(val) {
+            if (!isRegisterMode) return; // للإنشاء فقط
             const trackGroup = document.getElementById('trackGroup');
             const boardNotice = document.getElementById('boardNotice');
             const cleanVal = val.trim().replace(/\s+/g, ' ');
@@ -362,8 +364,10 @@
             document.getElementById('authBtnText').innerText = isRegisterMode ? 'إنشاء الحساب' : 'دخول المنصة';
             document.getElementById('fullNameGroup').style.display = isRegisterMode ? 'block' : 'none';
             
+            // عند تسجيل الدخول إخفاء المسار تماماً
             if (!isRegisterMode) {
-                document.getElementById('trackGroup').style.display = 'block';
+                document.getElementById('trackGroup').style.display = 'none';
+                document.getElementById('boardNotice').style.display = 'none';
             } else {
                 checkBoardIdentity(document.getElementById('authFullName').value);
             }
@@ -472,4 +476,232 @@
             if (isAdminCheck) {
                 role = 'admin';
                 track = 'مشرف المنصة';
-                await supabaseClient.from('profiles').update({ role: 'admin', track: 'مشرف المنصة' }).eq
+                await supabaseClient.from('profiles').update({ role: 'admin', track: 'مشرف المنصة' }).eq('id', user.id);
+            } else if (isBoardCheck) {
+                role = 'board';
+                track = 'مجلس الإدارة';
+                await supabaseClient.from('profiles').update({ role: 'board', track: 'مجلس الإدارة' }).eq('id', user.id);
+            }
+
+            document.getElementById('barUserName').innerText = name;
+            document.getElementById('barUserTrack').innerText = track;
+            
+            let roleDisplay = 'عضو';
+            if (role === 'admin') roleDisplay = 'مشرف (Admin)';
+            else if (role === 'board') roleDisplay = 'مجلس الإدارة';
+            document.getElementById('barUserRole').innerText = roleDisplay;
+            
+            document.getElementById('profileDisplayName').innerText = name;
+            document.getElementById('authorName').value = name;
+            document.getElementById('inputBio').value = profile?.bio || '';
+            document.getElementById('inputTrack').value = track;
+            document.getElementById('inputPortfolio').value = profile?.portfolio_url || '';
+            
+            if (role === 'admin' || role === 'board') {
+                const profileTrackGroup = document.getElementById('profileTrackGroup');
+                if (profileTrackGroup) profileTrackGroup.style.display = 'none';
+            }
+
+            uploadedAvatarBase64 = profile?.avatar_url || '';
+            if (uploadedAvatarBase64) {
+                document.getElementById('avatarPreviewContainer').innerHTML = `<img src="${uploadedAvatarBase64}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">`;
+            }
+
+            if (role === 'admin') {
+                document.getElementById('profileRoleBadge').innerText = 'مشرف (Admin)';
+                document.getElementById('adminNavBtn').style.display = 'inline-flex';
+                loadAdminMembers();
+            } else if (role === 'board') {
+                document.getElementById('profileRoleBadge').innerText = 'عضو مجلس الإدارة 🌟';
+            } else {
+                document.getElementById('profileRoleBadge').innerText = 'عضو (Member)';
+            }
+        }
+
+        function previewAvatar(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = new Image();
+                    img.src = e.target.result;
+                    img.onload = function() {
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+                        const MAX_WIDTH = 200;
+                        const MAX_HEIGHT = 200;
+                        let width = img.width;
+                        let height = img.height;
+
+                        if (width > height) {
+                            if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; }
+                        } else {
+                            if (height > MAX_HEIGHT) { width *= MAX_HEIGHT / height; height = MAX_HEIGHT; }
+                        }
+                        canvas.width = width;
+                        canvas.height = height;
+                        ctx.drawImage(img, 0, 0, width, height);
+                        uploadedAvatarBase64 = canvas.toDataURL('image/jpeg', 0.7);
+                        document.getElementById('avatarPreviewContainer').innerHTML = `<img src="${uploadedAvatarBase64}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">`;
+                    };
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        async function updateProfile(e) {
+            e.preventDefault();
+            if (!currentUser) return;
+            const btn = document.getElementById('saveProfileBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<span>جاري الحفظ...</span> ⏳';
+
+            const bio = document.getElementById('inputBio').value.trim();
+            const track = document.getElementById('inputTrack').value;
+            const portfolio_url = document.getElementById('inputPortfolio').value.trim();
+
+            const { error } = await supabaseClient.from('profiles').update({
+                bio, track, portfolio_url, avatar_url: uploadedAvatarBase64
+            }).eq('id', currentUser.id);
+
+            if (error) {
+                alert('❌ تعذر حفظ التعديلات: ' + error.message);
+            } else {
+                alert('✅ تم حفظ التعديلات وصورتك الشخصية في بروفايلك بنجاح!');
+                document.getElementById('barUserTrack').innerText = track;
+            }
+            btn.disabled = false;
+            btn.innerHTML = '<span>حفظ التعديلات في البروفايل</span><span>💾</span>';
+        }
+
+        async function loadAdminMembers() {
+            const container = document.getElementById('adminMembersList');
+            const { data: members, error } = await supabaseClient.from('profiles').select('*');
+            if (error || !members) {
+                container.innerHTML = 'تعذر جلب الأعضاء.';
+                return;
+            }
+            container.innerHTML = '';
+            members.forEach(m => {
+                const item = document.createElement('div');
+                item.className = 'member-row-item';
+                item.innerHTML = `
+                    <div>
+                        <strong>${m.full_name || 'بدون اسم'}</strong><br>
+                        <span style="font-size: 0.78rem; color: var(--text-muted);">التخصص: ${m.track || 'غير محدد'} | الرتبة: ${m.role}</span>
+                    </div>
+                    <div style="display:flex; gap:5px; align-items:center;">
+                        <select id="track_${m.id}" style="padding:4px 8px; font-size:0.8rem;">
+                            <option value="تصوير وإضاءة" ${m.track==='تصوير وإضاءة'?'selected':''}>تصوير وإضاءة</option>
+                            <option value="مونتاج وموشن جرافيك" ${m.track==='مونتاج وموشن جرافيك'?'selected':''}>مونتاج</option>
+                            <option value="إنتاج برامج وبودكاست" ${m.track==='إنتاج برامج وبودكاست'?'selected':''}>بودكاست</option>
+                            <option value="تصميم وهوية بصرية" ${m.track==='تصميم وهوية بصرية'?'selected':''}>تصميم</option>
+                            <option value="كتابة وصحافة إعلامية" ${m.track==='كتابة وصحافة إعلامية'?'selected':''}>كتابة</option>
+                            <option value="تقنية المعلومات (IT)" ${m.track==='تقنية المعلومات (IT)'?'selected':''}>IT</option>
+                            <option value="مجلس الإدارة" ${m.track==='مجلس الإدارة'?'selected':''}>مجلس الإدارة</option>
+                        </select>
+                        <button onclick="changeMemberTrack('${m.id}')" style="background:var(--accent-primary); border:none; color:#fff; padding:5px 10px; border-radius:6px; cursor:pointer; font-size:0.75rem;">تحديث</button>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        async function changeMemberTrack(userId) {
+            const newTrack = document.getElementById(`track_${userId}`).value;
+            const { error } = await supabaseClient.from('profiles').update({ track: newTrack }).eq('id', userId);
+            if (error) {
+                alert('خطأ في التحديث');
+            } else {
+                alert('✅ تم نقل العضو للمسار الجديد بنجاح!');
+                loadAdminMembers();
+            }
+        }
+
+        async function logout() {
+            await supabaseClient.auth.signOut();
+            window.location.reload();
+        }
+
+        window.addEventListener('DOMContentLoaded', async () => {
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            if (session && session.user) {
+                loadUserProfile(session.user);
+            }
+        });
+
+        window.switchPage = function(pageId, btnElement) {
+            document.querySelectorAll('.page-section').forEach(sec => sec.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+            btnElement.classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            if(pageId === 'archivePage') { loadSheetIdeas(); }
+            if(pageId === 'adminPage') { loadAdminMembers(); }
+        };
+
+        function getYouTubeEmbedUrl(url) {
+            if (!url) return '';
+            const match = url.match(/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/);
+            return (match && match[2].length === 11) ? `https://www.youtube.com/embed/${match[2]}` : '';
+        }
+
+        document.getElementById('ideaForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span>جاري الحفظ...</span> ⏳';
+
+            const data = {
+                author: document.getElementById('authorName').value.trim(),
+                title: document.getElementById('ideaTitle').value.trim(),
+                desc: document.getElementById('ideaDescription').value.trim(),
+                location: document.getElementById('ideaLocation').value.trim(),
+                members: document.getElementById('ideaMembers').value.trim(),
+                imageUrl: document.getElementById('imageUrl').value.trim(),
+                videoUrl: document.getElementById('videoUrl').value.trim()
+            };
+
+            try {
+                await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+                alert('✅ تم حفظ الفكرة في السحابة بنجاح!');
+                this.reset();
+                document.getElementById('authorName').value = document.getElementById('profileDisplayName').innerText;
+                switchPage('archivePage', document.querySelectorAll('.nav-btn')[3]);
+            } catch (error) {
+                alert('❌ تعذر الحفظ.');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<span>حفظ الفكرة في السحابة</span><span>🚀</span>';
+            }
+        });
+
+        async function loadSheetIdeas() {
+            const container = document.getElementById('archiveContainer');
+            const counter = document.getElementById('archiveCount');
+            try {
+                container.innerHTML = '<div style="text-align: center; color: var(--text-muted); padding: 20px;">جاري تحميل الأرشيف...</div>';
+                const response = await fetch(SCRIPT_URL);
+                const ideas = await response.json();
+                counter.textContent = `إجمالي المشاركات: ${ideas.length}`;
+                container.innerHTML = ideas.length === 0 ? '<div style="text-align: center; color: var(--text-muted); padding: 20px;">لا توجد أفكار مسجلة.</div>' : '';
+
+                ideas.reverse().forEach((idea) => {
+                    const embedUrl = getYouTubeEmbedUrl(idea.videoUrl || idea.video);
+                    const card = document.createElement('div');
+                    card.className = 'idea-card';
+                    card.innerHTML = `
+                        <div class="idea-header"><div class="idea-title">${idea.title || 'بدون عنوان'}</div><div class="idea-author">المقترح: ${idea.author || 'مجهول'}</div></div>
+                        <div class="idea-body">${idea.desc || idea.description || ''}</div>
+                        ${idea.imageUrl || idea.image ? `<div style="margin-top: 10px;"><img src="${idea.imageUrl || idea.image}" style="width:100%; max-height:220px; object-fit:cover; border-radius:8px;" onerror="this.style.display='none'"></div>` : ''}
+                        ${embedUrl ? `<div class="video-wrapper"><iframe src="${embedUrl}" allowfullscreen></iframe></div>` : ''}
+                    `;
+                    container.appendChild(card);
+                });
+            } catch (error) {
+                container.innerHTML = '<div style="text-align: center; color: #f85149; padding: 20px;">تعذر جلب الأرشيف.</div>';
+            }
+        }
+    </script>
+</body>
+</html>
