@@ -110,7 +110,7 @@
         .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; margin-top: 10px; }
         .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
         .auth-switch { text-align: center; margin-top: 12px; font-size: 0.85rem; color: var(--text-muted); }
-        .auth-switch a { color: var(--accent-glow); cursor: pointer; text-decoration: underline; }
+        .auth-switch a { color: var(--accent-glow); cursor: pointer; font-weight: 800; text-decoration: underline; }
         .error-msg { color: #f85149; font-size: 0.8rem; text-align: center; margin-top: 8px; }
         footer { text-align: center; color: var(--text-muted); font-size: 0.8rem; padding-top: 20px; border-top: 1px solid var(--border); margin-top: 25px; }
     </style>
@@ -122,7 +122,7 @@
     </div>
     <div class="bg-overlay"></div>
 
-    <!-- شاشة تسجيل الدخول -->
+    <!-- شاشة تسجيل الدخول والتسجيل المحدثة صراحة -->
     <div id="welcomeScreen">
         <div class="mtu-logo-container"><div class="mtu-logo-text">MTU<span class="mtu-dot"></span></div></div>
         <span class="site-badge" style="margin-top: 5px;">منصة النادي الإعلامي</span>
@@ -135,7 +135,7 @@
                     <input type="text" id="authFullName" placeholder="ادخل اسمك الكامل">
                 </div>
                 <div class="form-group" id="trackGroup" style="display: none;">
-                    <label>اختر مسارك في النادي:</label>
+                    <label>اختر مسارك في النادي الإعلامي:</label>
                     <select id="authTrack">
                         <option value="تصوير وإضاءة">📷 تصوير وإضاءة</option>
                         <option value="مونتاج وموشن جرافيك">🎬 مونتاج وموشن جرافيك</option>
@@ -149,7 +149,10 @@
                 <button type="submit" class="btn-submit" id="authBtn"><span id="authBtnText">دخول المنصة</span><span>🚀</span></button>
                 <div id="authError" class="error-msg"></div>
             </form>
-            <div class="auth-switch"><span id="switchText">ليس لديك حساب؟</span> <a onclick="toggleAuthMode()" id="switchLink">التسجيل في النادي الإعلامي</a></div>
+            <div class="auth-switch">
+                <span id="switchText">تريد الانضمام لنا؟</span> 
+                <a onclick="toggleAuthMode()" id="switchLink">التسجيل في النادي الإعلامي</a>
+            </div>
         </div>
     </div>
 
@@ -301,11 +304,11 @@
         function toggleAuthMode() {
             isRegisterMode = !isRegisterMode;
             document.getElementById('authMainTitle').innerText = isRegisterMode ? 'التسجيل في النادي الإعلامي' : 'تسجيل الدخول لمنصة النادي الإعلامي';
-            document.getElementById('authBtnText').innerText = isRegisterMode ? 'إتمام التسجيل والإنشاء' : 'دخول المنصة';
+            document.getElementById('authBtnText').innerText = isRegisterMode ? 'إتمام التسجيل في النادي' : 'دخول المنصة';
             document.getElementById('fullNameGroup').style.display = isRegisterMode ? 'block' : 'none';
             document.getElementById('trackGroup').style.display = isRegisterMode ? 'block' : 'none';
-            document.getElementById('switchText').innerText = isRegisterMode ? 'لديك حساب بالفعل؟' : 'ليس لديك حساب؟';
-            document.getElementById('switchLink').innerText = isRegisterMode ? 'سجل الدخول هنا' : 'التسجيل في النادي الإعلامي';
+            document.getElementById('switchText').innerText = isRegisterMode ? 'لديك حساب بالفعل؟' : 'تريد الانضمام لنا؟';
+            document.getElementById('switchLink').innerText = isRegisterMode ? 'تسجيل الدخول هنا' : 'التسجيل في النادي الإعلامي';
             document.getElementById('authError').innerText = '';
         }
 
@@ -333,7 +336,7 @@
                             id: data.user.id, full_name: fullName || 'عضو جديد', role: 'member', track: track
                         });
                     }
-                    alert('✅ تم التسجيل بنجاح!');
+                    alert('✅ تم التسجيل في النادي الإعلامي بنجاح!');
                 }
                 const { data: loginData, error: loginError } = await supabaseClient.auth.signInWithPassword({ email, password });
                 if (loginError) throw loginError;
@@ -387,7 +390,6 @@
             }
         }
 
-        // اختيار ورفع الصورة بضغطة زر من الجوال وضغط حجمها لتجنب ثقل الكود
         function previewAvatar(input) {
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
