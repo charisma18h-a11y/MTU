@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>بنك الأفكار وأرشيف المشاريع - MTU Media Club</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Montserrat:wght@800;900&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root {
             --bg-dark: #0a0a0c;
@@ -22,13 +21,7 @@
             --admin-color: #238636;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Cairo', sans-serif;
-            -webkit-tap-highlight-color: transparent;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; -webkit-tap-highlight-color: transparent; }
 
         body {
             background-color: var(--bg-dark);
@@ -42,379 +35,116 @@
         }
 
         .bg-video-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: -99;
-            overflow: hidden;
-            pointer-events: none;
-            background: #000;
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -99; overflow: hidden; pointer-events: none; background: #000;
         }
 
         .bg-youtube-video {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(1.35);
-            width: 100vw;
-            height: 56.25vw;
-            min-height: 100vh;
-            min-width: 177.77vh;
-            pointer-events: none;
-            filter: brightness(0.7) contrast(1.1);
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(1.35); width: 100vw; height: 56.25vw; min-height: 100vh; min-width: 177.77vh; pointer-events: none; filter: brightness(0.7) contrast(1.1);
         }
 
         .bg-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(10, 10, 12, 0.75);
-            z-index: -98;
-            pointer-events: none;
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(10, 10, 12, 0.75); z-index: -98; pointer-events: none;
         }
 
-        .mtu-logo-container {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 15px;
-            position: relative;
-        }
-
-        .mtu-logo-text {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 3.2rem;
-            font-weight: 900;
-            letter-spacing: -1px;
-            color: #ffffff;
-            line-height: 1;
-            display: flex;
-            align-items: flex-start;
-            position: relative;
-        }
-
-        .mtu-dot {
-            width: 14px;
-            height: 14px;
-            background-color: var(--brand-red);
-            border-radius: 50%;
-            display: inline-block;
-            margin-left: 2px;
-            margin-top: 2px;
-            box-shadow: 0 0 10px rgba(255, 77, 45, 0.8);
-        }
+        .mtu-logo-container { display: inline-flex; align-items: center; justify-content: center; margin-bottom: 15px; position: relative; }
+        .mtu-logo-text { font-family: 'Montserrat', sans-serif; font-size: 3.2rem; font-weight: 900; letter-spacing: -1px; color: #ffffff; line-height: 1; display: flex; align-items: flex-start; position: relative; }
+        .mtu-dot { width: 14px; height: 14px; background-color: var(--brand-red); border-radius: 50%; display: inline-block; margin-left: 2px; margin-top: 2px; box-shadow: 0 0 10px rgba(255, 77, 45, 0.8); }
 
         #welcomeScreen {
-            position: fixed;
-            inset: 0;
-            z-index: 99999;
-            background: var(--bg-deep);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            text-align: center;
-            transition: opacity 0.5s ease, visibility 0.5s ease;
+            position: fixed; inset: 0; z-index: 99999; background: var(--bg-deep); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; text-align: center; transition: opacity 0.5s ease;
         }
 
         .auth-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            backdrop-filter: blur(12px);
-            border-radius: 16px;
-            padding: 25px 20px;
-            width: 100%;
-            max-width: 400px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.8);
-            margin-top: 15px;
+            background: var(--bg-card); border: 1px solid var(--border); backdrop-filter: blur(12px); border-radius: 16px; padding: 25px 20px; width: 100%; max-width: 400px; box-shadow: 0 15px 35px rgba(0,0,0,0.8); margin-top: 15px;
         }
 
         .quick-nav {
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            background: rgba(15, 15, 20, 0.85);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid var(--border);
-            padding: 10px 12px;
-            display: flex;
-            justify-content: center;
-            gap: 8px;
-            width: 100%;
+            position: sticky; top: 0; z-index: 1000; background: rgba(15, 15, 20, 0.85); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 10px 12px; display: flex; justify-content: center; gap: 8px; width: 100%;
         }
 
         .nav-btn {
-            background: rgba(255, 255, 255, 0.05);
-            color: var(--text-main);
-            border: 1px solid var(--border);
-            padding: 8px 12px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 5px;
-            flex: 1;
-            max-width: 140px;
-            text-align: center;
-            white-space: nowrap;
+            background: rgba(255, 255, 255, 0.05); color: var(--text-main); border: 1px solid var(--border); padding: 8px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; cursor: pointer; transition: all 0.3s ease; display: inline-flex; align-items: center; justify-content: center; gap: 5px; flex: 1; max-width: 140px; text-align: center; white-space: nowrap;
         }
 
         .nav-btn:hover, .nav-btn.active {
-            background: var(--accent-primary);
-            color: #ffffff;
-            border-color: var(--accent-glow);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+            background: var(--accent-primary); color: #ffffff; border-color: var(--accent-glow); transform: translateY(-2px); box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
         }
 
-        header {
-            position: relative;
-            text-align: center;
-            padding: 30px 15px 20px;
-            background: rgba(18, 18, 24, 0.65);
-            border-bottom: 1px solid var(--border);
-            backdrop-filter: blur(12px);
-            overflow: hidden;
-        }
+        header { position: relative; text-align: center; padding: 30px 15px 20px; background: rgba(18, 18, 24, 0.65); border-bottom: 1px solid var(--border); backdrop-filter: blur(12px); }
+        .site-badge { background: rgba(59, 130, 246, 0.15); color: var(--accent-glow); padding: 5px 18px; border-radius: 30px; font-size: 0.8rem; font-weight: 700; display: inline-block; margin-bottom: 8px; border: 1px solid rgba(59, 130, 246, 0.3); }
+        h1 { font-size: 1.6rem; font-weight: 900; margin-bottom: 6px; color: #fff; }
+        p.subtitle { color: var(--text-muted); font-size: 0.88rem; max-width: 680px; margin: 0 auto; }
 
-        .site-badge {
-            background: rgba(59, 130, 246, 0.15);
-            color: var(--accent-glow);
-            padding: 5px 18px;
-            border-radius: 30px;
-            font-size: 0.8rem;
-            font-weight: 700;
-            display: inline-block;
-            margin-bottom: 8px;
-            border: 1px solid rgba(59, 130, 246, 0.3);
-        }
-
-        h1 {
-            font-size: 1.6rem;
-            font-weight: 900;
-            margin-bottom: 6px;
-            background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        p.subtitle {
-            color: var(--text-muted);
-            font-size: 0.88rem;
-            max-width: 680px;
-            margin: 0 auto;
-            padding: 0 10px;
-        }
-
-        .container {
-            max-width: 950px;
-            margin: 20px auto;
-            padding: 0 12px;
-            width: 100%;
-        }
-
+        .container { max-width: 950px; margin: 20px auto; padding: 0 12px; width: 100%; }
         .page-section { display: none; }
-        .page-section.active { display: block; animation: fadeIn 0.3s ease-in-out; }
+        .page-section.active { display: block; }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(8px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            backdrop-filter: blur(12px);
-            border-radius: 14px;
-            padding: 18px 14px;
-            margin-bottom: 20px;
-            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.8);
-        }
-
-        .section-title {
-            font-size: 1.15rem;
-            font-weight: 800;
-            margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: var(--text-main);
-        }
-
-        .section-title span.icon {
-            background: var(--accent-primary);
-            color: #ffffff;
-            width: 30px;
-            height: 30px;
-            border-radius: 8px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1rem;
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-            flex-shrink: 0;
-        }
+        .card { background: var(--bg-card); border: 1px solid var(--border); backdrop-filter: blur(12px); border-radius: 14px; padding: 18px 14px; margin-bottom: 20px; box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.8); }
+        .section-title { font-size: 1.15rem; font-weight: 800; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; color: var(--text-main); }
+        .section-title span.icon { background: var(--accent-primary); color: #ffffff; width: 30px; height: 30px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; }
 
         .board-hierarchy { display: flex; flex-direction: column; gap: 12px; }
         .board-tier-1 { display: flex; justify-content: center; }
         .board-tier-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
         .board-tier-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; }
-
-        .board-card {
-            background: var(--bg-card-solid);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 12px 10px;
-            text-align: center;
-        }
-
-        .board-card.supervisor {
-            background: linear-gradient(145deg, #1e1b4b 0%, #0f172a 100%);
-            border: 1px solid rgba(96, 165, 250, 0.4);
-            width: 100%;
-            max-width: 280px;
-            margin: 0 auto;
-        }
-
-        .board-card.tech-lead {
-            background: linear-gradient(145deg, #0f172a 0%, #1e293b 100%);
-            border: 1px solid rgba(59, 130, 246, 0.5);
-        }
-
-        .board-role { font-size: 0.72rem; font-weight: 700; color: var(--accent-glow); margin-bottom: 2px; text-transform: uppercase; }
+        .board-card { background: var(--bg-card-solid); border: 1px solid var(--border); border-radius: 10px; padding: 12px 10px; text-align: center; }
+        .board-card.supervisor { background: linear-gradient(145deg, #1e1b4b 0%, #0f172a 100%); width: 100%; max-width: 280px; margin: 0 auto; }
+        .board-card.tech-lead { background: linear-gradient(145deg, #0f172a 100%, #1e293b 100%); }
+        .board-role { font-size: 0.72rem; font-weight: 700; color: var(--accent-glow); margin-bottom: 2px; }
         .board-name { font-size: 0.92rem; font-weight: 800; color: #ffffff; }
 
         .form-row { display: grid; grid-template-columns: 1fr; gap: 12px; }
         @media (min-width: 600px) { .form-row { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); } }
-
         .form-group { margin-bottom: 14px; }
         label { display: block; margin-bottom: 5px; font-weight: 700; color: #cbd5e1; font-size: 0.85rem; }
+        input, textarea, select { width: 100%; padding: 10px 12px; background-color: var(--input-bg); border: 1px solid var(--border); border-radius: 8px; color: var(--text-main); font-size: 0.9rem; outline: none; }
+        button.btn-submit { background: var(--accent-primary); color: #ffffff; font-weight: 800; font-size: 0.95rem; padding: 12px 20px; border: none; border-radius: 8px; cursor: pointer; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; }
 
-        input[type="text"], input[type="url"], input[type="email"], input[type="password"], textarea {
-            width: 100%;
-            padding: 10px 12px;
-            background-color: var(--input-bg);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            color: var(--text-main);
-            font-size: 0.9rem;
-            outline: none;
-            transition: all 0.3s ease;
-        }
-
-        input:focus, textarea:focus { border-color: var(--accent-primary); box-shadow: 0 0 10px rgba(59, 130, 246, 0.25); background-color: #121218; }
-        textarea { resize: vertical; min-height: 90px; }
-
-        button.btn-submit {
-            background: var(--accent-primary);
-            color: #ffffff;
-            font-weight: 800;
-            font-size: 0.95rem;
-            padding: 12px 20px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            width: 100%;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.35);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .archive-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px; }
+        .archive-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         .archive-counter { background: rgba(59, 130, 246, 0.15); color: var(--accent-glow); padding: 4px 12px; border-radius: 16px; font-size: 0.78rem; font-weight: 700; border: 1px solid rgba(59, 130, 246, 0.3); }
         .archive-grid { display: flex; flex-direction: column; gap: 15px; }
-
-        .idea-card { background: var(--bg-card-solid); border: 1px solid var(--border); border-radius: 12px; padding: 15px; position: relative; overflow: hidden; }
-        .idea-card.featured { border: 1px solid rgba(59, 130, 246, 0.4); background: linear-gradient(145deg, #121218 0%, #172033 100%); }
-        .badge-featured { background: var(--accent-primary); color: #ffffff; font-size: 0.68rem; font-weight: 800; padding: 2px 8px; border-radius: 4px; display: inline-block; margin-bottom: 8px; }
-
-        .idea-header { display: flex; flex-direction: column; gap: 6px; margin-bottom: 8px; }
-        @media (min-width: 500px) { .idea-header { flex-direction: row; justify-content: space-between; align-items: flex-start; } }
-
-        .idea-title { font-size: 1.05rem; font-weight: 800; color: #ffffff; }
-        .idea-author { font-size: 0.75rem; color: var(--accent-glow); background: rgba(59, 130, 246, 0.12); padding: 2px 10px; border-radius: 15px; border: 1px solid rgba(59, 130, 246, 0.3); font-weight: 700; }
+        .idea-card { background: var(--bg-card-solid); border: 1px solid var(--border); border-radius: 12px; padding: 15px; position: relative; }
+        .idea-header { display: flex; justify-content: space-between; margin-bottom: 8px; flex-wrap: wrap; gap: 6px; }
+        .idea-title { font-size: 1.05rem; font-weight: 800; color: #fff; }
+        .idea-author { font-size: 0.75rem; color: var(--accent-glow); background: rgba(59, 130, 246, 0.12); padding: 2px 10px; border-radius: 15px; }
         .idea-body { color: #cbd5e1; font-size: 0.88rem; margin-bottom: 12px; }
-
-        .media-container { margin-top: 12px; display: flex; flex-direction: column; gap: 10px; }
-        .media-image { width: 100%; max-height: 250px; object-fit: cover; border-radius: 8px; border: 1px solid var(--border); }
-        .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; border: 1px solid var(--border); }
+        .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; margin-top: 10px; }
         .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
-
-        .detail-box { background: rgba(0, 0, 0, 0.4); border-radius: 8px; padding: 10px; margin-top: 10px; border: 1px solid rgba(255, 255, 255, 0.08); }
-        .detail-box h4 { color: var(--accent-glow); font-size: 0.82rem; margin-bottom: 6px; }
-
-        .tracks-grid { display: grid; grid-template-columns: 1fr; gap: 6px; margin-top: 6px; }
-        @media (min-width: 480px) { .tracks-grid { grid-template-columns: repeat(2, 1fr); } }
-        .track-item { background: rgba(255, 255, 255, 0.03); border-radius: 6px; padding: 6px 8px; font-size: 0.78rem; border-right: 3px solid var(--accent-primary); }
-        .track-item strong { color: #fff; display: block; margin-bottom: 1px; }
-
-        .idea-footer-info { display: flex; flex-direction: column; gap: 6px; margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--border); font-size: 0.8rem; color: var(--text-muted); }
-        @media (min-width: 500px) { .idea-footer-info { flex-direction: row; gap: 15px; } }
-        .idea-footer-info span { color: #fff; font-weight: 600; }
-
-        .auth-switch { text-align: center; margin-top: 12px; font-size: 0.85rem; color: var(--text-muted); }
-        .auth-switch a { color: var(--accent-glow); cursor: pointer; text-decoration: underline; }
-        .error-msg { color: #f85149; font-size: 0.8rem; text-align: center; margin-top: 8px; }
-
         footer { text-align: center; color: var(--text-muted); font-size: 0.8rem; padding-top: 20px; border-top: 1px solid var(--border); margin-top: 25px; }
     </style>
     <script src="https://www.youtube.com/iframe_api"></script>
 </head>
 <body>
 
-    <div class="bg-video-container">
-        <div id="player" class="bg-youtube-video"></div>
-    </div>
+    <div class="bg-video-container"><div id="player" class="bg-youtube-video"></div></div>
     <div class="bg-overlay"></div>
 
-    <!-- شاشة تسجيل الدخول وإنشاء الحساب الترحيبية -->
+    <!-- شاشة إدخال الاسم للدخول المباشر -->
     <div id="welcomeScreen">
         <div class="mtu-logo-container">
-            <div class="mtu-logo-text">
-                MTU<span class="mtu-dot"></span>
-            </div>
+            <div class="mtu-logo-text">MTU<span class="mtu-dot"></span></div>
         </div>
-
         <span class="site-badge" style="margin-top: 5px;">منصة النادي الإعلامي</span>
-        <h1 id="auth-main-title" style="font-size: 1.4rem; margin-top: 5px;">تسجيل الدخول إلى حسابك</h1>
+        <h1 style="font-size: 1.4rem; margin-top: 5px;">أهلاً بك، أدخل اسمك للدخول للمنصة</h1>
         
         <div class="auth-card">
-            <form id="authForm" onsubmit="handleAuth(event)">
-                <div class="form-group" id="nameFieldGroup" style="display: none;">
-                    <label>الاسم الكامل</label>
-                    <input type="text" id="authName" placeholder="ادخل اسمك الكريم">
+            <form id="authForm" onsubmit="directEnter(event)">
+                <div class="form-group">
+                    <label>اسمك الكريم</label>
+                    <input type="text" id="visitorName" placeholder="مثال: خالد الهلال" required>
                 </div>
                 <div class="form-group">
-                    <label>البريد الإلكتروني</label>
-                    <input id="authEmail" type="email" placeholder="name@example.com" required>
+                    <label>الرتبة / الصلاحية</label>
+                    <select id="visitorRole">
+                        <option value="member">عضو (طالب)</option>
+                        <option value="admin">مشرف (أدمن)</option>
+                    </select>
                 </div>
-                <div class="form-group">
-                    <label>كلمة المرور</label>
-                    <input type="password" id="authPassword" placeholder="••••••••" required>
-                </div>
-                <button type="submit" class="btn-submit" id="authBtn">
-                    <span id="authBtnText">دخول المنصة</span>
+                <button type="submit" class="btn-submit">
+                    <span>دخول المنصة فوراً</span>
                     <span>🚀</span>
                 </button>
-                <div id="authError" class="error-msg"></div>
             </form>
-            
-            <div class="auth-switch">
-                <span id="switchText">ليس لديك حساب؟</span> 
-                <a onclick="toggleAuthMode()" id="switchLink">انشئ حساباً جديداً</a>
-            </div>
         </div>
     </div>
 
@@ -429,9 +159,7 @@
 
     <header>
         <div class="mtu-logo-container" style="margin-bottom: 5px;">
-            <div class="mtu-logo-text" style="font-size: 2.2rem;">
-                MTU<span class="mtu-dot" style="width: 10px; height: 10px;"></span>
-            </div>
+            <div class="mtu-logo-text" style="font-size: 2.2rem;">MTU<span class="mtu-dot" style="width: 10px; height: 10px;"></span></div>
         </div>
         <br>
         <span class="site-badge">منصة النادي الإعلامي</span>
@@ -440,53 +168,27 @@
     </header>
 
     <div class="container">
-
         <!-- صفحة المجلس -->
         <section id="homePage" class="page-section active">
             <div class="card">
-                <h2 class="section-title">
-                    <span class="icon">👥</span>
-                    مجلس النادي وهيكلة الإدارة
-                </h2>
+                <h2 class="section-title"><span class="icon">👥</span>مجلس النادي وهيكلة الإدارة</h2>
                 <div class="board-hierarchy">
                     <div class="board-tier-1">
-                        <div class="board-card supervisor">
-                            <div class="board-role">مشرف النادي</div>
-                            <div class="board-name">د. حمزه فرج</div>
-                        </div>
+                        <div class="board-card supervisor"><div class="board-role">مشرف النادي</div><div class="board-name">د. حمزه فرج</div></div>
                     </div>
                     <div class="board-tier-2">
-                        <div class="board-card">
-                            <div class="board-role">رئيس النادي</div>
-                            <div class="board-name">عبدالرحمن علي الزهراني</div>
-                        </div>
-                        <div class="board-card">
-                            <div class="board-role">نائب الرئيس</div>
-                            <div class="board-name">ماجد الشاطري</div>
-                        </div>
+                        <div class="board-card"><div class="board-role">رئيس النادي</div><div class="board-name">عبدالرحمن علي الزهراني</div></div>
+                        <div class="board-card"><div class="board-role">نائب الرئيس</div><div class="board-name">ماجد الشاطري</div></div>
                     </div>
                     <div class="board-tier-3">
-                        <div class="board-card">
-                            <div class="board-role">عضو مجلس الإدارة</div>
-                            <div class="board-name">نواف عبد الله المالكي</div>
-                        </div>
-                        <div class="board-card">
-                            <div class="board-role">عضو مجلس الإدارة</div>
-                            <div class="board-name">حمد عايض الحارثي</div>
-                        </div>
-                        <div class="board-card">
-                            <div class="board-role">عضو مجلس الإدارة</div>
-                            <div class="board-name">عبد الله مزيد السواط</div>
-                        </div>
-                        <div class="board-card">
-                            <div class="board-role">عضو مجلس الإدارة</div>
-                            <div class="board-name">عبد الرحمن نجم العتيبي</div>
-                        </div>
+                        <div class="board-card"><div class="board-role">عضو مجلس الإدارة</div><div class="board-name">نواف عبد الله المالكي</div></div>
+                        <div class="board-card"><div class="board-role">عضو مجلس الإدارة</div><div class="board-name">حمد عايض الحارثي</div></div>
+                        <div class="board-card"><div class="board-role">عضو مجلس الإدارة</div><div class="board-name">عبد الله مزيد السواط</div></div>
+                        <div class="board-card"><div class="board-role">عضو مجلس الإدارة</div><div class="board-name">عبد الرحمن نجم العتيبي</div></div>
                     </div>
                     <div class="board-tier-3">
                         <div class="board-card tech-lead" style="grid-column: 1 / -1; max-width: 320px; margin: 0 auto; width: 100%;">
-                            <div class="board-role">مسؤول تقنية المعلومات (IT)</div>
-                            <div class="board-name">خالد أحمد الهلال</div>
+                            <div class="board-role">مسؤول تقنية المعلومات (IT)</div><div class="board-name">خالد أحمد الهلال</div>
                         </div>
                     </div>
                 </div>
@@ -496,49 +198,22 @@
         <!-- صفحة تقديم فكرة -->
         <section id="formPage" class="page-section">
             <div class="card">
-                <h2 class="section-title">
-                    <span class="icon">💡</span>
-                    تقديم فكرة / مشروع جديد
-                </h2>
+                <h2 class="section-title"><span class="icon">💡</span>تقديم فكرة / مشروع جديد</h2>
                 <form id="ideaForm">
                     <div class="form-row">
-                        <div class="form-group">
-                            <label for="authorName">اسم مُقدم الفكرة:</label>
-                            <input type="text" id="authorName" placeholder="أدخل اسمك الكريم" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="ideaTitle">عنوان الفكرة أو المبادرة:</label>
-                            <input type="text" id="ideaTitle" placeholder="مثال: بودكاست النادي" required>
-                        </div>
+                        <div class="form-group"><label>اسم مُقدم الفكرة:</label><input type="text" id="authorName" required></div>
+                        <div class="form-group"><label>عنوان الفكرة أو المبادرة:</label><input type="text" id="ideaTitle" required></div>
                     </div>
-                    <div class="form-group">
-                        <label for="ideaDescription">تفاصيل وآلية تطبيق الفكرة:</label>
-                        <textarea id="ideaDescription" placeholder="اشرح هدف الفكرة وحجم التنفيذ..." required></textarea>
+                    <div class="form-group"><label>تفاصيل وآلية تطبيق الفكرة:</label><textarea id="ideaDescription" required></textarea></div>
+                    <div class="form-row">
+                        <div class="form-group"><label>الموقع المقترح للتنفيذ:</label><input type="text" id="ideaLocation" required></div>
+                        <div class="form-group"><label>المسارات والمشاركون:</label><input type="text" id="ideaMembers" required></div>
                     </div>
                     <div class="form-row">
-                        <div class="form-group">
-                            <label for="ideaLocation">الموقع المقترح للتنفيذ:</label>
-                            <input type="text" id="ideaLocation" placeholder="مثال: مسرح الجامعة" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="ideaMembers">المسارات والمشاركون:</label>
-                            <input type="text" id="ideaMembers" placeholder="مثال: التقديم والتصوير" required>
-                        </div>
+                        <div class="form-group"><label>رابط صورة/تصميم (اختياري):</label><input type="url" id="imageUrl"></div>
+                        <div class="form-group"><label>رابط فيديو يوتيوب (اختياري):</label><input type="url" id="videoUrl"></div>
                     </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="imageUrl">رابط صورة/تصميم (اختياري):</label>
-                            <input type="url" id="imageUrl" placeholder="https://example.com/image.jpg">
-                        </div>
-                        <div class="form-group">
-                            <label for="videoUrl">رابط فيديو يوتيوب (اختياري):</label>
-                            <input type="url" id="videoUrl" placeholder="https://youtube.com/watch?v=...">
-                        </div>
-                    </div>
-                    <button type="submit" class="btn-submit" id="submitBtn">
-                        <span>حفظ الفكرة في السحابة</span>
-                        <span>🚀</span>
-                    </button>
+                    <button type="submit" class="btn-submit" id="submitBtn"><span>حفظ الفكرة في السحابة</span><span>🚀</span></button>
                 </form>
             </div>
         </section>
@@ -546,163 +221,70 @@
         <!-- صفحة الأرشيف -->
         <section id="archivePage" class="page-section">
             <div class="archive-header">
-                <h2 class="section-title" style="margin-bottom: 0;">
-                    <span class="icon">📁</span>
-                    الأرشيف
-                </h2>
+                <h2 class="section-title" style="margin-bottom: 0;"><span class="icon">📁</span>الأرشيف</h2>
                 <span class="archive-counter" id="archiveCount">جاري التحميل...</span>
             </div>
-
-            <div class="idea-card featured" style="margin-bottom: 15px;">
-                <span class="badge-featured">⭐ مشروع مقترح وموثّق</span>
-                <div class="idea-header">
-                    <div class="idea-title">🎬 ملتقى سينما الجامعة</div>
-                    <div class="idea-author">المقترح: خالد أحمد الهلال</div>
-                </div>
-                <div class="idea-body">
-                    مشروع متكامل يهدف إلى دمج الفن البصري بالمهارات الخطابية والإعلامية لطلاب الجامعة.
-                    <div class="detail-box">
-                        <h4>🎯 المسارات والورش:</h4>
-                        <div class="tracks-grid">
-                            <div class="track-item"><strong>1. مسار التقديم</strong>إدارة الجلسات.</div>
-                            <div class="track-item"><strong>2. مسار الإنتاج</strong>كتابة السيناريو.</div>
-                            <div class="track-item"><strong>3. مسار التصوير</strong>التصوير والإنتاج.</div>
-                            <div class="track-item"><strong>4. مسار التسويق</strong>الهوية والإعلام.</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="idea-footer-info">
-                    <div>📍 الموقع: <span>مسرح الجامعة الرئيسي</span></div>
-                    <div>👥 المسارات: <span>جميع المسارات</span></div>
-                </div>
-            </div>
-
             <div class="archive-grid" id="archiveContainer"></div>
         </section>
 
         <!-- لوحة تحكم المشرف -->
         <section id="adminPage" class="page-section">
             <div class="card">
-                <h2 class="section-title">
-                    <span class="icon">⚙️</span>
-                    لوحة تحكم المشرف
-                </h2>
-                <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 15px;">أهلاً بك يا مشرف المنصة. يمكنك من هنا مراجعة الصلاحيات والتحكم بمحتويات المنصة.</p>
-                <div id="adminStats" style="background: rgba(35, 134, 54, 0.1); border: 1px solid rgba(35, 134, 54, 0.3); padding: 15px; border-radius: 8px;">
-                    <strong>حالة النظام:</strong> متصل بنجاح بقاعدة البيانات والصلاحيات (Supabase) ✅
+                <h2 class="section-title"><span class="icon">⚙️</span>لوحة تحكم المشرف</h2>
+                <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 15px;">أهلاً بك يا مشرف المنصة. يمكنك التحكم الكامل بمحتويات وأعضاء النادي.</p>
+                <div style="background: rgba(35, 134, 54, 0.1); border: 1px solid rgba(35, 134, 54, 0.3); padding: 15px; border-radius: 8px;">
+                    <strong>حالة النظام:</strong> يعمل بنظام الدخول السريع والمتكامل وجاهز للربط ✅
                 </div>
             </div>
         </section>
 
-        <footer>
-            النادي الإعلامي (MTU) ©️ 2026 | Media Club
-        </footer>
-
+        <footer>النادي الإعلامي (MTU) ©️ 2026 | Media Club</footer>
     </div>
 
     <script>
-        const SUPABASE_URL = 'https://hlgvjdknxtywdqjikayz.supabase.co';
-        const SUPABASE_ANON_KEY = 'sb_publishable_xw3iN_Cb5eFA125MyBx8TQ_3aTyXjqr';
-        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwN5Ty-lRiwKN9lVy9F94l8C9mxgSK-uDkVT9JStVT0eHnWtETg6CFJRpmw5lObZwV6/exec";
         let ytPlayer = null;
-        let isRegisterMode = false;
 
         function onYouTubeIframeAPIReady() {
             ytPlayer = new YT.Player('player', {
                 videoId: '_TkXgy18J_g',
-                playerVars: { 'autoplay': 1, 'mute': 1, 'controls': 0, 'loop': 1, 'playlist': '_TkXgy18J_g', 'playsinline': 1, 'rel': 0, 'modestbranding': 1 },
-                events: { 'onReady': function(event) { event.target.mute(); event.target.playVideo(); } }
+                playerVars: { 'autoplay': 1, 'mute': 1, 'controls': 0, 'loop': 1, 'playlist': '_TkXgy18J_g', 'playsinline': 1 }
             });
         }
 
-        function toggleAuthMode() {
-            isRegisterMode = !isRegisterMode;
-            document.getElementById('auth-main-title').innerText = isRegisterMode ? 'إنشاء حساب جديد في المنصة' : 'تسجيل الدخول إلى حسابك';
-            document.getElementById('authBtnText').innerText = isRegisterMode ? 'تسجيل وحفظ الحساب' : 'دخول المنصة';
-            document.getElementById('nameFieldGroup').style.display = isRegisterMode ? 'block' : 'none';
-            document.getElementById('switchText').innerText = isRegisterMode ? 'لديك حساب بالفعل؟' : 'ليس لديك حساب؟';
-            document.getElementById('switchLink').innerText = isRegisterMode ? 'سجل الدخول هنا' : 'انشئ حساباً جديداً';
-            document.getElementById('authError').innerText = '';
-        }
-
-        // دالة تسجيل وتفعيل الحساب مباشرة بدون تعقيدات الإيميل
-        async function handleAuth(e) {
+        function directEnter(e) {
             e.preventDefault();
-            const email = document.getElementById('authEmail').value.trim();
-            const password = document.getElementById('authPassword').value.trim();
-            const fullName = document.getElementById('authName').value.trim();
-            const errorEl = document.getElementById('authError');
-            const btn = document.getElementById('authBtn');
-            
-            errorEl.innerText = '';
-            btn.disabled = true;
-
-            if (isRegisterMode) {
-                // إنشاء حساب مع تسليم الجلسة مباشرة
-                const { data, error } = await supabaseClient.auth.signUp({
-                    email, password, options: { data: { full_name: fullName } }
-                });
-                if (error) {
-                    errorEl.innerText = 'خطأ بالتسجيل: ' + error.message;
-                    btn.disabled = false;
-                } else {
-                    alert('تم إنشاء الحساب بنجاح!');
-                    // دخول سريع
-                    loginDirectly(email, password);
-                }
-            } else {
-                loginDirectly(email, password);
-            }
+            const name = document.getElementById('visitorName').value.trim();
+            const role = document.getElementById('visitorRole').value;
+            const userData = { name, role };
+            localStorage.setItem('mtu_user', JSON.stringify(userData));
+            applyUserSession(userData);
         }
 
-        async function loginDirectly(email, password) {
-            const errorEl = document.getElementById('authError');
-            const btn = document.getElementById('authBtn');
-
-            const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
-            if (error) {
-                errorEl.innerText = 'تعذر الدخول: تأكد من صحة البيانات أو قم بإنشاء حساب جديد.';
-                btn.disabled = false;
-            } else {
-                openSiteAndCheckRole(data.user);
-            }
-        }
-
-        async function openSiteAndCheckRole(user) {
-            // إخفاء الشاشة الترحيبية وتمريرك فوراً للموقع
+        function applyUserSession(user) {
             const welcome = document.getElementById('welcomeScreen');
-            welcome.style.opacity = '0';
-            welcome.style.visibility = 'hidden';
-            setTimeout(() => welcome.style.display = 'none', 500);
+            if (welcome) {
+                welcome.style.opacity = '0';
+                setTimeout(() => welcome.style.display = 'none', 500);
+            }
+            const authorInput = document.getElementById('authorName');
+            if (authorInput) authorInput.value = user.name;
 
-            // جلب الدور
-            const { data: profile } = await supabaseClient
-                .from('profiles')
-                .select('role')
-                .eq('id', user.id)
-                .single();
-
-            if (profile && profile.role === 'admin') {
+            if (user.role === 'admin') {
                 document.getElementById('adminNavBtn').style.display = 'inline-flex';
             }
         }
 
-        async function checkUserSession() {
-            const { data: { session } } = await supabaseClient.auth.getSession();
-            if (session) {
-                openSiteAndCheckRole(session.user);
-            }
-        }
-
-        async function logout() {
-            await supabaseClient.auth.signOut();
+        function logout() {
+            localStorage.removeItem('mtu_user');
             window.location.reload();
         }
 
         window.addEventListener('DOMContentLoaded', () => {
-            checkUserSession();
+            const savedUser = localStorage.getItem('mtu_user');
+            if (savedUser) {
+                applyUserSession(JSON.parse(savedUser));
+            }
         });
 
         window.switchPage = function(pageId, btnElement) {
@@ -717,14 +299,8 @@
 
         function getYouTubeEmbedUrl(url) {
             if (!url) return '';
-            let videoId = '';
-            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-            const match = url.match(regExp);
-            if (match && match[2].length === 11) {
-                videoId = match[2];
-                return `https://www.youtube.com/embed/${videoId}`;
-            }
-            return '';
+            const match = url.match(/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/);
+            return (match && match[2].length === 11) ? `https://www.youtube.com/embed/${match[2]}` : '';
         }
 
         document.getElementById('ideaForm').addEventListener('submit', async function(e) {
@@ -744,18 +320,14 @@
             };
 
             try {
-                await fetch(SCRIPT_URL, {
-                    method: 'POST', mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data)
-                });
-
-                alert('✅ تم حفظ الفكرة بنجاح في السحابة!');
+                await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+                alert('✅ تم حفظ الفكرة بنجاح!');
                 this.reset();
-                const archiveBtn = document.querySelectorAll('.nav-btn')[2];
-                switchPage('archivePage', archiveBtn);
+                const saved = localStorage.getItem('mtu_user');
+                if(saved) document.getElementById('authorName').value = JSON.parse(saved).name;
+                switchPage('archivePage', document.querySelectorAll('.nav-btn')[2]);
             } catch (error) {
-                alert('❌ تعذر الحفظ: ' + error.message);
+                alert('❌ تعذر الحفظ.');
             } finally {
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = '<span>حفظ الفكرة في السحابة</span> <span>🚀</span>';
@@ -765,10 +337,29 @@
         async function loadSheetIdeas() {
             const container = document.getElementById('archiveContainer');
             const counter = document.getElementById('archiveCount');
-
             try {
                 container.innerHTML = '<div style="text-align: center; color: var(--text-muted); padding: 20px;">جاري تحميل الأرشيف...</div>';
                 const response = await fetch(SCRIPT_URL);
                 const ideas = await response.json();
+                counter.textContent = `إجمالي المشاركات: ${ideas.length}`;
+                container.innerHTML = ideas.length === 0 ? '<div style="text-align: center; color: var(--text-muted); padding: 20px;">لا توجد أفكار مسجلة.</div>' : '';
 
-                counter.textContent =
+                ideas.reverse().forEach((idea) => {
+                    const embedUrl = getYouTubeEmbedUrl(idea.videoUrl || idea.video);
+                    const card = document.createElement('div');
+                    card.className = 'idea-card';
+                    card.innerHTML = `
+                        <div class="idea-header"><div class="idea-title">${idea.title || 'بدون عنوان'}</div><div class="idea-author">المقترح: ${idea.author || 'مجهول'}</div></div>
+                        <div class="idea-body">${idea.desc || idea.description || ''}</div>
+                        ${idea.imageUrl || idea.image ? `<div style="margin-top: 10px;"><img src="${idea.imageUrl || idea.image}" style="width:100%; max-height:220px; object-fit:cover; border-radius:8px;" onerror="this.style.display='none'"></div>` : ''}
+                        ${embedUrl ? `<div class="video-wrapper"><iframe src="${embedUrl}" allowfullscreen></iframe></div>` : ''}
+                    `;
+                    container.appendChild(card);
+                });
+            } catch (error) {
+                container.innerHTML = '<div style="text-align: center; color: #f85149; padding: 20px;">تعذر جلب الأرشيف.</div>';
+            }
+        }
+    </script>
+</body>
+</html>
