@@ -620,7 +620,7 @@
                 </div>
                 <div class="form-group">
                     <label>البريد الإلكتروني</label>
-                    <input type="email5" id="authEmail" type="email" placeholder="name@example.com" required>
+                    <input id="authEmail" type="email" placeholder="name@example.com" required>
                 </div>
                 <div class="form-group">
                     <label>كلمة المرور</label>
@@ -811,7 +811,7 @@
                 </h2>
                 <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 15px;">أهلاً بك يا مشرف المنصة. يمكنك من هنا مراجعة الصلاحيات والتحكم بمحتويات المنصة.</p>
                 <div id="adminStats" style="background: rgba(35, 134, 54, 0.1); border: 1px solid rgba(35, 134, 54, 0.3); padding: 15px; border-radius: 8px;">
-                    <strong>حالة النظام:</strong> متصل بنجاح بقاعدة البيانات الصلاحيات (Supabase) ✅
+                    <strong>حالة النظام:</strong> متصل بنجاح بقاعدة البيانات والصلاحيات (Supabase) ✅
                 </div>
             </div>
         </section>
@@ -823,10 +823,9 @@
     </div>
 
     <script>
-        // إعدادات اتصال Supabase لمشروعك
+        // إعدادات اتصال Supabase لمشروعك المحدث بالمفتاح الصحيح
         const SUPABASE_URL = 'https://hlgvjdknxtywdqjikayz.supabase.co';
-        // مفتاح الـ Anon الخاص بك
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhsZ3ZqZGtueHR5d2RxamlrYXl6Iiwicm9sZSI6ImFub24iLCJpYXQiOjMy...'; // ملاحظة: استبدله بمفتاحك الصحيح إن لزم، أو سيعمل بالتكامل المباشر
+        const SUPABASE_ANON_KEY = 'sb_publishable_xw3iN_Cb5eFA125MyBx8TQ_3aTyXjqr';
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwN5Ty-lRiwKN9lVy9F94l8C9mxgSK-uDkVT9JStVT0eHnWtETg6CFJRpmw5lObZwV6/exec";
@@ -878,7 +877,7 @@
                     errorEl.innerText = 'خطأ بالتسجيل: ' + error.message;
                     btn.disabled = false;
                 } else {
-                    alert('تم إنشاء الحساب بنجاح! تم تسجيل دخولك تلقائياً.');
+                    alert('تم إنشاء الحساب بنجاح!');
                     checkUserSession();
                 }
             } else {
@@ -921,7 +920,6 @@
             window.location.reload();
         }
 
-        // عند فتح الصفحة، افحص هل المستخدم مسجل مسبقاً؟
         window.addEventListener('DOMContentLoaded', () => {
             checkUserSession();
         });
