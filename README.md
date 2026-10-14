@@ -132,9 +132,9 @@
             <form id="authForm" onsubmit="handleSupabaseAuth(event)">
                 <div class="form-group" id="fullNameGroup" style="display: none;">
                     <label>الاسم (الاول والعائلة / الرباعي):</label>
-                    <input type="text" id="authFullName" placeholder="مثال: عبدالرحمن الزهراني" oninput="checkBoardIdentity(this.value)">
+                    <input type="text" id="authFullName" placeholder="مثال: عبدالرحمن الزهراني أو خالد الهلال" oninput="checkBoardIdentity(this.value)">
                     <div id="boardNotice" style="display: none; font-size: 0.8rem; color: #8b5cf6; margin-top: 5px; font-weight: bold; background: rgba(139, 92, 246, 0.15); padding: 6px 10px; border-radius: 6px; border: 1px solid rgba(139, 92, 246, 0.3);">
-                        🌟 أهلاً بك! تطابق الاسم الأول والعائلة مع الهيكلة، وتم تعيينك في الإدارة.
+                        🌟 أهلاً بك! تطابق اسمك مع الهيكلة الإدارية، وتم إعفاؤك من المسارات.
                     </div>
                 </div>
                 <div class="form-group" id="trackGroup">
@@ -306,23 +306,26 @@
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwN5Ty-lRiwKN9lVy9F94l8C9mxgSK-uDkVT9JStVT0eHnWtETg6CFJRpmw5lObZwV6/exec";
         
-        // قائمة التحقق الدقيقة (يشترط الاسم الأول واسم العائلة معاً أو الاسم كاملاً)
-        const EXACT_BOARD_NAMES = [
+        // المشرفون (Admins): أنت (خالد الهلال)، الدكتور، الرئيس، النائب
+        const ADMIN_NAMES = [
+            "خالد الهلال", "خالد أحمد الهلال",
             "حمزه فرج", "حمزة فرج", "د. حمزه فرج", "د. حمزة فرج",
             "عبدالرحمن الزهراني", "عبدالرحمن علي الزهراني",
-            "ماجد الشاطري",
+            "ماجد الشاطري"
+        ];
+
+        // باقي أعضاء مجلس الإدارة
+        const BOARD_NAMES = [
             "نواف المالكي", "نواف عبد الله المالكي",
             "حمد الحارثي", "حمد عايض الحارثي",
             "عبدالله السواط", "عبد الله مزيد السواط",
-            "عبدالرحمن العتيبي", "عبد الرحمن نجم العتيبي",
-            "خالد الهلال", "خالد أحمد الهلال"
+            "عبدالرحمن العتيبي", "عبد الرحمن نجم العتيبي"
         ];
 
         let currentUser = null;
         let isRegisterMode = false;
         let uploadedAvatarBase64 = '';
 
-        // دالة فحص المطابقة الدقيقة للقسم الإداري (الاسم الأول + العائلة)
         function checkBoardIdentity(val) {
             const trackGroup = document.getElementById('trackGroup');
             const boardNotice = document.getElementById('boardNotice');
@@ -334,15 +337,17 @@
                 return;
             }
 
-            // التحقق عما إذا كان النص المدخل يحتوي على (الاسم الأول + اسم العائلة) معاً من القائمة المعتمدة
-            const isMatched = EXACT_BOARD_NAMES.some(fullName => {
-                const parts = fullName.split(' ');
-                const firstName = parts[0];
-                const lastName = parts[parts.length - 1];
-                return cleanVal.includes(firstName) && cleanVal.includes(lastName);
+            const isAdmin = ADMIN_NAMES.some(name => {
+                const parts = name.split(' ');
+                return cleanVal.includes(parts[0]) && cleanVal.includes(parts[parts.length - 1]);
             });
 
-            if (isMatched) {
+            const isBoard = BOARD_NAMES.some(name => {
+                const parts = name.split(' ');
+                return cleanVal.includes(parts[0]) && cleanVal.includes(parts[parts.length - 1]);
+            });
+
+            if (isAdmin || isBoard) {
                 trackGroup.style.display = 'none';
                 boardNotice.style.display = 'block';
             } else {
@@ -387,8 +392,11 @@
 
             try {
                 if (isRegisterMode) {
-                    const isSupervisor = (fullName.includes("حمزه") || fullName.includes("حمزة")) && fullName.includes("فرج");
-                    const isBoardMember = EXACT_BOARD_NAMES.some(name => {
+                    const isAdminUser = ADMIN_NAMES.some(name => {
+                        const parts = name.split(' ');
+                        return fullName.includes(parts[0]) && fullName.includes(parts[parts.length - 1]);
+                    });
+                    const isBoardUser = BOARD_NAMES.some(name => {
                         const parts = name.split(' ');
                         return fullName.includes(parts[0]) && fullName.includes(parts[parts.length - 1]);
                     });
@@ -396,10 +404,10 @@
                     let assignedRole = 'member';
                     let assignedTrack = track;
 
-                    if (isSupervisor) {
+                    if (isAdminUser) {
                         assignedRole = 'admin';
-                        assignedTrack = 'مشرف النادي';
-                    } else if (isBoardMember) {
+                        assignedTrack = 'مشرف المنصة';
+                    } else if (isBoardUser) {
                         assignedRole = 'board';
                         assignedTrack = 'مجلس الإدارة';
                     }
@@ -414,10 +422,10 @@
                             id: data.user.id, full_name: fullName || 'عضو جديد', role: assignedRole, track: assignedTrack
                         });
                         
-                        if (isSupervisor) {
-                            alert(`👑 أهلاً بفضيلة الدكتور ${fullName}!\nتم التحقق من الاسم الأول والعائلة وتعيينك كمشرف للنادي.`);
-                        } else if (isBoardMember) {
-                            alert(`🌟 أهلاً بك يا ${fullName}!\nتم التحقق من تطابق اسمك الأول واسم العائلة، وتعيينك في مجلس الإدارة تلقائياً.`);
+                        if (isAdminUser) {
+                            alert(`👑 أهلاً بك يا ${fullName}!\nتم التحقق من هويتك وتعيينك بصلاحية (مشرف - Admin) على المنصة.`);
+                        } else if (isBoardUser) {
+                            alert(`🌟 أهلاً بك يا ${fullName}!\nتم التحقق من هويتك وتعيينك في مجلس الإدارة تلقائياً.`);
                         } else {
                             alert('✅ تم إنشاء الحساب بنجاح!');
                         }
@@ -451,241 +459,17 @@
             let role = profile?.role || 'member';
             let track = profile?.track || 'عام';
 
-            const isSup = (name.includes("حمزه") || name.includes("حمزة")) && name.includes("فرج");
-            const isBoard = EXACT_BOARD_NAMES.some(bName => {
+            const isAdminCheck = ADMIN_NAMES.some(aName => {
+                const parts = aName.split(' ');
+                return name.includes(parts[0]) && name.includes(parts[parts.length - 1]);
+            });
+
+            const isBoardCheck = BOARD_NAMES.some(bName => {
                 const parts = bName.split(' ');
                 return name.includes(parts[0]) && name.includes(parts[parts.length - 1]);
             });
 
-            if (isSup) {
+            if (isAdminCheck) {
                 role = 'admin';
-                track = 'مشرف النادي';
-                await supabaseClient.from('profiles').update({ role: 'admin', track: 'مشرف النادي' }).eq('id', user.id);
-            } else if (isBoard) {
-                role = 'board';
-                track = 'مجلس الإدارة';
-                await supabaseClient.from('profiles').update({ role: 'board', track: 'مجلس الإدارة' }).eq('id', user.id);
-            }
-
-            document.getElementById('barUserName').innerText = name;
-            document.getElementById('barUserTrack').innerText = track;
-            
-            let roleDisplay = 'عضو';
-            if (role === 'admin') roleDisplay = 'مشرف النادي (Supervisor)';
-            else if (role === 'board') roleDisplay = 'مجلس الإدارة';
-            document.getElementById('barUserRole').innerText = roleDisplay;
-            
-            document.getElementById('profileDisplayName').innerText = name;
-            document.getElementById('authorName').value = name;
-            document.getElementById('inputBio').value = profile?.bio || '';
-            document.getElementById('inputTrack').value = track;
-            document.getElementById('inputPortfolio').value = profile?.portfolio_url || '';
-            
-            if (role === 'admin' || role === 'board') {
-                const profileTrackGroup = document.getElementById('profileTrackGroup');
-                if (profileTrackGroup) profileTrackGroup.style.display = 'none';
-            }
-
-            uploadedAvatarBase64 = profile?.avatar_url || '';
-            if (uploadedAvatarBase64) {
-                document.getElementById('avatarPreviewContainer').innerHTML = `<img src="${uploadedAvatarBase64}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">`;
-            }
-
-            if (role === 'admin') {
-                document.getElementById('profileRoleBadge').innerText = 'مشرف النادي (Supervisor)';
-                document.getElementById('adminNavBtn').style.display = 'inline-flex';
-                loadAdminMembers();
-            } else if (role === 'board') {
-                document.getElementById('profileRoleBadge').innerText = 'عضو مجلس الإدارة 🌟';
-            } else {
-                document.getElementById('profileRoleBadge').innerText = 'عضو (Member)';
-            }
-        }
-
-        function previewAvatar(input) {
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const img = new Image();
-                    img.src = e.target.result;
-                    img.onload = function() {
-                        const canvas = document.createElement('canvas');
-                        const ctx = canvas.getContext('2d');
-                        const MAX_WIDTH = 200;
-                        const MAX_HEIGHT = 200;
-                        let width = img.width;
-                        let height = img.height;
-
-                        if (width > height) {
-                            if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; }
-                        } else {
-                            if (height > MAX_HEIGHT) { width *= MAX_HEIGHT / height; height = MAX_HEIGHT; }
-                        }
-                        canvas.width = width;
-                        canvas.height = height;
-                        ctx.drawImage(img, 0, 0, width, height);
-                        uploadedAvatarBase64 = canvas.toDataURL('image/jpeg', 0.7);
-                        document.getElementById('avatarPreviewContainer').innerHTML = `<img src="${uploadedAvatarBase64}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">`;
-                    };
-                };
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
-
-        async function updateProfile(e) {
-            e.preventDefault();
-            if (!currentUser) return;
-            const btn = document.getElementById('saveProfileBtn');
-            btn.disabled = true;
-            btn.innerHTML = '<span>جاري الحفظ...</span> ⏳';
-
-            const bio = document.getElementById('inputBio').value.trim();
-            const track = document.getElementById('inputTrack').value;
-            const portfolio_url = document.getElementById('inputPortfolio').value.trim();
-
-            const { error } = await supabaseClient.from('profiles').update({
-                bio, track, portfolio_url, avatar_url: uploadedAvatarBase64
-            }).eq('id', currentUser.id);
-
-            if (error) {
-                alert('❌ تعذر حفظ التعديلات: ' + error.message);
-            } else {
-                alert('✅ تم حفظ التعديلات وصورتك الشخصية في بروفايلك بنجاح!');
-                document.getElementById('barUserTrack').innerText = track;
-            }
-            btn.disabled = false;
-            btn.innerHTML = '<span>حفظ التعديلات في البروفايل</span><span>💾</span>';
-        }
-
-        async function loadAdminMembers() {
-            const container = document.getElementById('adminMembersList');
-            const { data: members, error } = await supabaseClient.from('profiles').select('*');
-            if (error || !members) {
-                container.innerHTML = 'تعذر جلب الأعضاء.';
-                return;
-            }
-            container.innerHTML = '';
-            members.forEach(m => {
-                const item = document.createElement('div');
-                item.className = 'member-row-item';
-                item.innerHTML = `
-                    <div>
-                        <strong>${m.full_name || 'بدون اسم'}</strong><br>
-                        <span style="font-size: 0.78rem; color: var(--text-muted);">التخصص: ${m.track || 'غير محدد'} | الرتبة: ${m.role}</span>
-                    </div>
-                    <div style="display:flex; gap:5px; align-items:center;">
-                        <select id="track_${m.id}" style="padding:4px 8px; font-size:0.8rem;">
-                            <option value="تصوير وإضاءة" ${m.track==='تصوير وإضاءة'?'selected':''}>تصوير وإضاءة</option>
-                            <option value="مونتاج وموشن جرافيك" ${m.track==='مونتاج وموشن جرافيك'?'selected':''}>مونتاج</option>
-                            <option value="إنتاج برامج وبودكاست" ${m.track==='إنتاج برامج وبودكاست'?'selected':''}>بودكاست</option>
-                            <option value="تصميم وهوية بصرية" ${m.track==='تصميم وهوية بصرية'?'selected':''}>تصميم</option>
-                            <option value="كتابة وصحافة إعلامية" ${m.track==='كتابة وصحافة إعلامية'?'selected':''}>كتابة</option>
-                            <option value="تقنية المعلومات (IT)" ${m.track==='تقنية المعلومات (IT)'?'selected':''}>IT</option>
-                            <option value="مجلس الإدارة" ${m.track==='مجلس الإدارة'?'selected':''}>مجلس الإدارة</option>
-                        </select>
-                        <button onclick="changeMemberTrack('${m.id}')" style="background:var(--accent-primary); border:none; color:#fff; padding:5px 10px; border-radius:6px; cursor:pointer; font-size:0.75rem;">تحديث</button>
-                    </div>
-                `;
-                container.appendChild(item);
-            });
-        }
-
-        async function changeMemberTrack(userId) {
-            const newTrack = document.getElementById(`track_${userId}`).value;
-            const { error } = await supabaseClient.from('profiles').update({ track: newTrack }).eq('id', userId);
-            if (error) {
-                alert('خطأ في التحديث');
-            } else {
-                alert('✅ تم نقل العضو للمسار الجديد بنجاح!');
-                loadAdminMembers();
-            }
-        }
-
-        async function logout() {
-            await supabaseClient.auth.signOut();
-            window.location.reload();
-        }
-
-        window.addEventListener('DOMContentLoaded', async () => {
-            const { data: { session } } = await supabaseClient.auth.getSession();
-            if (session && session.user) {
-                loadUserProfile(session.user);
-            }
-        });
-
-        window.switchPage = function(pageId, btnElement) {
-            document.querySelectorAll('.page-section').forEach(sec => sec.classList.remove('active'));
-            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
-            document.getElementById(pageId).classList.add('active');
-            btnElement.classList.add('active');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-
-            if(pageId === 'archivePage') { loadSheetIdeas(); }
-            if(pageId === 'adminPage') { loadAdminMembers(); }
-        };
-
-        function getYouTubeEmbedUrl(url) {
-            if (!url) return '';
-            const match = url.match(/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/);
-            return (match && match[2].length === 11) ? `https://www.youtube.com/embed/${match[2]}` : '';
-        }
-
-        document.getElementById('ideaForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const submitBtn = document.getElementById('submitBtn');
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<span>جاري الحفظ...</span> ⏳';
-
-            const data = {
-                author: document.getElementById('authorName').value.trim(),
-                title: document.getElementById('ideaTitle').value.trim(),
-                desc: document.getElementById('ideaDescription').value.trim(),
-                location: document.getElementById('ideaLocation').value.trim(),
-                members: document.getElementById('ideaMembers').value.trim(),
-                imageUrl: document.getElementById('imageUrl').value.trim(),
-                videoUrl: document.getElementById('videoUrl').value.trim()
-            };
-
-            try {
-                await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
-                alert('✅ تم حفظ الفكرة في السحابة بنجاح!');
-                this.reset();
-                document.getElementById('authorName').value = document.getElementById('profileDisplayName').innerText;
-                switchPage('archivePage', document.querySelectorAll('.nav-btn')[3]);
-            } catch (error) {
-                alert('❌ تعذر الحفظ.');
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = '<span>حفظ الفكرة في السحابة</span><span>🚀</span>';
-            }
-        });
-
-        async function loadSheetIdeas() {
-            const container = document.getElementById('archiveContainer');
-            const counter = document.getElementById('archiveCount');
-            try {
-                container.innerHTML = '<div style="text-align: center; color: var(--text-muted); padding: 20px;">جاري تحميل الأرشيف...</div>';
-                const response = await fetch(SCRIPT_URL);
-                const ideas = await response.json();
-                counter.textContent = `إجمالي المشاركات: ${ideas.length}`;
-                container.innerHTML = ideas.length === 0 ? '<div style="text-align: center; color: var(--text-muted); padding: 20px;">لا توجد أفكار مسجلة.</div>' : '';
-
-                ideas.reverse().forEach((idea) => {
-                    const embedUrl = getYouTubeEmbedUrl(idea.videoUrl || idea.video);
-                    const card = document.createElement('div');
-                    card.className = 'idea-card';
-                    card.innerHTML = `
-                        <div class="idea-header"><div class="idea-title">${idea.title || 'بدون عنوان'}</div><div class="idea-author">المقترح: ${idea.author || 'مجهول'}</div></div>
-                        <div class="idea-body">${idea.desc || idea.description || ''}</div>
-                        ${idea.imageUrl || idea.image ? `<div style="margin-top: 10px;"><img src="${idea.imageUrl || idea.image}" style="width:100%; max-height:220px; object-fit:cover; border-radius:8px;" onerror="this.style.display='none'"></div>` : ''}
-                        ${embedUrl ? `<div class="video-wrapper"><iframe src="${embedUrl}" allowfullscreen></iframe></div>` : ''}
-                    `;
-                    container.appendChild(card);
-                });
-            } catch (error) {
-                container.innerHTML = '<div style="text-align: center; color: #f85149; padding: 20px;">تعذر جلب الأرشيف.</div>';
-            }
-        }
-    </script>
-</body>
-</html>
+                track = 'مشرف المنصة';
+                await supabaseClient.from('profiles').update({ role: 'admin', track: 'مشرف المنصة' }).eq
