@@ -131,13 +131,12 @@
         <div class="auth-card">
             <form id="authForm" onsubmit="handleSupabaseAuth(event)">
                 <div class="form-group" id="fullNameGroup" style="display: none;">
-                    <label>الاسم (الاول والعائلة / الرباعي):</label>
-                    <input type="text" id="authFullName" placeholder="مثال: عبدالرحمن الزهراني أو خالد الهلال" oninput="checkBoardIdentity(this.value)">
+                    <label>الاسم الرباعي:</label>
+                    <input type="text" id="authFullName" placeholder="اكتب اسمك الرباعي هنا" oninput="checkBoardIdentity(this.value)">
                     <div id="boardNotice" style="display: none; font-size: 0.8rem; color: #8b5cf6; margin-top: 5px; font-weight: bold; background: rgba(139, 92, 246, 0.15); padding: 6px 10px; border-radius: 6px; border: 1px solid rgba(139, 92, 246, 0.3);">
                         🌟 أهلاً بك! تطابق اسمك مع الهيكلة الإدارية، وتم إعفاؤك من المسارات.
                     </div>
                 </div>
-                <!-- مخفي افتراضياً عند تسجيل الدخول ويظهر فقط أثناء إنشاء حساب جديد للأعضاء العاديين -->
                 <div class="form-group" id="trackGroup" style="display: none;">
                     <label>اختر مسارك الرئيسي في النادي:</label>
                     <select id="authTrack">
@@ -328,7 +327,7 @@
         let uploadedAvatarBase64 = '';
 
         function checkBoardIdentity(val) {
-            if (!isRegisterMode) return; // للإنشاء فقط
+            if (!isRegisterMode) return;
             const trackGroup = document.getElementById('trackGroup');
             const boardNotice = document.getElementById('boardNotice');
             const cleanVal = val.trim().replace(/\s+/g, ' ');
@@ -364,7 +363,6 @@
             document.getElementById('authBtnText').innerText = isRegisterMode ? 'إنشاء الحساب' : 'دخول المنصة';
             document.getElementById('fullNameGroup').style.display = isRegisterMode ? 'block' : 'none';
             
-            // عند تسجيل الدخول إخفاء المسار تماماً
             if (!isRegisterMode) {
                 document.getElementById('trackGroup').style.display = 'none';
                 document.getElementById('boardNotice').style.display = 'none';
