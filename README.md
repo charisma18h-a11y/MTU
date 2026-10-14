@@ -25,31 +25,17 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; -webkit-tap-highlight-color: transparent; }
 
         body {
-            background-color: var(--bg-dark);
-            color: var(--text-main);
-            line-height: 1.7;
-            padding-bottom: 40px;
-            min-height: 100vh;
-            overflow-x: hidden;
-            width: 100%;
-            position: relative;
+            background-color: var(--bg-dark); color: var(--text-main); line-height: 1.7; padding-bottom: 40px; min-height: 100vh; overflow-x: hidden; width: 100%; position: relative;
         }
 
-        /* خلفية الفيديو المؤطرة */
         .bg-video-container {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -99; overflow: hidden; pointer-events: none; background: #000;
         }
-
         .bg-video-container iframe {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(1.35);
-            width: 100vw; height: 56.25vw; min-height: 100vh; min-width: 177.77vh; pointer-events: none;
-            filter: brightness(0.55) contrast(1.1);
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(1.35); width: 100vw; height: 56.25vw; min-height: 100vh; min-width: 177.77vh; pointer-events: none; filter: brightness(0.55) contrast(1.1);
         }
-
         .bg-overlay {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: radial-gradient(circle at center, rgba(10, 10, 12, 0.6) 0%, rgba(5, 5, 7, 0.9) 100%);
-            z-index: -98; pointer-events: none;
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: radial-gradient(circle at center, rgba(10, 10, 12, 0.6) 0%, rgba(5, 5, 7, 0.9) 100%); z-index: -98; pointer-events: none;
         }
 
         .mtu-logo-container { display: inline-flex; align-items: center; justify-content: center; margin-bottom: 15px; position: relative; }
@@ -65,11 +51,11 @@
         }
 
         .quick-nav {
-            position: sticky; top: 0; z-index: 1000; background: rgba(15, 15, 20, 0.85); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 10px 12px; display: flex; justify-content: center; gap: 8px; width: 100%;
+            position: sticky; top: 0; z-index: 1000; background: rgba(15, 15, 20, 0.85); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 10px 12px; display: flex; justify-content: center; gap: 6px; width: 100%; flex-wrap: wrap;
         }
 
         .nav-btn {
-            background: rgba(255, 255, 255, 0.05); color: var(--text-main); border: 1px solid var(--border); padding: 8px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; cursor: pointer; transition: all 0.3s ease; display: inline-flex; align-items: center; justify-content: center; gap: 5px; flex: 1; max-width: 140px; text-align: center; white-space: nowrap;
+            background: rgba(255, 255, 255, 0.05); color: var(--text-main); border: 1px solid var(--border); padding: 8px 12px; border-radius: 20px; font-size: 0.78rem; font-weight: 700; cursor: pointer; transition: all 0.3s ease; display: inline-flex; align-items: center; justify-content: center; gap: 5px; text-align: center; white-space: nowrap;
         }
 
         .nav-btn:hover, .nav-btn.active {
@@ -89,6 +75,10 @@
         .section-title { font-size: 1.15rem; font-weight: 800; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; color: var(--text-main); }
         .section-title span.icon { background: var(--accent-primary); color: #ffffff; width: 30px; height: 30px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; }
 
+        /* تنسيق البروفايل الشخصي */
+        .profile-header-card { text-align: center; padding: 25px; }
+        .avatar-preview { width: 90px; height: 90px; border-radius: 50%; object-fit: cover; border: 3px solid var(--accent-primary); margin: 0 auto 12px; background: #1a1a24; display: flex; align-items: center; justify-content: center; font-size: 2rem; color: var(--text-muted); }
+        
         .board-hierarchy { display: flex; flex-direction: column; gap: 12px; }
         .board-tier-1 { display: flex; justify-content: center; }
         .board-tier-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
@@ -105,8 +95,6 @@
         label { display: block; margin-bottom: 5px; font-weight: 700; color: #cbd5e1; font-size: 0.85rem; }
         input, textarea { width: 100%; padding: 10px 12px; background-color: var(--input-bg); border: 1px solid var(--border); border-radius: 8px; color: var(--text-main); font-size: 0.9rem; outline: none; }
         button.btn-submit { background: var(--accent-primary); color: #ffffff; font-weight: 800; font-size: 0.95rem; padding: 12px 20px; border: none; border-radius: 8px; cursor: pointer; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; }
-
-        .profile-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.05); padding: 8px 15px; border-radius: 20px; border: 1px solid var(--border); margin-bottom: 15px; font-size: 0.85rem; }
 
         .archive-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         .archive-counter { background: rgba(59, 130, 246, 0.15); color: var(--accent-glow); padding: 4px 12px; border-radius: 16px; font-size: 0.78rem; font-weight: 700; border: 1px solid rgba(59, 130, 246, 0.3); }
@@ -126,51 +114,36 @@
 </head>
 <body>
 
-    <!-- فيديو خلفية مباشر مع حماية من الحجب -->
     <div class="bg-video-container">
         <iframe src="https://www.youtube.com/embed/_TkXgy18J_g?autoplay=1&mute=1&controls=0&loop=1&playlist=_TkXgy18J_g&playsinline=1&enablejsapi=1" allow="autoplay; encrypted-media"></iframe>
     </div>
     <div class="bg-overlay"></div>
 
-    <!-- شاشة تسجيل الدخول وإنشاء البروفايل الرسمية -->
+    <!-- شاشة تسجيل الدخول -->
     <div id="welcomeScreen">
-        <div class="mtu-logo-container">
-            <div class="mtu-logo-text">MTU<span class="mtu-dot"></span></div>
-        </div>
+        <div class="mtu-logo-container"><div class="mtu-logo-text">MTU<span class="mtu-dot"></span></div></div>
         <span class="site-badge" style="margin-top: 5px;">منصة النادي الإعلامي</span>
         <h1 id="authMainTitle" style="font-size: 1.4rem; margin-top: 5px;">تسجيل الدخول للبروفايل</h1>
         
         <div class="auth-card">
             <form id="authForm" onsubmit="handleSupabaseAuth(event)">
                 <div class="form-group" id="fullNameGroup" style="display: none;">
-                    <label>الاسم الكامل (لإنشاء البروفايل):</label>
-                    <input type="text" id="authFullName" placeholder="ادخل اسمك الكامل الثلاثي">
+                    <label>الاسم الكامل:</label>
+                    <input type="text" id="authFullName" placeholder="ادخل اسمك الكامل">
                 </div>
-                <div class="form-group">
-                    <label>البريد الإلكتروني:</label>
-                    <input type="email" id="authEmail" placeholder="name@example.com" required>
-                </div>
-                <div class="form-group">
-                    <label>كلمة المرور:</label>
-                    <input type="password" id="authPassword" placeholder="••••••••" required>
-                </div>
-                <button type="submit" class="btn-submit" id="authBtn">
-                    <span id="authBtnText">دخول المنصة</span>
-                    <span>🚀</span>
-                </button>
+                <div class="form-group"><label>البريد الإلكتروني:</label><input type="email" id="authEmail" placeholder="name@example.com" required></div>
+                <div class="form-group"><label>كلمة المرور:</label><input type="password" id="authPassword" placeholder="••••••••" required></div>
+                <button type="submit" class="btn-submit" id="authBtn"><span id="authBtnText">دخول المنصة</span><span>🚀</span></button>
                 <div id="authError" class="error-msg"></div>
             </form>
-            
-            <div class="auth-switch">
-                <span id="switchText">ليس لديك حساب؟</span> 
-                <a onclick="toggleAuthMode()" id="switchLink">انشئ بروفايل جديد</a>
-            </div>
+            <div class="auth-switch"><span id="switchText">ليس لديك حساب؟</span> <a onclick="toggleAuthMode()" id="switchLink">انشئ بروفايل جديد</a></div>
         </div>
     </div>
 
-    <!-- شريط التنقل العلوي -->
+    <!-- شريط التنقل العلوي المحدث -->
     <nav class="quick-nav">
         <button class="nav-btn active" onclick="switchPage('homePage', this)">🏛️ المجلس</button>
+        <button class="nav-btn" onclick="switchPage('profilePage', this)">👤 بروفايلي</button>
         <button class="nav-btn" onclick="switchPage('formPage', this)">💡 تقديم فكرة</button>
         <button class="nav-btn" onclick="switchPage('archivePage', this)">📁 الأرشيف</button>
         <button class="nav-btn" id="adminNavBtn" style="display: none; background: rgba(35, 134, 54, 0.2); border-color: var(--admin-color);" onclick="switchPage('adminPage', this)">⚙️ المشرف</button>
@@ -178,33 +151,20 @@
     </nav>
 
     <header>
-        <div class="mtu-logo-container" style="margin-bottom: 5px;">
-            <div class="mtu-logo-text" style="font-size: 2.2rem;">MTU<span class="mtu-dot" style="width: 10px; height: 10px;"></span></div>
-        </div>
-        <br>
-        <span class="site-badge">منصة النادي الإعلامي</span>
+        <div class="mtu-logo-container" style="margin-bottom: 5px;"><div class="mtu-logo-text" style="font-size: 2.2rem;">MTU<span class="mtu-dot" style="width: 10px; height: 10px;"></span></div></div>
+        <br><span class="site-badge">منصة النادي الإعلامي</span>
         <h1>بنك الأفكار والأرشيف</h1>
         <p class="subtitle">المساحة السحابية لاستقبال وتوثيق مبادرات طلاب جامعة الطائف</p>
     </header>
 
     <div class="container">
 
-        <!-- البروفايل الشخصي الحالي -->
-        <div style="text-align: center;">
-            <div class="profile-badge">
-                <span>👤 مرحباً بك: <strong id="userProfileName" style="color: var(--accent-glow);">...</strong></span>
-                <span id="userRoleBadge" style="background: rgba(59,130,246,0.2); padding: 2px 8px; border-radius: 10px; font-size: 0.75rem;">عضو</span>
-            </div>
-        </div>
-
         <!-- صفحة المجلس -->
         <section id="homePage" class="page-section active">
             <div class="card">
                 <h2 class="section-title"><span class="icon">👥</span>مجلس النادي وهيكلة الإدارة</h2>
                 <div class="board-hierarchy">
-                    <div class="board-tier-1">
-                        <div class="board-card supervisor"><div class="board-role">مشرف النادي</div><div class="board-name">د. حمزه فرج</div></div>
-                    </div>
+                    <div class="board-tier-1"><div class="board-card supervisor"><div class="board-role">مشرف النادي</div><div class="board-name">د. حمزه فرج</div></div></div>
                     <div class="board-tier-2">
                         <div class="board-card"><div class="board-role">رئيس النادي</div><div class="board-name">عبدالرحمن علي الزهراني</div></div>
                         <div class="board-card"><div class="board-role">نائب الرئيس</div><div class="board-name">ماجد الشاطري</div></div>
@@ -224,13 +184,44 @@
             </div>
         </section>
 
+        <!-- صفحة بروفايلي الشخصي -->
+        <section id="profilePage" class="page-section">
+            <div class="card profile-header-card">
+                <div class="avatar-preview" id="avatarPreviewContainer">👤</div>
+                <h2 id="profileDisplayName" style="font-size: 1.3rem; margin-bottom: 4px; color: #fff;">اسم العضو</h2>
+                <span id="profileRoleBadge" style="background: rgba(59,130,246,0.2); color: var(--accent-glow); padding: 3px 12px; border-radius: 12px; font-size: 0.75rem; font-weight: 700;">عضو</span>
+                
+                <form id="profileForm" onsubmit="updateProfile(event)" style="margin-top: 20px; text-align: right;">
+                    <div class="form-group">
+                        <label>رابط الصورة الشخصية (Avatar URL):</label>
+                        <input type="url" id="inputAvatar" placeholder="https://example.com/my-photo.jpg">
+                    </div>
+                    <div class="form-group">
+                        <label>نبذة تعريفية عنك (Bio):</label>
+                        <textarea id="inputBio" placeholder="اكتب نبذة عن مهاراتك واهتماماتك الإعلامية..."></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>المسارات والاهتمامات:</label>
+                            <input type="text" id="inputTracks" placeholder="مثال: تصوير، مونتاج، تصميم">
+                        </div>
+                        <div class="form-group">
+                            <label>رابط معرض الأعمال (Portfolio / GitHub):</label>
+                            <input type="url" id="inputPortfolio" placeholder="https://github.com/username">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-submit" id="saveProfileBtn"><span>حفظ التعديلات في البروفايل</span><span>💾</span></button>
+                </form>
+            </div>
+        </section>
+
         <!-- صفحة تقديم فكرة -->
         <section id="formPage" class="page-section">
             <div class="card">
                 <h2 class="section-title"><span class="icon">💡</span>تقديم فكرة / مشروع جديد</h2>
                 <form id="ideaForm">
                     <div class="form-row">
-                        <div class="form-group"><label>اسم مُقدم الفكرة:</label><input type="text" id="authorName" readonly style="opacity: 0.8; cursor: not-allowed;"></div>
+                        <div class="form-group"><label>اسم مُقدم الفكرة:</label><input type="text" id="authorName" readonly style="opacity: 0.8;"></div>
                         <div class="form-group"><label>عنوان الفكرة أو المبادرة:</label><input type="text" id="ideaTitle" required></div>
                     </div>
                     <div class="form-group"><label>تفاصيل وآلية تطبيق الفكرة:</label><textarea id="ideaDescription" required></textarea></div>
@@ -256,13 +247,13 @@
             <div class="archive-grid" id="archiveContainer"></div>
         </section>
 
-        <!-- لوحة تحكم المشرف المحمية -->
+        <!-- لوحة تحكم المشرف -->
         <section id="adminPage" class="page-section">
             <div class="card">
-                <h2 class="section-title"><span class="icon">⚙️</span>لوحة تحكم المشرف المقيدة</h2>
-                <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 15px;">أهلاً بك يا مشرف المنصة. تمت المصادقة على حسابك كأدمن معتمد بنجاح.</p>
+                <h2 class="section-title"><span class="icon">⚙️</span>لوحة تحكم المشرف</h2>
+                <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 15px;">أهلاً بك يا مشرف المنصة. يمكنك التحكم الكامل بمحتويات ואعضاء النادي.</p>
                 <div style="background: rgba(35, 134, 54, 0.1); border: 1px solid rgba(35, 134, 54, 0.3); padding: 15px; border-radius: 8px;">
-                    <strong>صلاحية الحساب:</strong> Admin (مشرف معتمد عبر قاعدة بيانات Supabase) ✅
+                    <strong>صلاحية الحساب:</strong> Admin (مشرف معتمد) ✅
                 </div>
             </div>
         </section>
@@ -274,8 +265,9 @@
         const SUPABASE_URL = 'https://hlgvjdknxtywdqjikayz.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_xw3iN_Cb5eFA125MyBx8TQ_3aTyXjqr';
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwN5Ty-lRiwKN9lVy9F94l8C9mxgSK-uDkVT9JStVT0eHnWtETg6CFJRpmw5lObZwV6/exec";
+        
+        let currentUser = null;
         let isRegisterMode = false;
 
         function toggleAuthMode() {
@@ -305,73 +297,87 @@
                     const { data, error } = await supabaseClient.auth.signUp({
                         email, password, options: { data: { full_name: fullName } }
                     });
-
                     if (error) throw error;
-
-                    // حفظ البروفايل بجدول profiles
                     if (data.user) {
                         await supabaseClient.from('profiles').upsert({
-                            id: data.user.id,
-                            full_name: fullName || 'عضو جديد',
-                            role: 'member' // القيمة الافتراضية للجميع هي عضو
+                            id: data.user.id, full_name: fullName || 'عضو جديد', role: 'member'
                         });
                     }
-
-                    alert('✅ تم إنشاء الحساب والبروفايل بنجاح!');
-                    await loginUser(email, password);
-                } else {
-                    await loginUser(email, password);
+                    alert('✅ تم إنشاء البروفايل بنجاح!');
                 }
+                const { data: loginData, error: loginError } = await supabaseClient.auth.signInWithPassword({ email, password });
+                if (loginError) throw loginError;
+                if (loginData.user) loadUserProfile(loginData.user);
             } catch (err) {
-                errorEl.innerText = err.message || 'تعذر الاتصال، حاول مرة أخرى.';
+                errorEl.innerText = err.message || 'خطأ في المصادقة.';
                 btn.disabled = false;
                 btn.innerHTML = '<span>تأكيد</span> 🚀';
             }
         }
 
-        async function loginUser(email, password) {
-            const errorEl = document.getElementById('authError');
-            const btn = document.getElementById('authBtn');
-
-            const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
-
-            if (error) {
-                errorEl.innerText = 'خطأ في الدخول: تأكد من الإيميل وكلمة المرور.';
-                btn.disabled = false;
-                btn.innerHTML = '<span>دخول المنصة</span> 🚀';
-            } else if (data.user) {
-                await loadUserProfile(data.user);
-            }
-        }
-
         async function loadUserProfile(user) {
-            // إخفاء الواجهة الترحيبية
+            currentUser = user;
             const welcome = document.getElementById('welcomeScreen');
-            welcome.style.opacity = '0';
-            setTimeout(() => welcome.style.display = 'none', 500);
+            if (welcome) {
+                welcome.style.opacity = '0';
+                setTimeout(() => welcome.style.display = 'none', 500);
+            }
 
-            // جلب بيانات البروفايل والدور من جدول profiles
             const { data: profile } = await supabaseClient
                 .from('profiles')
-                .select('full_name, role')
+                .select('*')
                 .eq('id', user.id)
                 .maybeSingle();
 
-            const displayName = (profile && profile.full_name) ? profile.full_name : (user.user_metadata?.full_name || user.email.split('@')[0]);
-            const userRole = (profile && profile.role) ? profile.role : 'member';
+            const name = profile?.full_name || user.email.split('@')[0];
+            const role = profile?.role || 'member';
 
-            // تحديث واجهة المستخدم بالبروفايل
-            document.getElementById('userProfileName').innerText = displayName;
-            document.getElementById('authorName').value = displayName;
+            // تعبئة البيانات في واجهة البروفايل
+            document.getElementById('profileDisplayName').innerText = name;
+            document.getElementById('authorName').value = name;
+            document.getElementById('inputBio').value = profile?.bio || '';
+            document.getElementById('inputTracks').value = profile?.tracks || '';
+            document.getElementById('inputPortfolio').value = profile?.portfolio_url || '';
+            document.getElementById('inputAvatar').value = profile?.avatar_url || '';
 
-            if (userRole === 'admin') {
-                document.getElementById('userRoleBadge').innerText = 'مشرف (Admin)';
-                document.getElementById('userRoleBadge').style.background = 'rgba(35, 134, 54, 0.4)';
+            if (profile?.avatar_url) {
+                document.getElementById('avatarPreviewContainer').innerHTML = `<img src="${profile.avatar_url}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">`;
+            }
+
+            if (role === 'admin') {
+                document.getElementById('profileRoleBadge').innerText = 'مشرف (Admin)';
                 document.getElementById('adminNavBtn').style.display = 'inline-flex';
             } else {
-                document.getElementById('userRoleBadge').innerText = 'عضو (Member)';
-                document.getElementById('adminNavBtn').style.display = 'none';
+                document.getElementById('profileRoleBadge').innerText = 'عضو (Member)';
             }
+        }
+
+        async function updateProfile(e) {
+            e.preventDefault();
+            if (!currentUser) return;
+            const btn = document.getElementById('saveProfileBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<span>جاري الحفظ...</span> ⏳';
+
+            const bio = document.getElementById('inputBio').value.trim();
+            const tracks = document.getElementById('inputTracks').value.trim();
+            const portfolio_url = document.getElementById('inputPortfolio').value.trim();
+            const avatar_url = document.getElementById('inputAvatar').value.trim();
+
+            const { error } = await supabaseClient.from('profiles').update({
+                bio, tracks, portfolio_url, avatar_url
+            }).eq('id', currentUser.id);
+
+            if (error) {
+                alert('❌ تعذر حفظ التعديلات: ' + error.message);
+            } else {
+                alert('✅ تم حفظ التعديلات في بروفايلك بنجاح!');
+                if(avatar_url) {
+                    document.getElementById('avatarPreviewContainer').innerHTML = `<img src="${avatar_url}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">`;
+                }
+            }
+            btn.disabled = false;
+            btn.innerHTML = '<span>حفظ التعديلات في البروفايل</span><span>💾</span>';
         }
 
         async function logout() {
@@ -420,14 +426,15 @@
 
             try {
                 await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
-                alert('✅ تم حفظ الفكرة بنجاح في السحابة!');
+                alert('✅ تم حفظ الفكرة في السحابة بنجاح!');
                 this.reset();
-                switchPage('archivePage', document.querySelectorAll('.nav-btn')[2]);
+                document.getElementById('authorName').value = document.getElementById('profileDisplayName').innerText;
+                switchPage('archivePage', document.querySelectorAll('.nav-btn')[3]);
             } catch (error) {
                 alert('❌ تعذر الحفظ.');
             } finally {
                 submitBtn.disabled = false;
-                submitBtn.innerHTML = '<span>حفظ الفكرة في السحابة</span> <span>🚀</span>';
+                submitBtn.innerHTML = '<span>حفظ الفكرة في السحابة</span><span>🚀</span>';
             }
         });
 
