@@ -5,11 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>بنك الأفكار وأرشيف المشاريع - MTU Media Club</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Montserrat:wght@800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root {
             --bg-dark: #0a0a0c;
             --bg-deep: #050507;
-            --bg-card: rgba(18, 18, 24, 0.85);
+            --bg-card: rgba(18, 18, 24, 0.88);
             --bg-card-solid: #121218;
             --accent-primary: #3b82f6;
             --accent-glow: #60a5fa;
@@ -34,16 +35,21 @@
             position: relative;
         }
 
+        /* خلفية الفيديو المؤطرة */
         .bg-video-container {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -99; overflow: hidden; pointer-events: none; background: #000;
         }
 
-        .bg-youtube-video {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(1.35); width: 100vw; height: 56.25vw; min-height: 100vh; min-width: 177.77vh; pointer-events: none; filter: brightness(0.7) contrast(1.1);
+        .bg-video-container iframe {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(1.35);
+            width: 100vw; height: 56.25vw; min-height: 100vh; min-width: 177.77vh; pointer-events: none;
+            filter: brightness(0.55) contrast(1.1);
         }
 
         .bg-overlay {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(10, 10, 12, 0.75); z-index: -98; pointer-events: none;
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: radial-gradient(circle at center, rgba(10, 10, 12, 0.6) 0%, rgba(5, 5, 7, 0.9) 100%);
+            z-index: -98; pointer-events: none;
         }
 
         .mtu-logo-container { display: inline-flex; align-items: center; justify-content: center; margin-bottom: 15px; position: relative; }
@@ -95,10 +101,12 @@
 
         .form-row { display: grid; grid-template-columns: 1fr; gap: 12px; }
         @media (min-width: 600px) { .form-row { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); } }
-        .form-group { margin-bottom: 14px; }
+        .form-group { margin-bottom: 14px; text-align: right; }
         label { display: block; margin-bottom: 5px; font-weight: 700; color: #cbd5e1; font-size: 0.85rem; }
-        input, textarea, select { width: 100%; padding: 10px 12px; background-color: var(--input-bg); border: 1px solid var(--border); border-radius: 8px; color: var(--text-main); font-size: 0.9rem; outline: none; }
+        input, textarea { width: 100%; padding: 10px 12px; background-color: var(--input-bg); border: 1px solid var(--border); border-radius: 8px; color: var(--text-main); font-size: 0.9rem; outline: none; }
         button.btn-submit { background: var(--accent-primary); color: #ffffff; font-weight: 800; font-size: 0.95rem; padding: 12px 20px; border: none; border-radius: 8px; cursor: pointer; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; }
+
+        .profile-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.05); padding: 8px 15px; border-radius: 20px; border: 1px solid var(--border); margin-bottom: 15px; font-size: 0.85rem; }
 
         .archive-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         .archive-counter { background: rgba(59, 130, 246, 0.15); color: var(--accent-glow); padding: 4px 12px; border-radius: 16px; font-size: 0.78rem; font-weight: 700; border: 1px solid rgba(59, 130, 246, 0.3); }
@@ -110,41 +118,53 @@
         .idea-body { color: #cbd5e1; font-size: 0.88rem; margin-bottom: 12px; }
         .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; margin-top: 10px; }
         .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+        .auth-switch { text-align: center; margin-top: 12px; font-size: 0.85rem; color: var(--text-muted); }
+        .auth-switch a { color: var(--accent-glow); cursor: pointer; text-decoration: underline; }
+        .error-msg { color: #f85149; font-size: 0.8rem; text-align: center; margin-top: 8px; }
         footer { text-align: center; color: var(--text-muted); font-size: 0.8rem; padding-top: 20px; border-top: 1px solid var(--border); margin-top: 25px; }
     </style>
-    <script src="https://www.youtube.com/iframe_api"></script>
 </head>
 <body>
 
-    <div class="bg-video-container"><div id="player" class="bg-youtube-video"></div></div>
+    <!-- فيديو خلفية مباشر مع حماية من الحجب -->
+    <div class="bg-video-container">
+        <iframe src="https://www.youtube.com/embed/_TkXgy18J_g?autoplay=1&mute=1&controls=0&loop=1&playlist=_TkXgy18J_g&playsinline=1&enablejsapi=1" allow="autoplay; encrypted-media"></iframe>
+    </div>
     <div class="bg-overlay"></div>
 
-    <!-- شاشة إدخال الاسم للدخول المباشر -->
+    <!-- شاشة تسجيل الدخول وإنشاء البروفايل الرسمية -->
     <div id="welcomeScreen">
         <div class="mtu-logo-container">
             <div class="mtu-logo-text">MTU<span class="mtu-dot"></span></div>
         </div>
         <span class="site-badge" style="margin-top: 5px;">منصة النادي الإعلامي</span>
-        <h1 style="font-size: 1.4rem; margin-top: 5px;">أهلاً بك، أدخل اسمك للدخول للمنصة</h1>
+        <h1 id="authMainTitle" style="font-size: 1.4rem; margin-top: 5px;">تسجيل الدخول للبروفايل</h1>
         
         <div class="auth-card">
-            <form id="authForm" onsubmit="directEnter(event)">
-                <div class="form-group">
-                    <label>اسمك الكريم</label>
-                    <input type="text" id="visitorName" placeholder="مثال: خالد الهلال" required>
+            <form id="authForm" onsubmit="handleSupabaseAuth(event)">
+                <div class="form-group" id="fullNameGroup" style="display: none;">
+                    <label>الاسم الكامل (لإنشاء البروفايل):</label>
+                    <input type="text" id="authFullName" placeholder="ادخل اسمك الكامل الثلاثي">
                 </div>
                 <div class="form-group">
-                    <label>الرتبة / الصلاحية</label>
-                    <select id="visitorRole">
-                        <option value="member">عضو (طالب)</option>
-                        <option value="admin">مشرف (أدمن)</option>
-                    </select>
+                    <label>البريد الإلكتروني:</label>
+                    <input type="email" id="authEmail" placeholder="name@example.com" required>
                 </div>
-                <button type="submit" class="btn-submit">
-                    <span>دخول المنصة فوراً</span>
+                <div class="form-group">
+                    <label>كلمة المرور:</label>
+                    <input type="password" id="authPassword" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn-submit" id="authBtn">
+                    <span id="authBtnText">دخول المنصة</span>
                     <span>🚀</span>
                 </button>
+                <div id="authError" class="error-msg"></div>
             </form>
+            
+            <div class="auth-switch">
+                <span id="switchText">ليس لديك حساب؟</span> 
+                <a onclick="toggleAuthMode()" id="switchLink">انشئ بروفايل جديد</a>
+            </div>
         </div>
     </div>
 
@@ -168,6 +188,15 @@
     </header>
 
     <div class="container">
+
+        <!-- البروفايل الشخصي الحالي -->
+        <div style="text-align: center;">
+            <div class="profile-badge">
+                <span>👤 مرحباً بك: <strong id="userProfileName" style="color: var(--accent-glow);">...</strong></span>
+                <span id="userRoleBadge" style="background: rgba(59,130,246,0.2); padding: 2px 8px; border-radius: 10px; font-size: 0.75rem;">عضو</span>
+            </div>
+        </div>
+
         <!-- صفحة المجلس -->
         <section id="homePage" class="page-section active">
             <div class="card">
@@ -201,7 +230,7 @@
                 <h2 class="section-title"><span class="icon">💡</span>تقديم فكرة / مشروع جديد</h2>
                 <form id="ideaForm">
                     <div class="form-row">
-                        <div class="form-group"><label>اسم مُقدم الفكرة:</label><input type="text" id="authorName" required></div>
+                        <div class="form-group"><label>اسم مُقدم الفكرة:</label><input type="text" id="authorName" readonly style="opacity: 0.8; cursor: not-allowed;"></div>
                         <div class="form-group"><label>عنوان الفكرة أو المبادرة:</label><input type="text" id="ideaTitle" required></div>
                     </div>
                     <div class="form-group"><label>تفاصيل وآلية تطبيق الفكرة:</label><textarea id="ideaDescription" required></textarea></div>
@@ -227,13 +256,13 @@
             <div class="archive-grid" id="archiveContainer"></div>
         </section>
 
-        <!-- لوحة تحكم المشرف -->
+        <!-- لوحة تحكم المشرف المحمية -->
         <section id="adminPage" class="page-section">
             <div class="card">
-                <h2 class="section-title"><span class="icon">⚙️</span>لوحة تحكم المشرف</h2>
-                <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 15px;">أهلاً بك يا مشرف المنصة. يمكنك التحكم الكامل بمحتويات وأعضاء النادي.</p>
+                <h2 class="section-title"><span class="icon">⚙️</span>لوحة تحكم المشرف المقيدة</h2>
+                <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 15px;">أهلاً بك يا مشرف المنصة. تمت المصادقة على حسابك كأدمن معتمد بنجاح.</p>
                 <div style="background: rgba(35, 134, 54, 0.1); border: 1px solid rgba(35, 134, 54, 0.3); padding: 15px; border-radius: 8px;">
-                    <strong>حالة النظام:</strong> يعمل بنظام الدخول السريع والمتكامل وجاهز للربط ✅
+                    <strong>صلاحية الحساب:</strong> Admin (مشرف معتمد عبر قاعدة بيانات Supabase) ✅
                 </div>
             </div>
         </section>
@@ -242,48 +271,118 @@
     </div>
 
     <script>
+        const SUPABASE_URL = 'https://hlgvjdknxtywdqjikayz.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_xw3iN_Cb5eFA125MyBx8TQ_3aTyXjqr';
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwN5Ty-lRiwKN9lVy9F94l8C9mxgSK-uDkVT9JStVT0eHnWtETg6CFJRpmw5lObZwV6/exec";
-        let ytPlayer = null;
+        let isRegisterMode = false;
 
-        function onYouTubeIframeAPIReady() {
-            ytPlayer = new YT.Player('player', {
-                videoId: '_TkXgy18J_g',
-                playerVars: { 'autoplay': 1, 'mute': 1, 'controls': 0, 'loop': 1, 'playlist': '_TkXgy18J_g', 'playsinline': 1 }
-            });
+        function toggleAuthMode() {
+            isRegisterMode = !isRegisterMode;
+            document.getElementById('authMainTitle').innerText = isRegisterMode ? 'إنشاء بروفايل جديد' : 'تسجيل الدخول للبروفايل';
+            document.getElementById('authBtnText').innerText = isRegisterMode ? 'إنشاء البروفايل والدخول' : 'دخول المنصة';
+            document.getElementById('fullNameGroup').style.display = isRegisterMode ? 'block' : 'none';
+            document.getElementById('switchText').innerText = isRegisterMode ? 'لديك حساب بالفعل؟' : 'ليس لديك حساب؟';
+            document.getElementById('switchLink').innerText = isRegisterMode ? 'سجل الدخول هنا' : 'انشئ بروفايل جديد';
+            document.getElementById('authError').innerText = '';
         }
 
-        function directEnter(e) {
+        async function handleSupabaseAuth(e) {
             e.preventDefault();
-            const name = document.getElementById('visitorName').value.trim();
-            const role = document.getElementById('visitorRole').value;
-            const userData = { name, role };
-            localStorage.setItem('mtu_user', JSON.stringify(userData));
-            applyUserSession(userData);
+            const email = document.getElementById('authEmail').value.trim();
+            const password = document.getElementById('authPassword').value.trim();
+            const fullName = document.getElementById('authFullName').value.trim();
+            const errorEl = document.getElementById('authError');
+            const btn = document.getElementById('authBtn');
+
+            errorEl.innerText = '';
+            btn.disabled = true;
+            btn.innerHTML = '<span>جاري المعالجة...</span> ⏳';
+
+            try {
+                if (isRegisterMode) {
+                    const { data, error } = await supabaseClient.auth.signUp({
+                        email, password, options: { data: { full_name: fullName } }
+                    });
+
+                    if (error) throw error;
+
+                    // حفظ البروفايل بجدول profiles
+                    if (data.user) {
+                        await supabaseClient.from('profiles').upsert({
+                            id: data.user.id,
+                            full_name: fullName || 'عضو جديد',
+                            role: 'member' // القيمة الافتراضية للجميع هي عضو
+                        });
+                    }
+
+                    alert('✅ تم إنشاء الحساب والبروفايل بنجاح!');
+                    await loginUser(email, password);
+                } else {
+                    await loginUser(email, password);
+                }
+            } catch (err) {
+                errorEl.innerText = err.message || 'تعذر الاتصال، حاول مرة أخرى.';
+                btn.disabled = false;
+                btn.innerHTML = '<span>تأكيد</span> 🚀';
+            }
         }
 
-        function applyUserSession(user) {
+        async function loginUser(email, password) {
+            const errorEl = document.getElementById('authError');
+            const btn = document.getElementById('authBtn');
+
+            const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+
+            if (error) {
+                errorEl.innerText = 'خطأ في الدخول: تأكد من الإيميل وكلمة المرور.';
+                btn.disabled = false;
+                btn.innerHTML = '<span>دخول المنصة</span> 🚀';
+            } else if (data.user) {
+                await loadUserProfile(data.user);
+            }
+        }
+
+        async function loadUserProfile(user) {
+            // إخفاء الواجهة الترحيبية
             const welcome = document.getElementById('welcomeScreen');
-            if (welcome) {
-                welcome.style.opacity = '0';
-                setTimeout(() => welcome.style.display = 'none', 500);
-            }
-            const authorInput = document.getElementById('authorName');
-            if (authorInput) authorInput.value = user.name;
+            welcome.style.opacity = '0';
+            setTimeout(() => welcome.style.display = 'none', 500);
 
-            if (user.role === 'admin') {
+            // جلب بيانات البروفايل والدور من جدول profiles
+            const { data: profile } = await supabaseClient
+                .from('profiles')
+                .select('full_name, role')
+                .eq('id', user.id)
+                .maybeSingle();
+
+            const displayName = (profile && profile.full_name) ? profile.full_name : (user.user_metadata?.full_name || user.email.split('@')[0]);
+            const userRole = (profile && profile.role) ? profile.role : 'member';
+
+            // تحديث واجهة المستخدم بالبروفايل
+            document.getElementById('userProfileName').innerText = displayName;
+            document.getElementById('authorName').value = displayName;
+
+            if (userRole === 'admin') {
+                document.getElementById('userRoleBadge').innerText = 'مشرف (Admin)';
+                document.getElementById('userRoleBadge').style.background = 'rgba(35, 134, 54, 0.4)';
                 document.getElementById('adminNavBtn').style.display = 'inline-flex';
+            } else {
+                document.getElementById('userRoleBadge').innerText = 'عضو (Member)';
+                document.getElementById('adminNavBtn').style.display = 'none';
             }
         }
 
-        function logout() {
-            localStorage.removeItem('mtu_user');
+        async function logout() {
+            await supabaseClient.auth.signOut();
             window.location.reload();
         }
 
-        window.addEventListener('DOMContentLoaded', () => {
-            const savedUser = localStorage.getItem('mtu_user');
-            if (savedUser) {
-                applyUserSession(JSON.parse(savedUser));
+        window.addEventListener('DOMContentLoaded', async () => {
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            if (session && session.user) {
+                loadUserProfile(session.user);
             }
         });
 
@@ -321,10 +420,8 @@
 
             try {
                 await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
-                alert('✅ تم حفظ الفكرة بنجاح!');
+                alert('✅ تم حفظ الفكرة بنجاح في السحابة!');
                 this.reset();
-                const saved = localStorage.getItem('mtu_user');
-                if(saved) document.getElementById('authorName').value = JSON.parse(saved).name;
                 switchPage('archivePage', document.querySelectorAll('.nav-btn')[2]);
             } catch (error) {
                 alert('❌ تعذر الحفظ.');
