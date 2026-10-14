@@ -42,7 +42,7 @@
         .mtu-logo-text { font-family: 'Montserrat', sans-serif; font-size: 3rem; font-weight: 900; letter-spacing: -1px; color: #ffffff; line-height: 1; display: flex; align-items: flex-start; position: relative; }
         .mtu-dot { width: 14px; height: 14px; background-color: var(--brand-red); border-radius: 50%; display: inline-block; margin-left: 2px; margin-top: 2px; box-shadow: 0 0 10px rgba(255, 77, 45, 0.8); }
 
-        /* شاشة تسجيل الدخول المستقلة والخاصة بالكامل */
+        /* شاشة تسجيل الدخول الخاصة والمستقلة بالكامل */
         #welcomeScreen {
             position: fixed; inset: 0; z-index: 99999; background: var(--bg-deep); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; text-align: center; transition: opacity 0.5s ease; overflow-y: auto;
         }
@@ -63,10 +63,8 @@
             background: var(--accent-primary); color: #ffffff; border-color: var(--accent-glow); transform: translateY(-2px); box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
         }
 
-        header { position: relative; text-align: center; padding: 30px 15px 20px; background: rgba(18, 18, 24, 0.65); border-bottom: 1px solid var(--border); backdrop-filter: blur(12px); }
-        .site-badge { background: rgba(59, 130, 246, 0.15); color: var(--accent-glow); padding: 5px 18px; border-radius: 30px; font-size: 0.8rem; font-weight: 700; display: inline-block; margin-bottom: 8px; border: 1px solid rgba(59, 130, 246, 0.3); }
-        h1 { font-size: 1.6rem; font-weight: 900; margin-bottom: 6px; color: #fff; }
-        p.subtitle { color: var(--text-muted); font-size: 0.88rem; max-width: 680px; margin: 0 auto; }
+        header { position: relative; text-align: center; padding: 25px 15px 15px; background: rgba(18, 18, 24, 0.65); border-bottom: 1px solid var(--border); backdrop-filter: blur(12px); }
+        .site-badge { background: rgba(59, 130, 246, 0.15); color: var(--accent-glow); padding: 6px 20px; border-radius: 30px; font-size: 0.9rem; font-weight: 700; display: inline-block; border: 1px solid rgba(59, 130, 246, 0.3); }
 
         .container { max-width: 950px; margin: 20px auto; padding: 0 12px; width: 100%; }
         .page-section { display: none; }
@@ -127,7 +125,7 @@
     <div id="welcomeScreen">
         <div class="mtu-logo-container"><div class="mtu-logo-text">MTU<span class="mtu-dot"></span></div></div>
         <span class="site-badge" style="margin-top: 5px;">منصة النادي الإعلامي</span>
-        <h1 id="authMainTitle" style="font-size: 1.3rem; margin-top: 5px;">تسجيل الدخول لمنصة النادي الإعلامي</h1>
+        <h1 id="authMainTitle" style="font-size: 1.3rem; margin-top: 10px;">تسجيل الدخول لمنصة النادي الإعلامي</h1>
         
         <div class="auth-card">
             <form id="authForm" onsubmit="handleSupabaseAuth(event)">
@@ -174,10 +172,8 @@
     </nav>
 
     <header>
-        <div class="mtu-logo-container" style="margin-bottom: 5px;"><div class="mtu-logo-text" style="font-size: 2.2rem;">MTU<span class="mtu-dot" style="width: 10px; height: 10px;"></span></div></div>
-        <br><span class="site-badge">منصة النادي الإعلامي</span>
-        <h1>بنك الأفكار والأرشيف</h1>
-        <p class="subtitle">المساحة السحابية لاستقبال وتوثيق مبادرات طلاب جامعة الطائف</p>
+        <div class="mtu-logo-container" style="margin-bottom: 3px;"><div class="mtu-logo-text" style="font-size: 2.2rem;">MTU<span class="mtu-dot" style="width: 10px; height: 10px;"></span></div></div>
+        <br><span class="site-badge">النادي الإعلامي</span>
     </header>
 
     <div class="container">
