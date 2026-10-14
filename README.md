@@ -28,13 +28,12 @@
             background-color: var(--bg-dark); color: var(--text-main); line-height: 1.7; padding-bottom: 40px; min-height: 100vh; overflow-x: hidden; width: 100%; position: relative;
         }
 
-        /* خلفية الفيديو المحسنة والأكثر وضوحاً على الجوال والكمبيوتر */
         .bg-video-container {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -99; overflow: hidden; pointer-events: none; background: #000;
         }
         .bg-video-container iframe {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(1.35); width: 100vw; height: 56.25vw; min-height: 100vh; min-width: 177.77vh; pointer-events: none; 
-            filter: brightness(0.65) contrast(1.15); /* زيادة وضوح الفيديو وإضاءته */
+            filter: brightness(0.65) contrast(1.15);
         }
         .bg-overlay {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(5, 5, 7, 0.75); z-index: -98; pointer-events: none;
@@ -117,7 +116,6 @@
 </head>
 <body>
 
-    <!-- خلفية الفيديو المحسنة للتعامل مع الجوال والكمبيوتر بوضوح عالٍ -->
     <div class="bg-video-container">
         <iframe src="https://www.youtube.com/embed/_TkXgy18J_g?autoplay=1&mute=1&controls=0&loop=1&playlist=_TkXgy18J_g&playsinline=1&enablejsapi=1" allow="autoplay; encrypted-media"></iframe>
     </div>
@@ -143,6 +141,7 @@
                         <option value="إنتاج برامج وبودكاست">🎙️ إنتاج برامج وبودكاست</option>
                         <option value="تصميم وهوية بصرية">🎨 تصميم وهوية بصرية</option>
                         <option value="كتابة وصحافة إعلامية">✍️ كتابة وصحافة إعلامية</option>
+                        <option value="تقنية المعلومات (IT)">💻 تقنية المعلومات (IT)</option>
                     </select>
                 </div>
                 <div class="form-group"><label>البريد الإلكتروني:</label><input type="email" id="authEmail" placeholder="name@example.com" required></div>
@@ -237,6 +236,7 @@
                                 <option value="إنتاج برامج وبودكاست">🎙️ إنتاج برامج وبودكاست</option>
                                 <option value="تصميم وهوية بصرية">🎨 تصميم وهوية بصرية</option>
                                 <option value="كتابة وصحافة إعلامية">✍️ كتابة وصحافة إعلامية</option>
+                                <option value="تقنية المعلومات (IT)">💻 تقنية المعلومات (IT)</option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -377,7 +377,12 @@
 
             document.getElementById('barUserName').innerText = name;
             document.getElementById('barUserTrack').innerText = track;
-            document.getElementById('barUserRole').innerText = role === 'admin' ? 'مشرف (Admin)' : 'عضو';
+            
+            // تحديد المسمى العربي للرتبة
+            let roleDisplay = 'عضو';
+            if (role === 'admin') roleDisplay = 'مشرف (Admin)';
+            else if (role === 'board') roleDisplay = 'مجلس الإدارة';
+            document.getElementById('barUserRole').innerText = roleDisplay;
             
             document.getElementById('profileDisplayName').innerText = name;
             document.getElementById('authorName').value = name;
@@ -394,6 +399,8 @@
                 document.getElementById('profileRoleBadge').innerText = 'مشرف (Admin)';
                 document.getElementById('adminNavBtn').style.display = 'inline-flex';
                 loadAdminMembers();
+            } else if (role === 'board') {
+                document.getElementById('profileRoleBadge').innerText = 'مجلس الإدارة';
             } else {
                 document.getElementById('profileRoleBadge').innerText = 'عضو (Member)';
             }
@@ -477,6 +484,7 @@
                             <option value="إنتاج برامج وبودكاست" ${m.track==='إنتاج برامج وبودكاست'?'selected':''}>بودكاست</option>
                             <option value="تصميم وهوية بصرية" ${m.track==='تصميم وهوية بصرية'?'selected':''}>تصميم</option>
                             <option value="كتابة وصحافة إعلامية" ${m.track==='كتابة وصحافة إعلامية'?'selected':''}>كتابة</option>
+                            <option value="تقنية المعلومات (IT)" ${m.track==='تقنية المعلومات (IT)'?'selected':''}>IT</option>
                         </select>
                         <button onclick="changeMemberTrack('${m.id}')" style="background:var(--accent-primary); border:none; color:#fff; padding:5px 10px; border-radius:6px; cursor:pointer; font-size:0.75rem;">تحديث</button>
                     </div>
