@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>بنك الأفكار وأرشيف المشاريع - MTU Media Club</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Montserrat:wght@800;900&display=swap" rel="stylesheet">
-    <!-- مكتبة Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root {
@@ -109,7 +108,6 @@
             box-shadow: 0 0 10px rgba(255, 77, 45, 0.8);
         }
 
-        /* شاشة الترحيب وتسجيل الدخول */
         #welcomeScreen {
             position: fixed;
             inset: 0;
@@ -224,14 +222,8 @@
             width: 100%;
         }
 
-        .page-section {
-            display: none;
-        }
-
-        .page-section.active {
-            display: block;
-            animation: fadeIn 0.3s ease-in-out;
-        }
+        .page-section { display: none; }
+        .page-section.active { display: block; animation: fadeIn 0.3s ease-in-out; }
 
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(8px); }
@@ -272,12 +264,7 @@
             flex-shrink: 0;
         }
 
-        .board-hierarchy {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
+        .board-hierarchy { display: flex; flex-direction: column; gap: 12px; }
         .board-tier-1 { display: flex; justify-content: center; }
         .board-tier-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
         .board-tier-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; }
@@ -303,43 +290,14 @@
             border: 1px solid rgba(59, 130, 246, 0.5);
         }
 
-        .board-role {
-            font-size: 0.72rem;
-            font-weight: 700;
-            color: var(--accent-glow);
-            margin-bottom: 2px;
-            text-transform: uppercase;
-        }
+        .board-role { font-size: 0.72rem; font-weight: 700; color: var(--accent-glow); margin-bottom: 2px; text-transform: uppercase; }
+        .board-name { font-size: 0.92rem; font-weight: 800; color: #ffffff; }
 
-        .board-name {
-            font-size: 0.92rem;
-            font-weight: 800;
-            color: #ffffff;
-        }
+        .form-row { display: grid; grid-template-columns: 1fr; gap: 12px; }
+        @media (min-width: 600px) { .form-row { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); } }
 
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 12px;
-        }
-
-        @media (min-width: 600px) {
-            .form-row {
-                grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            }
-        }
-
-        .form-group {
-            margin-bottom: 14px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: 700;
-            color: #cbd5e1;
-            font-size: 0.85rem;
-        }
+        .form-group { margin-bottom: 14px; }
+        label { display: block; margin-bottom: 5px; font-weight: 700; color: #cbd5e1; font-size: 0.85rem; }
 
         input[type="text"], input[type="url"], input[type="email"], input[type="password"], textarea {
             width: 100%;
@@ -353,16 +311,8 @@
             transition: all 0.3s ease;
         }
 
-        input:focus, textarea:focus {
-            border-color: var(--accent-primary);
-            box-shadow: 0 0 10px rgba(59, 130, 246, 0.25);
-            background-color: #121218;
-        }
-
-        textarea {
-            resize: vertical;
-            min-height: 90px;
-        }
+        input:focus, textarea:focus { border-color: var(--accent-primary); box-shadow: 0 0 10px rgba(59, 130, 246, 0.25); background-color: #121218; }
+        textarea { resize: vertical; min-height: 90px; }
 
         button.btn-submit {
             background: var(--accent-primary);
@@ -382,215 +332,43 @@
             gap: 8px;
         }
 
-        button.btn-submit:active {
-            transform: scale(0.98);
-        }
+        .archive-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px; }
+        .archive-counter { background: rgba(59, 130, 246, 0.15); color: var(--accent-glow); padding: 4px 12px; border-radius: 16px; font-size: 0.78rem; font-weight: 700; border: 1px solid rgba(59, 130, 246, 0.3); }
+        .archive-grid { display: flex; flex-direction: column; gap: 15px; }
 
-        .archive-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
+        .idea-card { background: var(--bg-card-solid); border: 1px solid var(--border); border-radius: 12px; padding: 15px; position: relative; overflow: hidden; }
+        .idea-card.featured { border: 1px solid rgba(59, 130, 246, 0.4); background: linear-gradient(145deg, #121218 0%, #172033 100%); }
+        .badge-featured { background: var(--accent-primary); color: #ffffff; font-size: 0.68rem; font-weight: 800; padding: 2px 8px; border-radius: 4px; display: inline-block; margin-bottom: 8px; }
 
-        .archive-counter {
-            background: rgba(59, 130, 246, 0.15);
-            color: var(--accent-glow);
-            padding: 4px 12px;
-            border-radius: 16px;
-            font-size: 0.78rem;
-            font-weight: 700;
-            border: 1px solid rgba(59, 130, 246, 0.3);
-        }
+        .idea-header { display: flex; flex-direction: column; gap: 6px; margin-bottom: 8px; }
+        @media (min-width: 500px) { .idea-header { flex-direction: row; justify-content: space-between; align-items: flex-start; } }
 
-        .archive-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
+        .idea-title { font-size: 1.05rem; font-weight: 800; color: #ffffff; }
+        .idea-author { font-size: 0.75rem; color: var(--accent-glow); background: rgba(59, 130, 246, 0.12); padding: 2px 10px; border-radius: 15px; border: 1px solid rgba(59, 130, 246, 0.3); font-weight: 700; }
+        .idea-body { color: #cbd5e1; font-size: 0.88rem; margin-bottom: 12px; }
 
-        .idea-card {
-            background: var(--bg-card-solid);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 15px;
-            position: relative;
-            overflow: hidden;
-        }
+        .media-container { margin-top: 12px; display: flex; flex-direction: column; gap: 10px; }
+        .media-image { width: 100%; max-height: 250px; object-fit: cover; border-radius: 8px; border: 1px solid var(--border); }
+        .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; border: 1px solid var(--border); }
+        .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
 
-        .idea-card.featured {
-            border: 1px solid rgba(59, 130, 246, 0.4);
-            background: linear-gradient(145deg, #121218 0%, #172033 100%);
-        }
+        .detail-box { background: rgba(0, 0, 0, 0.4); border-radius: 8px; padding: 10px; margin-top: 10px; border: 1px solid rgba(255, 255, 255, 0.08); }
+        .detail-box h4 { color: var(--accent-glow); font-size: 0.82rem; margin-bottom: 6px; }
 
-        .badge-featured {
-            background: var(--accent-primary);
-            color: #ffffff;
-            font-size: 0.68rem;
-            font-weight: 800;
-            padding: 2px 8px;
-            border-radius: 4px;
-            display: inline-block;
-            margin-bottom: 8px;
-        }
-
-        .idea-header {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            margin-bottom: 8px;
-        }
-
-        @media (min-width: 500px) {
-            .idea-header {
-                flex-direction: row;
-                justify-content: space-between;
-                align-items: flex-start;
-            }
-        }
-
-        .idea-title {
-            font-size: 1.05rem;
-            font-weight: 800;
-            color: #ffffff;
-        }
-
-        .idea-author {
-            font-size: 0.75rem;
-            color: var(--accent-glow);
-            background: rgba(59, 130, 246, 0.12);
-            padding: 2px 10px;
-            border-radius: 15px;
-            border: 1px solid rgba(59, 130, 246, 0.3);
-            font-weight: 700;
-        }
-
-        .idea-body {
-            color: #cbd5e1;
-            font-size: 0.88rem;
-            margin-bottom: 12px;
-        }
-
-        .media-container {
-            margin-top: 12px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .media-image {
-            width: 100%;
-            max-height: 250px;
-            object-fit: cover;
-            border-radius: 8px;
-            border: 1px solid var(--border);
-        }
-
-        .video-wrapper {
-            position: relative;
-            padding-bottom: 56.25%;
-            height: 0;
-            overflow: hidden;
-            border-radius: 8px;
-            border: 1px solid var(--border);
-        }
-
-        .video-wrapper iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-
-        .detail-box {
-            background: rgba(0, 0, 0, 0.4);
-            border-radius: 8px;
-            padding: 10px;
-            margin-top: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-        }
-
-        .detail-box h4 {
-            color: var(--accent-glow);
-            font-size: 0.82rem;
-            margin-bottom: 6px;
-        }
-
-        .tracks-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 6px;
-            margin-top: 6px;
-        }
-
-        @media (min-width: 480px) {
-            .tracks-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        .track-item {
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 6px;
-            padding: 6px 8px;
-            font-size: 0.78rem;
-            border-right: 3px solid var(--accent-primary);
-        }
-
+        .tracks-grid { display: grid; grid-template-columns: 1fr; gap: 6px; margin-top: 6px; }
+        @media (min-width: 480px) { .tracks-grid { grid-template-columns: repeat(2, 1fr); } }
+        .track-item { background: rgba(255, 255, 255, 0.03); border-radius: 6px; padding: 6px 8px; font-size: 0.78rem; border-right: 3px solid var(--accent-primary); }
         .track-item strong { color: #fff; display: block; margin-bottom: 1px; }
 
-        .idea-footer-info {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            margin-top: 12px;
-            padding-top: 10px;
-            border-top: 1px solid var(--border);
-            font-size: 0.8rem;
-            color: var(--text-muted);
-        }
-
-        @media (min-width: 500px) {
-            .idea-footer-info {
-                flex-direction: row;
-                gap: 15px;
-            }
-        }
-
+        .idea-footer-info { display: flex; flex-direction: column; gap: 6px; margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--border); font-size: 0.8rem; color: var(--text-muted); }
+        @media (min-width: 500px) { .idea-footer-info { flex-direction: row; gap: 15px; } }
         .idea-footer-info span { color: #fff; font-weight: 600; }
 
-        .auth-switch {
-            text-align: center;
-            margin-top: 12px;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-        }
+        .auth-switch { text-align: center; margin-top: 12px; font-size: 0.85rem; color: var(--text-muted); }
+        .auth-switch a { color: var(--accent-glow); cursor: pointer; text-decoration: underline; }
+        .error-msg { color: #f85149; font-size: 0.8rem; text-align: center; margin-top: 8px; }
 
-        .auth-switch a {
-            color: var(--accent-glow);
-            cursor: pointer;
-            text-decoration: underline;
-        }
-
-        .error-msg {
-            color: #f85149;
-            font-size: 0.8rem;
-            text-align: center;
-            margin-top: 8px;
-        }
-
-        footer {
-            text-align: center;
-            color: var(--text-muted);
-            font-size: 0.8rem;
-            padding-top: 20px;
-            border-top: 1px solid var(--border);
-            margin-top: 25px;
-        }
+        footer { text-align: center; color: var(--text-muted); font-size: 0.8rem; padding-top: 20px; border-top: 1px solid var(--border); margin-top: 25px; }
     </style>
     <script src="https://www.youtube.com/iframe_api"></script>
 </head>
@@ -802,7 +580,7 @@
             <div class="archive-grid" id="archiveContainer"></div>
         </section>
 
-        <!-- لوحة تحكم المشرف (تظهر للمشرفين فقط) -->
+        <!-- لوحة تحكم المشرف -->
         <section id="adminPage" class="page-section">
             <div class="card">
                 <h2 class="section-title">
@@ -823,7 +601,6 @@
     </div>
 
     <script>
-        // إعدادات اتصال Supabase لمشروعك المحدث بالمفتاح الصحيح
         const SUPABASE_URL = 'https://hlgvjdknxtywdqjikayz.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_xw3iN_Cb5eFA125MyBx8TQ_3aTyXjqr';
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -832,21 +609,14 @@
         let ytPlayer = null;
         let isRegisterMode = false;
 
-        // تهيئة لاعب يوتيوب
         function onYouTubeIframeAPIReady() {
             ytPlayer = new YT.Player('player', {
                 videoId: '_TkXgy18J_g',
-                playerVars: {
-                    'autoplay': 1, 'mute': 1, 'controls': 0, 'loop': 1,
-                    'playlist': '_TkXgy18J_g', 'playsinline': 1, 'rel': 0, 'modestbranding': 1
-                },
-                events: {
-                    'onReady': function(event) { event.target.mute(); event.target.playVideo(); }
-                }
+                playerVars: { 'autoplay': 1, 'mute': 1, 'controls': 0, 'loop': 1, 'playlist': '_TkXgy18J_g', 'playsinline': 1, 'rel': 0, 'modestbranding': 1 },
+                events: { 'onReady': function(event) { event.target.mute(); event.target.playVideo(); } }
             });
         }
 
-        // تبديل واجهة الدخول وإنشاء حساب
         function toggleAuthMode() {
             isRegisterMode = !isRegisterMode;
             document.getElementById('auth-main-title').innerText = isRegisterMode ? 'إنشاء حساب جديد في المنصة' : 'تسجيل الدخول إلى حسابك';
@@ -857,12 +627,12 @@
             document.getElementById('authError').innerText = '';
         }
 
-        // معالجة تسجيل الدخول / التسجيل عبر Supabase
+        // دالة تسجيل وتفعيل الحساب مباشرة بدون تعقيدات الإيميل
         async function handleAuth(e) {
             e.preventDefault();
-            const email = document.getElementById('authEmail').value;
-            const password = document.getElementById('authPassword').value;
-            const fullName = document.getElementById('authName').value;
+            const email = document.getElementById('authEmail').value.trim();
+            const password = document.getElementById('authPassword').value.trim();
+            const fullName = document.getElementById('authName').value.trim();
             const errorEl = document.getElementById('authError');
             const btn = document.getElementById('authBtn');
             
@@ -870,6 +640,7 @@
             btn.disabled = true;
 
             if (isRegisterMode) {
+                // إنشاء حساب مع تسليم الجلسة مباشرة
                 const { data, error } = await supabaseClient.auth.signUp({
                     email, password, options: { data: { full_name: fullName } }
                 });
@@ -878,43 +649,53 @@
                     btn.disabled = false;
                 } else {
                     alert('تم إنشاء الحساب بنجاح!');
-                    checkUserSession();
+                    // دخول سريع
+                    loginDirectly(email, password);
                 }
             } else {
-                const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
-                if (error) {
-                    errorEl.innerText = 'خطأ بالدخول: تأكد من البريد وكلمة المرور.';
-                    btn.disabled = false;
-                } else {
-                    checkUserSession();
-                }
+                loginDirectly(email, password);
             }
         }
 
-        // التحقق من جلسة المستخدم وصلاحياته
+        async function loginDirectly(email, password) {
+            const errorEl = document.getElementById('authError');
+            const btn = document.getElementById('authBtn');
+
+            const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+            if (error) {
+                errorEl.innerText = 'تعذر الدخول: تأكد من صحة البيانات أو قم بإنشاء حساب جديد.';
+                btn.disabled = false;
+            } else {
+                openSiteAndCheckRole(data.user);
+            }
+        }
+
+        async function openSiteAndCheckRole(user) {
+            // إخفاء الشاشة الترحيبية وتمريرك فوراً للموقع
+            const welcome = document.getElementById('welcomeScreen');
+            welcome.style.opacity = '0';
+            welcome.style.visibility = 'hidden';
+            setTimeout(() => welcome.style.display = 'none', 500);
+
+            // جلب الدور
+            const { data: profile } = await supabaseClient
+                .from('profiles')
+                .select('role')
+                .eq('id', user.id)
+                .single();
+
+            if (profile && profile.role === 'admin') {
+                document.getElementById('adminNavBtn').style.display = 'inline-flex';
+            }
+        }
+
         async function checkUserSession() {
             const { data: { session } } = await supabaseClient.auth.getSession();
             if (session) {
-                // إخفاء شاشة الترحيب وتسجيل الدخول
-                const welcome = document.getElementById('welcomeScreen');
-                welcome.style.opacity = '0';
-                welcome.style.visibility = 'hidden';
-                setTimeout(() => welcome.style.display = 'none', 500);
-
-                // فحص صلاحيات الدور (Role) من جدول profiles
-                const { data: profile } = await supabaseClient
-                    .from('profiles')
-                    .select('role')
-                    .eq('id', session.user.id)
-                    .single();
-
-                if (profile && profile.role === 'admin') {
-                    document.getElementById('adminNavBtn').style.display = 'inline-flex';
-                }
+                openSiteAndCheckRole(session.user);
             }
         }
 
-        // تسجيل الخروج
         async function logout() {
             await supabaseClient.auth.signOut();
             window.location.reload();
@@ -927,14 +708,11 @@
         window.switchPage = function(pageId, btnElement) {
             document.querySelectorAll('.page-section').forEach(sec => sec.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
-            
             document.getElementById(pageId).classList.add('active');
             btnElement.classList.add('active');
             window.scrollTo({ top: 0, behavior: 'smooth' });
 
-            if(pageId === 'archivePage') {
-                loadSheetIdeas();
-            }
+            if(pageId === 'archivePage') { loadSheetIdeas(); }
         };
 
         function getYouTubeEmbedUrl(url) {
@@ -967,8 +745,7 @@
 
             try {
                 await fetch(SCRIPT_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
+                    method: 'POST', mode: 'no-cors',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(data)
                 });
@@ -994,37 +771,4 @@
                 const response = await fetch(SCRIPT_URL);
                 const ideas = await response.json();
 
-                counter.textContent = `إجمالي المشاركات: ${ideas.length}`;
-                container.innerHTML = '';
-
-                if (ideas.length === 0) {
-                    container.innerHTML = '<div style="text-align: center; color: var(--text-muted); padding: 20px;">لا توجد أفكار مسجلة حتى الآن.</div>';
-                    return;
-                }
-
-                ideas.reverse().forEach((idea) => {
-                    const embedUrl = getYouTubeEmbedUrl(idea.videoUrl || idea.video);
-                    const card = document.createElement('div');
-                    card.className = 'idea-card';
-                    card.innerHTML = `
-                        <div class="idea-header">
-                            <div class="idea-title">${idea.title || 'بدون عنوان'}</div>
-                            <div class="idea-author">المقترح: ${idea.author || 'مجهول'}</div>
-                        </div>
-                        <div class="idea-body">${idea.desc || idea.description || ''}</div>
-                        ${idea.imageUrl || idea.image ? `<div class="media-container"><img src="${idea.imageUrl || idea.image}" class="media-image" alt="صورة المبادرة" onerror="this.style.display='none'"></div>` : ''}
-                        ${embedUrl ? `<div class="media-container"><div class="video-wrapper"><iframe src="${embedUrl}" allowfullscreen></iframe></div></div>` : ''}
-                        <div class="idea-footer-info">
-                            <div>📍 الموقع: <span>${idea.location || 'غير محدد'}</span></div>
-                            <div>👥 المسارات: <span>${idea.members || 'عام'}</span></div>
-                        </div>
-                    `;
-                    container.appendChild(card);
-                });
-            } catch (error) {
-                container.innerHTML = '<div style="text-align: center; color: #f85149; padding: 20px;">تعذر جلب الأرشيف.</div>';
-            }
-        }
-    </script>
-</body>
-</html>
+                counter.textContent =
