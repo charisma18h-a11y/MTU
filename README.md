@@ -44,12 +44,12 @@
         .mtu-logo-text { font-family: 'Montserrat', sans-serif; font-size: 3rem; font-weight: 900; letter-spacing: -1px; color: #ffffff; line-height: 1; display: flex; align-items: flex-start; position: relative; }
         .mtu-dot { width: 14px; height: 14px; background-color: var(--brand-red); border-radius: 50%; display: inline-block; margin-left: 2px; margin-top: 2px; box-shadow: 0 0 10px rgba(255, 77, 45, 0.8); }
 
-        #welcomeScreen {
+        #welcomeScreen, #clubRegModal {
             position: fixed; inset: 0; z-index: 99999; background: rgba(5, 5, 7, 0.88); backdrop-filter: blur(8px); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; text-align: center; transition: opacity 0.5s ease; overflow-y: auto;
         }
 
         .auth-card {
-            background: var(--bg-card); border: 1px solid var(--border); backdrop-filter: blur(12px); border-radius: 16px; padding: 25px 20px; width: 100%; max-width: 400px; box-shadow: 0 15px 35px rgba(0,0,0,0.8); margin-top: 15px;
+            background: var(--bg-card); border: 1px solid var(--border); backdrop-filter: blur(12px); border-radius: 16px; padding: 25px 20px; width: 100%; max-width: 450px; box-shadow: 0 15px 35px rgba(0,0,0,0.8); margin-top: 15px; text-align: right;
         }
 
         .quick-nav {
@@ -91,7 +91,7 @@
         .board-name { font-size: 0.92rem; font-weight: 800; color: #ffffff; }
 
         .form-row { display: grid; grid-template-columns: 1fr; gap: 12px; }
-        @media (min-width: 600px) { .form-row { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); } }
+        @media (min-width: 600px) { .form-row { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); } }
         .form-group { margin-bottom: 14px; text-align: right; }
         label { display: block; margin-bottom: 5px; font-weight: 700; color: #cbd5e1; font-size: 0.85rem; }
         input, textarea, select { width: 100%; padding: 10px 12px; background-color: var(--input-bg); border: 1px solid var(--border); border-radius: 8px; color: var(--text-main); font-size: 0.9rem; outline: none; }
@@ -122,7 +122,7 @@
     </div>
     <div class="bg-overlay"></div>
 
-    <!-- شاشة تسجيل الدخول الخاصة والمستقلة بالكامل -->
+    <!-- شاشة تسجيل الدخول / إنشاء حساب -->
     <div id="welcomeScreen">
         <div class="mtu-logo-container"><div class="mtu-logo-text">MTU<span class="mtu-dot"></span></div></div>
         <span class="site-badge" style="margin-top: 5px;">منصة النادي الإعلامي</span>
@@ -158,11 +158,69 @@
                 <div><span id="switchText">ليس لديك حساب على المنصة؟</span> <a onclick="toggleAuthMode()" id="switchLink">إنشاء حساب جديد</a></div>
                 <hr style="border: 0; border-top: 1px solid var(--border); margin: 6px 0;">
                 <div>
-                    <button type="button" onclick="showClubRegisterNotice()" style="background: rgba(59, 130, 246, 0.15); border: 1px solid var(--accent-primary); color: var(--accent-glow); padding: 8px 15px; border-radius: 8px; width: 100%; font-weight: 700; cursor: pointer; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                    <button type="button" onclick="openClubRegisterModal()" style="background: rgba(59, 130, 246, 0.15); border: 1px solid var(--accent-primary); color: var(--accent-glow); padding: 8px 15px; border-radius: 8px; width: 100%; font-weight: 700; cursor: pointer; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; gap: 6px;">
                         <span>📝 التسجيل في النادي الإعلامي (طلب عضوية)</span>
                     </button>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- نافذة طلب العضوية المستقلة (التسجيل الفعلي للنادي) -->
+    <div id="clubRegModal" style="display: none;">
+        <div class="mtu-logo-container"><div class="mtu-logo-text">MTU<span class="mtu-dot"></span></div></div>
+        <span class="site-badge" style="margin-top: 5px;">استمارة طلب انضمام للنادي الإعلامي</span>
+        
+        <div class="auth-card" style="max-width: 500px; max-height: 85vh; overflow-y: auto;">
+            <form id="clubRegisterForm" onsubmit="submitClubRegistration(event)">
+                <div class="form-group">
+                    <label>الاسم الرباعي:</label>
+                    <input type="text" id="regFullName" placeholder="الاسم الرباعي كما هو معتمد" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>البريد الجامعي:</label>
+                        <input type="email" id="regUnivEmail" placeholder="sXXXXX@tu.edu.sa" required>
+                    </div>
+                    <div class="form-group">
+                        <label>الرقم الجامعي:</label>
+                        <input type="text" id="regUnivId" placeholder="44XXXXXXXX" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>رقم الجوال:</label>
+                        <input type="tel" id="regPhone" placeholder="05XXXXXXXX" required>
+                    </div>
+                    <div class="form-group">
+                        <label>اختر مسارك المفضل:</label>
+                        <select id="regTrack">
+                            <option value="تصوير وإضاءة">📷 تصوير وإضاءة</option>
+                            <option value="مونتاج وموشن جرافيك">🎬 مونتاج وموشن جرافيك</option>
+                            <option value="إنتاج برامج وبودكاست">🎙️ إنتاج برامج وبودكاست</option>
+                            <option value="تصميم وهوية بصرية">🎨 تصميم وهوية بصرية</option>
+                            <option value="كتابة وصحافة إعلامية">✍️ كتابة وصحافة إعلامية</option>
+                            <option value="تقنية المعلومات (IT)">💻 تقنية المعلومات (IT)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>هل قد شاركت في أحد مسارات الإعلام من قبل؟</label>
+                    <select id="regPreviousExperience">
+                        <option value="نعم">نعم، لدي مشاركات سابقة</option>
+                        <option value="لا">لا، هذه بدايتي</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>نبذة عنك (مهاراتك واهتماماتك):</label>
+                    <textarea id="regBio" placeholder="اكتب نبذة مختصرة عن شغفك وخبراتك..." rows="3" required></textarea>
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <button type="submit" class="btn-submit" id="regSubmitBtn" style="flex: 2;"><span>إرسال طلب الانضمام</span><span>📩</span></button>
+                    <button type="button" onclick="closeClubRegisterModal()" style="background: rgba(248,81,73,0.2); border: 1px solid rgba(248,81,73,0.4); color: #f85149; border-radius: 8px; padding: 10px 15px; font-weight: 700; cursor: pointer; flex: 1;">إلغاء</button>
+                </div>
+                <div id="regError" class="error-msg"></div>
+            </form>
         </div>
     </div>
 
@@ -375,8 +433,46 @@
             document.getElementById('authError').innerText = '';
         }
 
-        function showClubRegisterNotice() {
-            alert('📌 للتسجيل الفعلي والانضمام للنادي الإعلامي:\nيرجى التواصل مع إدارة النادي أو تعبئة استمارة العضوية المعتمدة لجامعة الطائف.');
+        function openClubRegisterModal() {
+            document.getElementById('clubRegModal').style.display = 'flex';
+        }
+
+        function closeClubRegisterModal() {
+            document.getElementById('clubRegModal').style.display = 'none';
+            document.getElementById('clubRegisterForm').reset();
+            document.getElementById('regError').innerText = '';
+        }
+
+        async function submitClubRegistration(e) {
+            e.preventDefault();
+            const btn = document.getElementById('regSubmitBtn');
+            const errorEl = document.getElementById('regError');
+            errorEl.innerText = '';
+            btn.disabled = true;
+            btn.innerHTML = '<span>جاري الإرسال...</span> ⏳';
+
+            const regData = {
+                fullName: document.getElementById('regFullName').value.trim(),
+                univEmail: document.getElementById('regUnivEmail').value.trim(),
+                univId: document.getElementById('regUnivId').value.trim(),
+                phone: document.getElementById('regPhone').value.trim(),
+                track: document.getElementById('regTrack').value,
+                previousExperience: document.getElementById('regPreviousExperience').value,
+                bio: document.getElementById('regBio').value.trim(),
+                type: 'طلب عضوية نادي'
+            };
+
+            try {
+                // حفظ الطلب عبر جوجل شيت الأرشيف أو جدول الطلبات
+                await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(regData) });
+                alert('✅ تم إرسال طلب انضمامك للنادي الإعلامي بنجاح! سيتم مراجعة بياناتك والتواصل معك قريباً.');
+                closeClubRegisterModal();
+            } catch (err) {
+                errorEl.innerText = '❌ تعذر إرسال الطلب، تأكد من الاتصال.';
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<span>إرسال طلب الانضمام</span><span>📩</span>';
+            }
         }
 
         async function handleSupabaseAuth(e) {
