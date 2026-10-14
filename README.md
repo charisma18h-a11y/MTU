@@ -10,7 +10,7 @@
         :root {
             --bg-dark: #0a0a0c;
             --bg-deep: #050507;
-            --bg-card: rgba(18, 18, 24, 0.95);
+            --bg-card: rgba(18, 18, 24, 0.92);
             --bg-card-solid: #121218;
             --accent-primary: #3b82f6;
             --accent-glow: #60a5fa;
@@ -28,23 +28,24 @@
             background-color: var(--bg-dark); color: var(--text-main); line-height: 1.7; padding-bottom: 40px; min-height: 100vh; overflow-x: hidden; width: 100%; position: relative;
         }
 
+        /* خلفية الفيديو المحسنة والأكثر وضوحاً على الجوال والكمبيوتر */
         .bg-video-container {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -99; overflow: hidden; pointer-events: none; background: #000;
         }
         .bg-video-container iframe {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(1.35); width: 100vw; height: 56.25vw; min-height: 100vh; min-width: 177.77vh; pointer-events: none; filter: brightness(0.4) contrast(1.1);
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(1.35); width: 100vw; height: 56.25vw; min-height: 100vh; min-width: 177.77vh; pointer-events: none; 
+            filter: brightness(0.65) contrast(1.15); /* زيادة وضوح الفيديو وإضاءته */
         }
         .bg-overlay {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(5, 5, 7, 0.92); z-index: -98; pointer-events: none;
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(5, 5, 7, 0.75); z-index: -98; pointer-events: none;
         }
 
         .mtu-logo-container { display: inline-flex; align-items: center; justify-content: center; margin-bottom: 12px; position: relative; }
         .mtu-logo-text { font-family: 'Montserrat', sans-serif; font-size: 3rem; font-weight: 900; letter-spacing: -1px; color: #ffffff; line-height: 1; display: flex; align-items: flex-start; position: relative; }
         .mtu-dot { width: 14px; height: 14px; background-color: var(--brand-red); border-radius: 50%; display: inline-block; margin-left: 2px; margin-top: 2px; box-shadow: 0 0 10px rgba(255, 77, 45, 0.8); }
 
-        /* شاشة تسجيل الدخول الخاصة والمستقلة بالكامل */
         #welcomeScreen {
-            position: fixed; inset: 0; z-index: 99999; background: var(--bg-deep); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; text-align: center; transition: opacity 0.5s ease; overflow-y: auto;
+            position: fixed; inset: 0; z-index: 99999; background: rgba(5, 5, 7, 0.88); backdrop-filter: blur(8px); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; text-align: center; transition: opacity 0.5s ease; overflow-y: auto;
         }
 
         .auth-card {
@@ -116,6 +117,7 @@
 </head>
 <body>
 
+    <!-- خلفية الفيديو المحسنة للتعامل مع الجوال والكمبيوتر بوضوح عالٍ -->
     <div class="bg-video-container">
         <iframe src="https://www.youtube.com/embed/_TkXgy18J_g?autoplay=1&mute=1&controls=0&loop=1&playlist=_TkXgy18J_g&playsinline=1&enablejsapi=1" allow="autoplay; encrypted-media"></iframe>
     </div>
