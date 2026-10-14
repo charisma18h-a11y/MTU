@@ -10,7 +10,7 @@
         :root {
             --bg-dark: #0a0a0c;
             --bg-deep: #050507;
-            --bg-card: rgba(18, 18, 24, 0.88);
+            --bg-card: rgba(18, 18, 24, 0.95);
             --bg-card-solid: #121218;
             --accent-primary: #3b82f6;
             --accent-glow: #60a5fa;
@@ -32,18 +32,19 @@
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -99; overflow: hidden; pointer-events: none; background: #000;
         }
         .bg-video-container iframe {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(1.35); width: 100vw; height: 56.25vw; min-height: 100vh; min-width: 177.77vh; pointer-events: none; filter: brightness(0.55) contrast(1.1);
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(1.35); width: 100vw; height: 56.25vw; min-height: 100vh; min-width: 177.77vh; pointer-events: none; filter: brightness(0.4) contrast(1.1);
         }
         .bg-overlay {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: radial-gradient(circle at center, rgba(10, 10, 12, 0.6) 0%, rgba(5, 5, 7, 0.9) 100%); z-index: -98; pointer-events: none;
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(5, 5, 7, 0.92); z-index: -98; pointer-events: none;
         }
 
-        .mtu-logo-container { display: inline-flex; align-items: center; justify-content: center; margin-bottom: 15px; position: relative; }
-        .mtu-logo-text { font-family: 'Montserrat', sans-serif; font-size: 3.2rem; font-weight: 900; letter-spacing: -1px; color: #ffffff; line-height: 1; display: flex; align-items: flex-start; position: relative; }
+        .mtu-logo-container { display: inline-flex; align-items: center; justify-content: center; margin-bottom: 12px; position: relative; }
+        .mtu-logo-text { font-family: 'Montserrat', sans-serif; font-size: 3rem; font-weight: 900; letter-spacing: -1px; color: #ffffff; line-height: 1; display: flex; align-items: flex-start; position: relative; }
         .mtu-dot { width: 14px; height: 14px; background-color: var(--brand-red); border-radius: 50%; display: inline-block; margin-left: 2px; margin-top: 2px; box-shadow: 0 0 10px rgba(255, 77, 45, 0.8); }
 
+        /* شاشة تسجيل الدخول المستقلة والخاصة بالكامل */
         #welcomeScreen {
-            position: fixed; inset: 0; z-index: 99999; background: var(--bg-deep); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; text-align: center; transition: opacity 0.5s ease;
+            position: fixed; inset: 0; z-index: 99999; background: var(--bg-deep); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; text-align: center; transition: opacity 0.5s ease; overflow-y: auto;
         }
 
         .auth-card {
@@ -109,8 +110,8 @@
         .idea-body { color: #cbd5e1; font-size: 0.88rem; margin-bottom: 12px; }
         .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; margin-top: 10px; }
         .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
-        .auth-switch { text-align: center; margin-top: 12px; font-size: 0.85rem; color: var(--text-muted); }
-        .auth-switch a { color: var(--accent-glow); cursor: pointer; font-weight: 800; text-decoration: underline; }
+        .auth-switch { text-align: center; margin-top: 12px; font-size: 0.85rem; color: var(--text-muted); display: flex; flex-direction: column; gap: 8px; }
+        .auth-switch a { color: var(--accent-glow); cursor: pointer; font-weight: 700; }
         .error-msg { color: #f85149; font-size: 0.8rem; text-align: center; margin-top: 8px; }
         footer { text-align: center; color: var(--text-muted); font-size: 0.8rem; padding-top: 20px; border-top: 1px solid var(--border); margin-top: 25px; }
     </style>
@@ -122,7 +123,7 @@
     </div>
     <div class="bg-overlay"></div>
 
-    <!-- شاشة تسجيل الدخول والتسجيل المحدثة صراحة -->
+    <!-- شاشة تسجيل الدخول الخاصة والمستقلة بالكامل -->
     <div id="welcomeScreen">
         <div class="mtu-logo-container"><div class="mtu-logo-text">MTU<span class="mtu-dot"></span></div></div>
         <span class="site-badge" style="margin-top: 5px;">منصة النادي الإعلامي</span>
@@ -135,7 +136,7 @@
                     <input type="text" id="authFullName" placeholder="ادخل اسمك الكامل">
                 </div>
                 <div class="form-group" id="trackGroup" style="display: none;">
-                    <label>اختر مسارك في النادي الإعلامي:</label>
+                    <label>اختر مسارك الرئيسي في النادي:</label>
                     <select id="authTrack">
                         <option value="تصوير وإضاءة">📷 تصوير وإضاءة</option>
                         <option value="مونتاج وموشن جرافيك">🎬 مونتاج وموشن جرافيك</option>
@@ -149,9 +150,15 @@
                 <button type="submit" class="btn-submit" id="authBtn"><span id="authBtnText">دخول المنصة</span><span>🚀</span></button>
                 <div id="authError" class="error-msg"></div>
             </form>
+
             <div class="auth-switch">
-                <span id="switchText">تريد الانضمام لنا؟</span> 
-                <a onclick="toggleAuthMode()" id="switchLink">التسجيل في النادي الإعلامي</a>
+                <div><span id="switchText">ليس لديك حساب على المنصة؟</span> <a onclick="toggleAuthMode()" id="switchLink">إنشاء حساب جديد</a></div>
+                <hr style="border: 0; border-top: 1px solid var(--border); margin: 6px 0;">
+                <div>
+                    <button type="button" onclick="showClubRegisterNotice()" style="background: rgba(59, 130, 246, 0.15); border: 1px solid var(--accent-primary); color: var(--accent-glow); padding: 8px 15px; border-radius: 8px; width: 100%; font-weight: 700; cursor: pointer; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                        <span>📝 التسجيل في النادي الإعلامي (طلب عضوية)</span>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -303,13 +310,17 @@
 
         function toggleAuthMode() {
             isRegisterMode = !isRegisterMode;
-            document.getElementById('authMainTitle').innerText = isRegisterMode ? 'التسجيل في النادي الإعلامي' : 'تسجيل الدخول لمنصة النادي الإعلامي';
-            document.getElementById('authBtnText').innerText = isRegisterMode ? 'إتمام التسجيل في النادي' : 'دخول المنصة';
+            document.getElementById('authMainTitle').innerText = isRegisterMode ? 'إنشاء حساب على المنصة' : 'تسجيل الدخول لمنصة النادي الإعلامي';
+            document.getElementById('authBtnText').innerText = isRegisterMode ? 'إنشاء الحساب' : 'دخول المنصة';
             document.getElementById('fullNameGroup').style.display = isRegisterMode ? 'block' : 'none';
             document.getElementById('trackGroup').style.display = isRegisterMode ? 'block' : 'none';
-            document.getElementById('switchText').innerText = isRegisterMode ? 'لديك حساب بالفعل؟' : 'تريد الانضمام لنا؟';
-            document.getElementById('switchLink').innerText = isRegisterMode ? 'تسجيل الدخول هنا' : 'التسجيل في النادي الإعلامي';
+            document.getElementById('switchText').innerText = isRegisterMode ? 'لديك حساب بالفعل؟' : 'ليس لديك حساب على المنصة؟';
+            document.getElementById('switchLink').innerText = isRegisterMode ? 'تسجيل الدخول' : 'إنشاء حساب جديد';
             document.getElementById('authError').innerText = '';
+        }
+
+        function showClubRegisterNotice() {
+            alert('📌 للتسجيل الفعلي والانضمام للنادي الإعلامي:\nيرجى التواصل مع إدارة النادي أو تعبئة استمارة العضوية المعتمدة لجامعة الطائف.');
         }
 
         async function handleSupabaseAuth(e) {
@@ -336,7 +347,7 @@
                             id: data.user.id, full_name: fullName || 'عضو جديد', role: 'member', track: track
                         });
                     }
-                    alert('✅ تم التسجيل في النادي الإعلامي بنجاح!');
+                    alert('✅ تم إنشاء الحساب بنجاح!');
                 }
                 const { data: loginData, error: loginError } = await supabaseClient.auth.signInWithPassword({ email, password });
                 if (loginError) throw loginError;
