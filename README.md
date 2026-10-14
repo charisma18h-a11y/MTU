@@ -20,6 +20,7 @@
             --input-bg: #0c0c10;
             --brand-red: #ff4d2d;
             --admin-color: #238636;
+            --board-color: #8b5cf6;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; -webkit-tap-highlight-color: transparent; }
@@ -130,10 +131,13 @@
         <div class="auth-card">
             <form id="authForm" onsubmit="handleSupabaseAuth(event)">
                 <div class="form-group" id="fullNameGroup" style="display: none;">
-                    <label>الاسم الكامل:</label>
-                    <input type="text" id="authFullName" placeholder="ادخل اسمك الكامل">
+                    <label>الاسم (الاول والعائلة / الرباعي):</label>
+                    <input type="text" id="authFullName" placeholder="مثال: عبدالرحمن الزهراني" oninput="checkBoardIdentity(this.value)">
+                    <div id="boardNotice" style="display: none; font-size: 0.8rem; color: #8b5cf6; margin-top: 5px; font-weight: bold; background: rgba(139, 92, 246, 0.15); padding: 6px 10px; border-radius: 6px; border: 1px solid rgba(139, 92, 246, 0.3);">
+                        🌟 أهلاً بك! تطابق الاسم الأول والعائلة مع الهيكلة، وتم تعيينك في الإدارة.
+                    </div>
                 </div>
-                <div class="form-group" id="trackGroup" style="display: none;">
+                <div class="form-group" id="trackGroup">
                     <label>اختر مسارك الرئيسي في النادي:</label>
                     <select id="authTrack">
                         <option value="تصوير وإضاءة">📷 تصوير وإضاءة</option>
@@ -228,7 +232,7 @@
                         <textarea id="inputBio" placeholder="اكتب نبذة عن مهاراتك واهتماماتك الإعلامية..."></textarea>
                     </div>
                     <div class="form-row">
-                        <div class="form-group">
+                        <div class="form-group" id="profileTrackGroup">
                             <label>مسارك في النادي:</label>
                             <select id="inputTrack">
                                 <option value="تصوير وإضاءة">📷 تصوير وإضاءة</option>
@@ -302,16 +306,63 @@
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwN5Ty-lRiwKN9lVy9F94l8C9mxgSK-uDkVT9JStVT0eHnWtETg6CFJRpmw5lObZwV6/exec";
         
+        // قائمة التحقق الدقيقة (يشترط الاسم الأول واسم العائلة معاً أو الاسم كاملاً)
+        const EXACT_BOARD_NAMES = [
+            "حمزه فرج", "حمزة فرج", "د. حمزه فرج", "د. حمزة فرج",
+            "عبدالرحمن الزهراني", "عبدالرحمن علي الزهراني",
+            "ماجد الشاطري",
+            "نواف المالكي", "نواف عبد الله المالكي",
+            "حمد الحارثي", "حمد عايض الحارثي",
+            "عبدالله السواط", "عبد الله مزيد السواط",
+            "عبدالرحمن العتيبي", "عبد الرحمن نجم العتيبي",
+            "خالد الهلال", "خالد أحمد الهلال"
+        ];
+
         let currentUser = null;
         let isRegisterMode = false;
         let uploadedAvatarBase64 = '';
+
+        // دالة فحص المطابقة الدقيقة للقسم الإداري (الاسم الأول + العائلة)
+        function checkBoardIdentity(val) {
+            const trackGroup = document.getElementById('trackGroup');
+            const boardNotice = document.getElementById('boardNotice');
+            const cleanVal = val.trim().replace(/\s+/g, ' ');
+
+            if (!cleanVal) {
+                trackGroup.style.display = 'block';
+                boardNotice.style.display = 'none';
+                return;
+            }
+
+            // التحقق عما إذا كان النص المدخل يحتوي على (الاسم الأول + اسم العائلة) معاً من القائمة المعتمدة
+            const isMatched = EXACT_BOARD_NAMES.some(fullName => {
+                const parts = fullName.split(' ');
+                const firstName = parts[0];
+                const lastName = parts[parts.length - 1];
+                return cleanVal.includes(firstName) && cleanVal.includes(lastName);
+            });
+
+            if (isMatched) {
+                trackGroup.style.display = 'none';
+                boardNotice.style.display = 'block';
+            } else {
+                trackGroup.style.display = 'block';
+                boardNotice.style.display = 'none';
+            }
+        }
 
         function toggleAuthMode() {
             isRegisterMode = !isRegisterMode;
             document.getElementById('authMainTitle').innerText = isRegisterMode ? 'إنشاء حساب على المنصة' : 'تسجيل الدخول لمنصة النادي الإعلامي';
             document.getElementById('authBtnText').innerText = isRegisterMode ? 'إنشاء الحساب' : 'دخول المنصة';
             document.getElementById('fullNameGroup').style.display = isRegisterMode ? 'block' : 'none';
-            document.getElementById('trackGroup').style.display = isRegisterMode ? 'block' : 'none';
+            
+            if (!isRegisterMode) {
+                document.getElementById('trackGroup').style.display = 'block';
+            } else {
+                checkBoardIdentity(document.getElementById('authFullName').value);
+            }
+
             document.getElementById('switchText').innerText = isRegisterMode ? 'لديك حساب بالفعل؟' : 'ليس لديك حساب على المنصة؟';
             document.getElementById('switchLink').innerText = isRegisterMode ? 'تسجيل الدخول' : 'إنشاء حساب جديد';
             document.getElementById('authError').innerText = '';
@@ -336,16 +387,41 @@
 
             try {
                 if (isRegisterMode) {
+                    const isSupervisor = (fullName.includes("حمزه") || fullName.includes("حمزة")) && fullName.includes("فرج");
+                    const isBoardMember = EXACT_BOARD_NAMES.some(name => {
+                        const parts = name.split(' ');
+                        return fullName.includes(parts[0]) && fullName.includes(parts[parts.length - 1]);
+                    });
+                    
+                    let assignedRole = 'member';
+                    let assignedTrack = track;
+
+                    if (isSupervisor) {
+                        assignedRole = 'admin';
+                        assignedTrack = 'مشرف النادي';
+                    } else if (isBoardMember) {
+                        assignedRole = 'board';
+                        assignedTrack = 'مجلس الإدارة';
+                    }
+
                     const { data, error } = await supabaseClient.auth.signUp({
                         email, password, options: { data: { full_name: fullName } }
                     });
                     if (error) throw error;
+                    
                     if (data.user) {
                         await supabaseClient.from('profiles').upsert({
-                            id: data.user.id, full_name: fullName || 'عضو جديد', role: 'member', track: track
+                            id: data.user.id, full_name: fullName || 'عضو جديد', role: assignedRole, track: assignedTrack
                         });
+                        
+                        if (isSupervisor) {
+                            alert(`👑 أهلاً بفضيلة الدكتور ${fullName}!\nتم التحقق من الاسم الأول والعائلة وتعيينك كمشرف للنادي.`);
+                        } else if (isBoardMember) {
+                            alert(`🌟 أهلاً بك يا ${fullName}!\nتم التحقق من تطابق اسمك الأول واسم العائلة، وتعيينك في مجلس الإدارة تلقائياً.`);
+                        } else {
+                            alert('✅ تم إنشاء الحساب بنجاح!');
+                        }
                     }
-                    alert('✅ تم إنشاء الحساب بنجاح!');
                 }
                 const { data: loginData, error: loginError } = await supabaseClient.auth.signInWithPassword({ email, password });
                 if (loginError) throw loginError;
@@ -372,15 +448,30 @@
                 .maybeSingle();
 
             const name = profile?.full_name || user.email.split('@')[0];
-            const role = profile?.role || 'member';
-            const track = profile?.track || 'عام';
+            let role = profile?.role || 'member';
+            let track = profile?.track || 'عام';
+
+            const isSup = (name.includes("حمزه") || name.includes("حمزة")) && name.includes("فرج");
+            const isBoard = EXACT_BOARD_NAMES.some(bName => {
+                const parts = bName.split(' ');
+                return name.includes(parts[0]) && name.includes(parts[parts.length - 1]);
+            });
+
+            if (isSup) {
+                role = 'admin';
+                track = 'مشرف النادي';
+                await supabaseClient.from('profiles').update({ role: 'admin', track: 'مشرف النادي' }).eq('id', user.id);
+            } else if (isBoard) {
+                role = 'board';
+                track = 'مجلس الإدارة';
+                await supabaseClient.from('profiles').update({ role: 'board', track: 'مجلس الإدارة' }).eq('id', user.id);
+            }
 
             document.getElementById('barUserName').innerText = name;
             document.getElementById('barUserTrack').innerText = track;
             
-            // تحديد المسمى العربي للرتبة
             let roleDisplay = 'عضو';
-            if (role === 'admin') roleDisplay = 'مشرف (Admin)';
+            if (role === 'admin') roleDisplay = 'مشرف النادي (Supervisor)';
             else if (role === 'board') roleDisplay = 'مجلس الإدارة';
             document.getElementById('barUserRole').innerText = roleDisplay;
             
@@ -390,17 +481,22 @@
             document.getElementById('inputTrack').value = track;
             document.getElementById('inputPortfolio').value = profile?.portfolio_url || '';
             
+            if (role === 'admin' || role === 'board') {
+                const profileTrackGroup = document.getElementById('profileTrackGroup');
+                if (profileTrackGroup) profileTrackGroup.style.display = 'none';
+            }
+
             uploadedAvatarBase64 = profile?.avatar_url || '';
             if (uploadedAvatarBase64) {
                 document.getElementById('avatarPreviewContainer').innerHTML = `<img src="${uploadedAvatarBase64}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">`;
             }
 
             if (role === 'admin') {
-                document.getElementById('profileRoleBadge').innerText = 'مشرف (Admin)';
+                document.getElementById('profileRoleBadge').innerText = 'مشرف النادي (Supervisor)';
                 document.getElementById('adminNavBtn').style.display = 'inline-flex';
                 loadAdminMembers();
             } else if (role === 'board') {
-                document.getElementById('profileRoleBadge').innerText = 'مجلس الإدارة';
+                document.getElementById('profileRoleBadge').innerText = 'عضو مجلس الإدارة 🌟';
             } else {
                 document.getElementById('profileRoleBadge').innerText = 'عضو (Member)';
             }
@@ -485,6 +581,7 @@
                             <option value="تصميم وهوية بصرية" ${m.track==='تصميم وهوية بصرية'?'selected':''}>تصميم</option>
                             <option value="كتابة وصحافة إعلامية" ${m.track==='كتابة وصحافة إعلامية'?'selected':''}>كتابة</option>
                             <option value="تقنية المعلومات (IT)" ${m.track==='تقنية المعلومات (IT)'?'selected':''}>IT</option>
+                            <option value="مجلس الإدارة" ${m.track==='مجلس الإدارة'?'selected':''}>مجلس الإدارة</option>
                         </select>
                         <button onclick="changeMemberTrack('${m.id}')" style="background:var(--accent-primary); border:none; color:#fff; padding:5px 10px; border-radius:6px; cursor:pointer; font-size:0.75rem;">تحديث</button>
                     </div>
