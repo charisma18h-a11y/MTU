@@ -78,7 +78,7 @@
         .profile-header-card { text-align: center; padding: 25px; }
         .avatar-container { position: relative; width: 95px; height: 95px; margin: 0 auto 12px; }
         .avatar-preview { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 3px solid var(--accent-primary); background: #1a1a24; display: flex; align-items: center; justify-content: center; font-size: 2rem; color: var(--text-muted); }
-        .avatar-upload-btn { position: absolute; bottom: 0; left: 0; background: var(--accent-primary); color: #fff; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; border: 2px solid var(--bg-card); font-size: 0.9rem; }
+        .avatar-upload-btn { position: absolute; bottom: 0; left: 0; background: var(--accent-primary); color: #fff; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; border: 2px solid var(--bg-card); font-size: 1rem; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
         
         .board-hierarchy { display: flex; flex-direction: column; gap: 12px; }
         .board-tier-1 { display: flex; justify-content: center; }
@@ -209,8 +209,8 @@
             <div class="card profile-header-card">
                 <div class="avatar-container">
                     <div class="avatar-preview" id="avatarPreviewContainer">👤</div>
-                    <label for="fileUploadInput" class="avatar-upload-btn" title="رفع صورة شخصية">➕</label>
-                    <input type="file" id="fileUploadInput" accept="image/*" style="display: none;" onchange="uploadAvatarImage(this)">
+                    <label for="avatarFileInput" class="avatar-upload-btn" title="اختر صورة من الجوال">➕</label>
+                    <input type="file" id="avatarFileInput" accept="image/*" style="display: none;" onchange="previewAvatar(this)">
                 </div>
                 <h2 id="profileDisplayName" style="font-size: 1.3rem; margin-bottom: 4px; color: #fff;">اسم العضو</h2>
                 <span id="profileRoleBadge" style="background: rgba(59,130,246,0.2); color: var(--accent-glow); padding: 3px 12px; border-radius: 12px; font-size: 0.75rem; font-weight: 700;">عضو</span>
@@ -296,7 +296,7 @@
         
         let currentUser = null;
         let isRegisterMode = false;
-        let currentAvatarUrl = '';
+        let uploadedAvatarBase64 = '';
 
         function toggleAuthMode() {
             isRegisterMode = !isRegisterMode;
@@ -363,7 +363,6 @@
             const role = profile?.role || 'member';
             const track = profile?.track || 'عام';
 
-            // تحديث الشريط العلوي والبروفايل
             document.getElementById('barUserName').innerText = name;
             document.getElementById('barUserTrack').innerText = track;
             document.getElementById('barUserRole').innerText = role === 'admin' ? 'مشرف (Admin)' : 'عضو';
@@ -374,9 +373,9 @@
             document.getElementById('inputTrack').value = track;
             document.getElementById('inputPortfolio').value = profile?.portfolio_url || '';
             
-            currentAvatarUrl = profile?.avatar_url || '';
-            if (currentAvatarUrl) {
-                document.getElementById('avatarPreviewContainer').innerHTML = `<img src="${currentAvatarUrl}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">`;
+            uploadedAvatarBase64 = profile?.avatar_url || '';
+            if (uploadedAvatarBase64) {
+                document.getElementById('avatarPreviewContainer').innerHTML = `<img src="${uploadedAvatarBase64}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">`;
             }
 
             if (role === 'admin') {
@@ -388,13 +387,32 @@
             }
         }
 
-        // تحويل الصورة المرفوعة إلى Base64 وتخزينها مباشرة
-        function uploadAvatarImage(input) {
+        // اختيار ورفع الصورة بضغطة زر من الجوال وضغط حجمها لتجنب ثقل الكود
+        function previewAvatar(input) {
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    currentAvatarUrl = e.target.result;
-                    document.getElementById('avatarPreviewContainer').innerHTML = `<img src="${currentAvatarUrl}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">`;
+                    const img = new Image();
+                    img.src = e.target.result;
+                    img.onload = function() {
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+                        const MAX_WIDTH = 200;
+                        const MAX_HEIGHT = 200;
+                        let width = img.width;
+                        let height = img.height;
+
+                        if (width > height) {
+                            if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; }
+                        } else {
+                            if (height > MAX_HEIGHT) { width *= MAX_HEIGHT / height; height = MAX_HEIGHT; }
+                        }
+                        canvas.width = width;
+                        canvas.height = height;
+                        ctx.drawImage(img, 0, 0, width, height);
+                        uploadedAvatarBase64 = canvas.toDataURL('image/jpeg', 0.7);
+                        document.getElementById('avatarPreviewContainer').innerHTML = `<img src="${uploadedAvatarBase64}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">`;
+                    };
                 };
                 reader.readAsDataURL(input.files[0]);
             }
@@ -412,20 +430,19 @@
             const portfolio_url = document.getElementById('inputPortfolio').value.trim();
 
             const { error } = await supabaseClient.from('profiles').update({
-                bio, track, portfolio_url, avatar_url: currentAvatarUrl
+                bio, track, portfolio_url, avatar_url: uploadedAvatarBase64
             }).eq('id', currentUser.id);
 
             if (error) {
                 alert('❌ تعذر حفظ التعديلات: ' + error.message);
             } else {
-                alert('✅ تم حفظ التعديلات في بروفايلك بنجاح!');
+                alert('✅ تم حفظ التعديلات وصورتك الشخصية في بروفايلك بنجاح!');
                 document.getElementById('barUserTrack').innerText = track;
             }
             btn.disabled = false;
             btn.innerHTML = '<span>حفظ التعديلات في البروفايل</span><span>💾</span>';
         }
 
-        // جلب ونقل الأعضاء (للأدمن)
         async function loadAdminMembers() {
             const container = document.getElementById('adminMembersList');
             const { data: members, error } = await supabaseClient.from('profiles').select('*');
@@ -440,7 +457,7 @@
                 item.innerHTML = `
                     <div>
                         <strong>${m.full_name || 'بدون اسم'}</strong><br>
-                        <span style="font-size: 0.78rem; color: var(--text-muted);">التخصص الحالي: ${m.track || 'غير محدد'} | الرتبة: ${m.role}</span>
+                        <span style="font-size: 0.78rem; color: var(--text-muted);">التخصص: ${m.track || 'غير محدد'} | الرتبة: ${m.role}</span>
                     </div>
                     <div style="display:flex; gap:5px; align-items:center;">
                         <select id="track_${m.id}" style="padding:4px 8px; font-size:0.8rem;">
