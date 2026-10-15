@@ -139,13 +139,18 @@
         .status-pending { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
         .status-approved { background: rgba(34, 197, 94, 0.15); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.3); }
 
-        /* معرض الصور الشبكي (Gallery) */
-        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; margin-top: 15px; }
-        .gallery-item { background: var(--bg-card-solid); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; transition: transform 0.3s ease; }
+        /* معرض الصور الديناميكي والألبومات */
+        .albums-bar { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 15px; }
+        .album-chip { background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: var(--text-muted); padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; cursor: pointer; white-space: nowrap; transition: 0.2s; }
+        .album-chip.active, .album-chip:hover { background: var(--accent-primary); color: #fff; border-color: var(--accent-glow); }
+
+        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; margin-top: 15px; }
+        .gallery-item { background: var(--bg-card-solid); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; transition: transform 0.3s ease; position: relative; }
         .gallery-item:hover { transform: translateY(-4px); border-color: var(--accent-primary); }
-        .gallery-item img { width: 100%; height: 160px; object-fit: cover; display: block; }
+        .gallery-item img { width: 100%; height: 150px; object-fit: cover; display: block; }
         .gallery-caption { padding: 8px; font-size: 0.78rem; color: #cbd5e1; text-align: center; font-weight: 700; }
-        
+        .delete-img-btn { position: absolute; top: 6px; left: 6px; background: rgba(248,81,73,0.8); color: #fff; border: none; width: 26px; height: 26px; border-radius: 50%; cursor: pointer; font-size: 0.75rem; display: flex; align-items: center; justify-content: center; }
+
         .like-btn { background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: #fff; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; cursor: pointer; transition: 0.2s ease; display: inline-flex; align-items: center; gap: 5px; }
         .like-btn:hover { background: rgba(59,130,246,0.2); border-color: var(--accent-primary); }
 
@@ -321,13 +326,58 @@
             </div>
         </section>
 
-        <!-- صفحة معرض الصور الشبكي (التوليد التلقائي) -->
+        <!-- صفحة معرض الصور الذكي مع الرفع وإضافة الألبومات -->
         <section id="galleryPage" class="page-section">
             <div class="card">
-                <h2 class="section-title"><span class="icon">🖼️</span>معرض صور فعاليات ومشاريع النادي</h2>
-                <p style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 15px;">أرشيف فعاليات النادي الإعلامي بجامعة الطائف (60 صورة):</p>
+                <h2 class="section-title"><span class="icon">🖼️</span>معرض صور فعاليات النادي</h2>
                 
-                <div class="gallery-grid" id="clubGalleryContainer"></div>
+                <!-- نموذج إضافة قسم جديد (ملف/ألبوم) أو رفع صورة -->
+                <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--border); padding: 15px; border-radius: 12px; margin-bottom: 20px;">
+                    <h3 style="font-size: 0.95rem; margin-bottom: 12px; color: var(--accent-glow);">➕ إدارة الصور والألبومات:</h3>
+                    
+                    <div class="form-row" style="margin-bottom: 10px;">
+                        <div class="form-group">
+                            <label>إنشاء ألبوم / مجلد جديد:</label>
+                            <div style="display: flex; gap: 8px;">
+                                <input type="text" id="newAlbumName" placeholder="مثال: ورشة التصوير 2026">
+                                <button type="button" onclick="createNewAlbum()" style="background: var(--accent-primary); border: none; color: #fff; padding: 0 15px; border-radius: 8px; font-weight: 700; cursor: pointer; white-space: nowrap;">إنشاء</button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>اختر الألبوم المستهدف:</label>
+                            <select id="targetAlbumSelect">
+                                <option value="الكل">الفعاليات العامة (افتراضي)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <form id="uploadGalleryForm" onsubmit="uploadGalleryImage(event)">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>رفع صورة من الجهاز:</label>
+                                <input type="file" id="galleryImageFile" accept="image/*" style="padding: 8px;">
+                            </div>
+                            <div class="form-group">
+                                <label>أو ضع رابط صورة مباشر:</label>
+                                <input type="url" id="galleryImageUrl" placeholder="https://example.com/photo.jpg">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>عنوان أو وصف للصورة:</label>
+                            <input type="text" id="galleryImageCaption" placeholder="مثال: جانب من حضور الورشة التدريبية" required>
+                        </div>
+                        <button type="submit" class="btn-submit" id="uploadGalleryBtn"><span>رفع وإضافة الصورة للمعرض</span><span>🚀</span></button>
+                    </form>
+                </div>
+
+                <!-- شريط تصفية الألبومات -->
+                <div class="albums-bar" id="albumsBarContainer">
+                    <div class="album-chip active" onclick="filterGalleryByAlbum('الكل', this)">📁 الكل</div>
+                </div>
+                
+                <div class="gallery-grid" id="dynamicGalleryContainer">
+                    <div style="text-align: center; color: var(--text-muted); grid-column: 1 / -1; padding: 20px;">جاري تحميل الصور...</div>
+                </div>
             </div>
         </section>
 
@@ -489,21 +539,145 @@
         let uploadedAvatarBase64 = '';
         let allMembersData = [];
         let allIdeasData = [];
+        let galleryData = [];
+        let albumsList = ["الفعاليات العامة"];
+        let currentSelectedAlbum = "الكل";
 
-        // توليد الـ 60 صورة تلقائياً
-        function renderClubGallery() {
-            const container = document.getElementById('clubGalleryContainer');
-            if (!container) return;
+        // إدارة الألبومات والمعرض
+        function createNewAlbum() {
+            const input = document.getElementById('newAlbumName');
+            const albumName = input.value.trim();
+            if (!albumName) { alert('⚠️ يرجى كتابة اسم الألبوم.'); return; }
+            if (albumsList.includes(albumName)) { alert('⚠️ هذا الألبوم موجود مسبقاً.'); return; }
+
+            albumsList.push(albumName);
+            input.value = '';
+            updateAlbumsUI();
+            alert(`✅ تم إنشاء الألبوم "${albumName}" بنجاح!`);
+        }
+
+        function updateAlbumsUI() {
+            const selectEl = document.getElementById('targetAlbumSelect');
+            const barEl = document.getElementById('albumsBarContainer');
+            
+            selectEl.innerHTML = '<option value="الفعاليات العامة">الفعاليات العامة (افتراضي)</option>';
+            albumsList.forEach(album => {
+                if(album !== "الفعاليات العامة") {
+                    selectEl.innerHTML += `<option value="${album}">${album}</option>`;
+                }
+            });
+
+            barEl.innerHTML = `<div class="album-chip ${currentSelectedAlbum==='الكل'?'active':''}" onclick="filterGalleryByAlbum('الكل', this)">📁 الكل</div>`;
+            albumsList.forEach(album => {
+                barEl.innerHTML += `<div class="album-chip ${currentSelectedAlbum===album?'active':''}" onclick="filterGalleryByAlbum('${album}', this)">📁 ${album}</div>`;
+            });
+        }
+
+        async function loadGalleryFromSupabase() {
+            const container = document.getElementById('dynamicGalleryContainer');
+            try {
+                const { data, error } = await supabaseClient.from('gallery').select('*').order('created_at', { ascending: false });
+                if (error) throw error;
+                galleryData = data || [];
+                
+                // استخراج الألبومات الفريدة من الصور المخزنة
+                galleryData.forEach(item => {
+                    if (item.album && !albumsList.includes(item.album)) {
+                        albumsList.push(item.album);
+                    }
+                });
+                updateAlbumsUI();
+                renderGalleryGrid(galleryData);
+            } catch (err) {
+                container.innerHTML = '<div style="text-align: center; color: var(--text-muted); grid-column: 1 / -1; padding: 20px;">لا توجد صور مرفوعة حتى الآن. ابدأ برفع أول صورة!</div>';
+            }
+        }
+
+        function renderGalleryGrid(items) {
+            const container = document.getElementById('dynamicGalleryContainer');
             container.innerHTML = '';
+            
+            const filtered = currentSelectedAlbum === 'الكل' ? items : items.filter(i => i.album === currentSelectedAlbum);
 
-            for (let i = 1; i <= 60; i++) {
-                const item = document.createElement('div');
-                item.className = 'gallery-item';
-                item.innerHTML = `
-                    <img src="images/${i}.jpg" alt="فعالية النادي ${i}" loading="lazy" onerror="this.onerror=null; this.src='images/${i}.png';">
-                    <div class="gallery-caption">فعالية النادي #${i}</div>
+            if (filtered.length === 0) {
+                container.innerHTML = '<div style="text-align: center; color: var(--text-muted); grid-column: 1 / -1; padding: 20px;">لا توجد صور في هذا الألبوم.</div>';
+                return;
+            }
+
+            filtered.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'gallery-item';
+                card.innerHTML = `
+                    <img src="${item.image_url}" alt="${item.caption || 'صورة النادي'}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=600&q=80'">
+                    <div class="gallery-caption">${item.caption || 'بدون وصف'} <br><span style="font-size:0.65rem; color:var(--accent-glow);">[${item.album || 'عام'}]</span></div>
+                    <button class="delete-img-btn" onclick="deleteGalleryItem('${item.id}')" title="حذف الصورة">×</button>
                 `;
-                container.appendChild(item);
+                container.appendChild(card);
+            });
+        }
+
+        function filterGalleryByAlbum(albumName, btnEl) {
+            currentSelectedAlbum = albumName;
+            document.querySelectorAll('.album-chip').forEach(c => c.classList.remove('active'));
+            btnEl.classList.add('active');
+            renderGalleryGrid(galleryData);
+        }
+
+        async function uploadGalleryImage(e) {
+            e.preventDefault();
+            const btn = document.getElementById('uploadGalleryBtn');
+            const fileInput = document.getElementById('galleryImageFile');
+            const urlInput = document.getElementById('galleryImageUrl');
+            const captionInput = document.getElementById('galleryImageCaption');
+            const albumSelect = document.getElementById('targetAlbumSelect');
+
+            btn.disabled = true;
+            btn.innerHTML = '<span>جاري الرفع...</span> ⏳';
+
+            let finalImageUrl = urlInput.value.trim();
+
+            try {
+                if (fileInput.files && fileInput.files[0]) {
+                    const file = fileInput.files[0];
+                    const filePath = `gallery_uploads/${Date.now()}_${file.name}`;
+                    const { error: upErr } = await supabaseClient.storage.from('media').upload(filePath, file);
+                    if (upErr) throw upErr;
+                    const { data: pubData } = supabaseClient.storage.from('media').getPublicUrl(filePath);
+                    finalImageUrl = pubData.publicUrl;
+                }
+
+                if (!finalImageUrl) {
+                    throw new Error('يرجى اختيار ملف صورة أو إدخال رابط مباشر.');
+                }
+
+                const newGalleryItem = {
+                    image_url: finalImageUrl,
+                    caption: captionInput.value.trim(),
+                    album: albumSelect.value
+                };
+
+                const { error: dbErr } = await supabaseClient.from('gallery').insert([newGalleryItem]);
+                if (dbErr) throw dbErr;
+
+                alert('✅ تمت إضافة الصورة بنجاح للمعرض!');
+                document.getElementById('uploadGalleryForm').reset();
+                loadGalleryFromSupabase();
+            } catch (err) {
+                alert('❌ تعذر الرفع: ' + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<span>رفع وإضافة الصورة للمعرض</span><span>🚀</span>';
+            }
+        }
+
+        async function deleteGalleryItem(id) {
+            if (!confirm('هل أنت متأكد من حذف هذه الصورة؟')) return;
+            const { error } = await supabaseClient.from('gallery').delete().eq('id', id);
+            if (!error) {
+                alert('✅ تم الحذف بنجاح');
+                loadGalleryFromSupabase();
+            } else {
+                alert('❌ تعذر الحذف');
             }
         }
 
@@ -877,7 +1051,7 @@
         }
 
         window.addEventListener('DOMContentLoaded', async () => {
-            renderClubGallery();
+            loadGalleryFromSupabase();
             const { data: { session } } = await supabaseClient.auth.getSession();
             if (session && session.user) { loadUserProfile(session.user); }
         });
@@ -890,6 +1064,7 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
             if (pageId === 'archivePage') loadSupabaseIdeas();
             if (pageId === 'adminPage') loadAdminMembers();
+            if (pageId === 'galleryPage') loadGalleryFromSupabase();
         };
 
         function getYouTubeEmbedUrl(url) {
