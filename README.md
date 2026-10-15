@@ -147,8 +147,7 @@
         .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; margin-top: 15px; }
         .gallery-item { background: var(--bg-card-solid); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; transition: transform 0.3s ease; position: relative; }
         .gallery-item:hover { transform: translateY(-4px); border-color: var(--accent-primary); }
-        .gallery-item img { width: 100%; height: 150px; object-fit: cover; display: block; }
-        .gallery-caption { padding: 8px; font-size: 0.78rem; color: #cbd5e1; text-align: center; font-weight: 700; }
+        .gallery-item img { width: 100%; height: 160px; object-fit: cover; display: block; }
         .delete-img-btn { position: absolute; top: 6px; left: 6px; background: rgba(248,81,73,0.8); color: #fff; border: none; width: 26px; height: 26px; border-radius: 50%; cursor: pointer; font-size: 0.75rem; display: flex; align-items: center; justify-content: center; }
 
         .like-btn { background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: #fff; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; cursor: pointer; transition: 0.2s ease; display: inline-flex; align-items: center; gap: 5px; }
@@ -326,14 +325,14 @@
             </div>
         </section>
 
-        <!-- صفحة معرض الصور الذكي مع الرفع وإضافة الألبومات -->
+        <!-- صفحة معرض الصور الذكي مع الرفع الجماعي والألبومات -->
         <section id="galleryPage" class="page-section">
             <div class="card">
                 <h2 class="section-title"><span class="icon">🖼️</span>معرض صور فعاليات النادي</h2>
                 
-                <!-- نموذج إضافة قسم جديد (ملف/ألبوم) أو رفع صورة -->
+                <!-- نموذج الرفع الجماعي وإنشاء الألبومات -->
                 <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--border); padding: 15px; border-radius: 12px; margin-bottom: 20px;">
-                    <h3 style="font-size: 0.95rem; margin-bottom: 12px; color: var(--accent-glow);">➕ إدارة الصور والألبومات:</h3>
+                    <h3 style="font-size: 0.95rem; margin-bottom: 12px; color: var(--accent-glow);">➕ إدارة المعرض (رفع جماعي وإنشاء ألبومات):</h3>
                     
                     <div class="form-row" style="margin-bottom: 10px;">
                         <div class="form-group">
@@ -346,27 +345,19 @@
                         <div class="form-group">
                             <label>اختر الألبوم المستهدف:</label>
                             <select id="targetAlbumSelect">
-                                <option value="الكل">الفعاليات العامة (افتراضي)</option>
+                                <option value="الفعاليات العامة">الفعاليات العامة (افتراضي)</option>
                             </select>
                         </div>
                     </div>
 
-                    <form id="uploadGalleryForm" onsubmit="uploadGalleryImage(event)">
+                    <form id="uploadGalleryForm" onsubmit="uploadMultipleGalleryImages(event)">
                         <div class="form-row">
-                            <div class="form-group">
-                                <label>رفع صورة من الجهاز:</label>
-                                <input type="file" id="galleryImageFile" accept="image/*" style="padding: 8px;">
-                            </div>
-                            <div class="form-group">
-                                <label>أو ضع رابط صورة مباشر:</label>
-                                <input type="url" id="galleryImageUrl" placeholder="https://example.com/photo.jpg">
+                            <div class="form-group" style="grid-column: 1 / -1;">
+                                <label>اختر صور متعددة من الجهاز (يمكنك تحديد أكثر من صورة دفعة واحدة):</label>
+                                <input type="file" id="galleryImageFiles" accept="image/*" multiple required style="padding: 8px;">
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label>عنوان أو وصف للصورة:</label>
-                            <input type="text" id="galleryImageCaption" placeholder="مثال: جانب من حضور الورشة التدريبية" required>
-                        </div>
-                        <button type="submit" class="btn-submit" id="uploadGalleryBtn"><span>رفع وإضافة الصورة للمعرض</span><span>🚀</span></button>
+                        <button type="submit" class="btn-submit" id="uploadGalleryBtn"><span>رفع الصور المحددة دفعة واحدة</span><span>🚀</span></button>
                     </form>
                 </div>
 
@@ -543,7 +534,7 @@
         let albumsList = ["الفعاليات العامة"];
         let currentSelectedAlbum = "الكل";
 
-        // إدارة الألبومات والمعرض
+        // إدارة الألبومات والمعرض الجماعي
         function createNewAlbum() {
             const input = document.getElementById('newAlbumName');
             const albumName = input.value.trim();
@@ -580,7 +571,6 @@
                 if (error) throw error;
                 galleryData = data || [];
                 
-                // استخراج الألبومات الفريدة من الصور المخزنة
                 galleryData.forEach(item => {
                     if (item.album && !albumsList.includes(item.album)) {
                         albumsList.push(item.album);
@@ -589,7 +579,7 @@
                 updateAlbumsUI();
                 renderGalleryGrid(galleryData);
             } catch (err) {
-                container.innerHTML = '<div style="text-align: center; color: var(--text-muted); grid-column: 1 / -1; padding: 20px;">لا توجد صور مرفوعة حتى الآن. ابدأ برفع أول صورة!</div>';
+                container.innerHTML = '<div style="text-align: center; color: var(--text-muted); grid-column: 1 / -1; padding: 20px;">لا توجد صور مرفوعة حتى الآن. ابدأ برفع الصور دفعة وحدة!</div>';
             }
         }
 
@@ -608,8 +598,7 @@
                 const card = document.createElement('div');
                 card.className = 'gallery-item';
                 card.innerHTML = `
-                    <img src="${item.image_url}" alt="${item.caption || 'صورة النادي'}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=600&q=80'">
-                    <div class="gallery-caption">${item.caption || 'بدون وصف'} <br><span style="font-size:0.65rem; color:var(--accent-glow);">[${item.album || 'عام'}]</span></div>
+                    <img src="${item.image_url}" alt="صورة النادي" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=600&q=80'">
                     <button class="delete-img-btn" onclick="deleteGalleryItem('${item.id}')" title="حذف الصورة">×</button>
                 `;
                 container.appendChild(card);
@@ -623,50 +612,50 @@
             renderGalleryGrid(galleryData);
         }
 
-        async function uploadGalleryImage(e) {
+        // دالة الرفع المتعدد (مجموعة صور دفعة واحدة)
+        async function uploadMultipleGalleryImages(e) {
             e.preventDefault();
             const btn = document.getElementById('uploadGalleryBtn');
-            const fileInput = document.getElementById('galleryImageFile');
-            const urlInput = document.getElementById('galleryImageUrl');
-            const captionInput = document.getElementById('galleryImageCaption');
+            const fileInput = document.getElementById('galleryImageFiles');
             const albumSelect = document.getElementById('targetAlbumSelect');
+            const targetAlbum = albumSelect.value;
+
+            if (!fileInput.files || fileInput.files.length === 0) {
+                alert('⚠️ يرجى اختيار صورة واحدة على الأقل.');
+                return;
+            }
 
             btn.disabled = true;
-            btn.innerHTML = '<span>جاري الرفع...</span> ⏳';
-
-            let finalImageUrl = urlInput.value.trim();
+            const totalFiles = fileInput.files.length;
+            btn.innerHTML = `<span>جاري رفع ${totalFiles} صور...</span> ⏳`;
 
             try {
-                if (fileInput.files && fileInput.files[0]) {
-                    const file = fileInput.files[0];
-                    const filePath = `gallery_uploads/${Date.now()}_${file.name}`;
+                for (let i = 0; i < totalFiles; i++) {
+                    const file = fileInput.files[i];
+                    const filePath = `gallery_uploads/${Date.now()}_${i}_${file.name}`;
+                    
                     const { error: upErr } = await supabaseClient.storage.from('media').upload(filePath, file);
                     if (upErr) throw upErr;
+
                     const { data: pubData } = supabaseClient.storage.from('media').getPublicUrl(filePath);
-                    finalImageUrl = pubData.publicUrl;
+                    
+                    const newGalleryItem = {
+                        image_url: pubData.publicUrl,
+                        caption: '',
+                        album: targetAlbum
+                    };
+
+                    await supabaseClient.from('gallery').insert([newGalleryItem]);
                 }
 
-                if (!finalImageUrl) {
-                    throw new Error('يرجى اختيار ملف صورة أو إدخال رابط مباشر.');
-                }
-
-                const newGalleryItem = {
-                    image_url: finalImageUrl,
-                    caption: captionInput.value.trim(),
-                    album: albumSelect.value
-                };
-
-                const { error: dbErr } = await supabaseClient.from('gallery').insert([newGalleryItem]);
-                if (dbErr) throw dbErr;
-
-                alert('✅ تمت إضافة الصورة بنجاح للمعرض!');
+                alert(`✅ تم رفع الـ ${totalFiles} صورة بنجاح إلى الألبوم "${targetAlbum}"!`);
                 document.getElementById('uploadGalleryForm').reset();
                 loadGalleryFromSupabase();
             } catch (err) {
-                alert('❌ تعذر الرفع: ' + err.message);
+                alert('❌ تعذر رفع الصور: ' + err.message);
             } finally {
                 btn.disabled = false;
-                btn.innerHTML = '<span>رفع وإضافة الصورة للمعرض</span><span>🚀</span>';
+                btn.innerHTML = '<span>رفع الصور المحددة دفعة واحدة</span><span>🚀</span>';
             }
         }
 
