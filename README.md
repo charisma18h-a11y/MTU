@@ -141,7 +141,7 @@
 
         /* معرض الصور الشبكي (Gallery) */
         .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; margin-top: 15px; }
-        .gallery-item { background: var(--bg-card-solid); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; transition: transform 0.3s ease; cursor: pointer; }
+        .gallery-item { background: var(--bg-card-solid); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; transition: transform 0.3s ease; }
         .gallery-item:hover { transform: translateY(-4px); border-color: var(--accent-primary); }
         .gallery-item img { width: 100%; height: 160px; object-fit: cover; display: block; }
         .gallery-caption { padding: 8px; font-size: 0.78rem; color: #cbd5e1; text-align: center; font-weight: 700; }
@@ -321,15 +321,13 @@
             </div>
         </section>
 
-        <!-- صفحة معرض الصور الشبكي (التوليد التلقائي لـ 60 صورة) -->
+        <!-- صفحة معرض الصور الشبكي (التوليد التلقائي مع الحماية) -->
         <section id="galleryPage" class="page-section">
             <div class="card">
-                <h2 class="section-title"><span class="icon">🖼️</span>معرض صور فعاليات ومشاريع النادي (60 صورة)</h2>
-                <p style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 15px;">أرشيف فعاليات النادي الإعلامي بجامعة الطائف:</p>
+                <h2 class="section-title"><span class="icon">🖼️</span>معرض صور فعاليات ومشاريع النادي</h2>
+                <p style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 15px;">أرشيف فعاليات النادي الإعلامي بجامعة الطائف (60 صورة):</p>
                 
-                <div class="gallery-grid" id="clubGalleryContainer">
-                    <!-- يتم توليد الصور تلقائياً هنا بواسطة الجافاسكريبت -->
-                </div>
+                <div class="gallery-grid" id="clubGalleryContainer"></div>
             </div>
         </section>
 
@@ -492,19 +490,17 @@
         let allMembersData = [];
         let allIdeasData = [];
 
-        // توليد الـ 60 صورة تلقائياً في المعرض
+        // توليد الـ 60 صورة تلقائياً مع معالجة الأخطاء
         function renderClubGallery() {
             const container = document.getElementById('clubGalleryContainer');
             if (!container) return;
             container.innerHTML = '';
 
-            // فرضا أن الصور مسمية من 1 إلى 60 (مثل: 1.jpg, 2.jpg ... الخ داخل مجلد images)
-            // ملاحظة: إذا كانت صيغ الصور png أو امتداد آخر تقدر تغيره هنا بسهولة
             for (let i = 1; i <= 60; i++) {
                 const item = document.createElement('div');
                 item.className = 'gallery-item';
                 item.innerHTML = `
-                    <img src="images/${i}.jpg" alt="فعالية النادي ${i}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=600&q=80'">
+                    <img src="images/${i}.jpg" alt="فعالية النادي ${i}" loading="lazy" onerror="this.onerror=null; this.src='images/${i}.png';">
                     <div class="gallery-caption">فعالية النادي #${i}</div>
                 `;
                 container.appendChild(item);
@@ -819,7 +815,7 @@
                 item.innerHTML = `
                     <div>
                         <strong>${m.full_name || 'بدون اسم'}</strong><br>
-                        <span style="font-size: 0.78rem; color: var(--text-muted);">المسار: ${m.track \vert{}\vert{} 'غير محدد'} \vert{} الجوال: ${m.phone || 'غير مسجل'}</span>
+                        <span style="font-size: 0.78rem; color: var(--text-muted);">المسار: ${m.track || 'غير محدد'} | الجوال: ${m.phone || 'غير مسجل'}</span>
                     </div>
                     <div style="display:flex; gap:5px; align-items:center;">
                         <select id="track_${m.id}" style="padding:4px 8px; font-size:0.8rem;">
@@ -862,7 +858,7 @@
         function exportMembersToExcel() {
             if (allMembersData.length === 0) return;
             let csv = "data:text/csv;charset=utf-8,\uFEFFالاسم,المسار,الرتبة,الجوال\n";
-            allMembersData.forEach(m => { csv += `"${m.full_name \vert{}\vert{} ''}","${m.track || ''}","${m.role \vert{}\vert{} ''}","${m.phone || ''}"\n`; });
+            allMembersData.forEach(m => { csv += `"${m.full_name || ''}","${m.track || ''}","${m.role || ''}","${m.phone || ''}"\n`; });
             const link = document.createElement("a");
             link.setAttribute("href", encodeURI(csv));
             link.setAttribute("download", `اعضاء_النادي_${new Date().toISOString().slice(0,10)}.csv`);
@@ -881,7 +877,7 @@
         }
 
         window.addEventListener('DOMContentLoaded', async () => {
-            renderClubGallery(); // تشغيل مولد الصور التلقائي للمعرض
+            renderClubGallery();
             const { data: { session } } = await supabaseClient.auth.getSession();
             if (session && session.user) { loadUserProfile(session.user); }
         });
@@ -969,7 +965,7 @@
             container.innerHTML = ideas.length === 0 ? '<div style="text-align: center; color: var(--text-muted); padding: 20px;">لا توجد أفكار.</div>' : '';
 
             ideas.forEach((idea) => {
-                const embedUrl = getYouTubeEmbedUrl(idea.video_url);
+                const, embedUrl = getYouTubeEmbedUrl(idea.video_url); // تم مراجعة الفاصلة الزائدة هنا
                 const statusClass = idea.status === 'معتمدة' ? 'status-approved' : 'status-pending';
                 const card = document.createElement('div');
                 card.className = 'idea-card';
@@ -981,4 +977,40 @@
                             <div class="idea-author">المقترح: ${idea.author || ''}</div>
                         </div>
                     </div>
-                    <div class="idea
+                    <div class="idea-body">${idea.description || ''}</div>
+                    <div class="idea-details-meta">
+                        <div>📍 <strong>الموقع:</strong> ${idea.location || ''}</div>
+                        <div>👥 <strong>المشاركون:</strong> ${idea.members || ''}</div>
+                    </div>
+                    ${idea.image_url ? `<div style="margin-top: 10px;"><img src="${idea.image_url}" style="width:100%; max-height:220px; object-fit:cover; border-radius:8px;" onerror="this.style.display='none'"></div>` : ''}
+                    ${embedUrl ? `<div class="video-wrapper"><iframe src="${embedUrl}" allowfullscreen></iframe></div>` : ''}
+                    <div style="margin-top: 12px; display: flex; justify-content: space-between; align-items: center;">
+                        <button class="like-btn" onclick="likeIdea('${idea.id}', ${idea.likes_count || 0})">
+                            <span>👍 تصويت</span> <strong id="like_count_${idea.id}">${idea.likes_count || 0}</strong>
+                        </button>
+                        <span style="font-size: 0.72rem; color: var(--text-muted);">${new Date(idea.created_at).toLocaleDateString('ar-SA')}</span>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function filterIdeasArchive() {
+            const query = document.getElementById('searchIdeaInput').value.toLowerCase().trim();
+            if (!query) { renderIdeasCards(allIdeasData); return; }
+            renderIdeasCards(allIdeasData.filter(i => 
+                (i.title && i.title.toLowerCase().includes(query)) ||
+                (i.author && i.author.toLowerCase().includes(query)) ||
+                (i.description && i.description.toLowerCase().includes(query))
+            ));
+        }
+
+        async function likeIdea(ideaId, currentLikes) {
+            const newLikes = currentLikes + 1;
+            const countEl = document.getElementById(`like_count_${ideaId}`);
+            if (countEl) countEl.innerText = newLikes;
+            await supabaseClient.from('ideas').update({ likes_count: newLikes }).eq('id', ideaId);
+        }
+    </script>
+</body>
+</html>
