@@ -95,6 +95,12 @@
         .section-title { font-size: 1.15rem; font-weight: 800; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; color: var(--text-main); }
         .section-title span.icon { background: var(--accent-primary); color: #ffffff; width: 30px; height: 30px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; }
 
+        /* كروت الإحصائيات في لوحة المشرف */
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 20px; }
+        .stat-card { background: rgba(255,255,255,0.03); border: 1px solid var(--border); padding: 15px; border-radius: 12px; text-align: center; }
+        .stat-num { font-size: 1.8rem; font-weight: 900; color: var(--accent-glow); margin-top: 5px; }
+        .stat-label { font-size: 0.8rem; color: var(--text-muted); font-weight: 700; }
+
         .profile-header-card { text-align: center; padding: 25px; }
         .avatar-container { position: relative; width: 95px; height: 95px; margin: 0 auto 12px; }
         .avatar-preview { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 3px solid var(--accent-primary); background: #1a1a24; display: flex; align-items: center; justify-content: center; font-size: 2rem; color: var(--text-muted); }
@@ -145,11 +151,11 @@
 </head>
 <body>
 
-    <!-- فيديو خلفية مباشر وسريع جداً مخصص للتصميم الإعلامي -->
+    <!-- فيديو خلفية مباشر وسريع جداً -->
     <div class="bg-video-container">
         <video autoplay loop muted playsinline preload="auto">
-            <source src="https://assets.mixkit.co/videos/preview/mixkit-abstract-technology-mesh-network-30230-large.mp4" type="video/mp4">
             <source src="background.mp4" type="video/mp4">
+            <source src="https://assets.mixkit.co/videos/preview/mixkit-abstract-technology-mesh-network-30230-large.mp4" type="video/mp4">
         </video>
     </div>
     <div class="bg-overlay"></div>
@@ -375,15 +381,77 @@
             <div class="archive-grid" id="archiveContainer"></div>
         </section>
 
-        <!-- لوحة تحكم المشرف المحمية -->
+        <!-- لوحة تحكم المشرف المحمية والمتطورة -->
         <section id="adminPage" class="page-section">
             <div class="card">
                 <h2 class="section-title"><span class="icon">⚙️</span>لوحة تحكم المشرف وإدارة الأعضاء</h2>
-                <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 15px;">أهلاً بك يا مشرف المنصة. يمكنك استعراض جميع الأعضاء ونقلهم بين المسارات مباشرة.</p>
-                <div style="margin-top: 15px;">
-                    <h3 style="font-size: 1rem; margin-bottom: 10px; color: var(--accent-glow);">قائمة أعضاء النادي المسجلين:</h3>
-                    <div id="adminMembersList">جاري جلب الأعضاء...</div>
+                
+                <!-- كروت الإحصائيات السريعة -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">👥 إجمالي الأعضاء</div>
+                        <div class="stat-num" id="statTotalMembers">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">💡 الأفكار والمشاريع</div>
+                        <div class="stat-num" id="statTotalIdeas">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">🔥 المسار الأكثر طلباً</div>
+                        <div class="stat-num" id="statTopTrack" style="font-size: 1.1rem; margin-top: 10px;">...</div>
+                    </div>
                 </div>
+
+                <!-- أدوات إدارة الرسائل والتصدير -->
+                <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--border); padding: 15px; border-radius: 12px; margin-bottom: 20px;">
+                    <h3 style="font-size: 0.95rem; margin-bottom: 10px; color: var(--accent-glow);">📱 إرسال SMS / تنبيه للاجتماع بضغطة زر:</h3>
+                    <div class="form-row" style="margin-bottom: 10px;">
+                        <div class="form-group">
+                            <label>حدد المسار المستهدف بالرسالة:</label>
+                            <select id="smsTargetTrack">
+                                <option value="جميع المسارات">🌐 جميع المسارات والأعضاء</option>
+                                <option value="تصوير وإضاءة">📷 تصوير وإضاءة</option>
+                                <option value="مونتاج وموشن جرافيك">🎬 مونتاج وموشن جرافيك</option>
+                                <option value="إنتاج برامج وبودكاست">🎙️ إنتاج برامج وبودكاست</option>
+                                <option value="تصميم وهوية بصرية">🎨 تصميم وهوية بصرية</option>
+                                <option value="كتابة وصحافة إعلامية">✍️ كتابة وصحافة إعلامية</option>
+                                <option value="تقنية المعلومات (IT)">💻 تقنية المعلومات (IT)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>نص الرسالة (دعوة اجتماع / تنبيه):</label>
+                            <input type="text" id="smsMessageText" placeholder="مثال: يرجى حضور اجتماع النادي اليوم الساعة 4 مساءً بالقاعة الرئيسية.">
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <button onclick="sendGroupSMS()" style="background: linear-gradient(135deg, #10b981, #059669); color: #fff; border: none; padding: 10px 18px; border-radius: 8px; font-weight: 800; cursor: pointer; flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                            <span>📱 إرسال SMS جماعي</span>
+                        </button>
+                        <button onclick="exportMembersToExcel()" style="background: rgba(59, 130, 246, 0.2); border: 1px solid var(--accent-primary); color: var(--accent-glow); padding: 10px 18px; border-radius: 8px; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+                            <span>📊 تصدير القائمة لـ Excel</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- فلترة الأعضاء -->
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 10px;">
+                    <h3 style="font-size: 1rem; color: #fff;">قائمة أعضاء النادي المسجلين:</h3>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <label style="margin: 0; font-size: 0.8rem;">فلترة حسب المسار:</label>
+                        <select id="filterTrackSelect" onchange="filterMembersList()" style="width: auto; padding: 6px 10px; font-size: 0.82rem;">
+                            <option value="الكل">الكل</option>
+                            <option value="تصوير وإضاءة">تصوير وإضاءة</option>
+                            <option value="مونتاج وموشن جرافيك">مونتاج</option>
+                            <option value="إنتاج برامج وبودكاست">بودكاست</option>
+                            <option value="تصميم وهوية بصرية">تصميم</option>
+                            <option value="كتابة وصحافة إعلامية">كتابة</option>
+                            <option value="تقنية المعلومات (IT)">IT</option>
+                            <option value="مشرف المنصة">مشرف المنصة</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="adminMembersList">جاري جلب الأعضاء...</div>
             </div>
         </section>
 
@@ -415,6 +483,7 @@
         let currentUser = null;
         let isRegisterMode = false;
         let uploadedAvatarBase64 = '';
+        let allMembersData = [];
 
         function checkBoardIdentity(val) {
             if (!isRegisterMode) return;
@@ -706,14 +775,45 @@
                 container.innerHTML = 'تعذر جلب الأعضاء.';
                 return;
             }
+            allMembersData = members;
+            updateDashboardStats();
+            renderMembersList(allMembersData);
+        }
+
+        function updateDashboardStats() {
+            document.getElementById('statTotalMembers').innerText = allMembersData.length;
+            
+            // حساب المسار الأكثر إقبالاً
+            const trackCounts = {};
+            allMembersData.forEach(m => {
+                const t = m.track || 'غير محدد';
+                trackCounts[t] = (trackCounts[t] || 0) + 1;
+            });
+            let topTrack = 'تحديد...';
+            let maxCount = 0;
+            for (let t in trackCounts) {
+                if (trackCounts[t] > maxCount && t !== 'مشرف المنصة') {
+                    maxCount = trackCounts[t];
+                    topTrack = t;
+                }
+            }
+            document.getElementById('statTopTrack').innerText = topTrack;
+        }
+
+        function renderMembersList(members) {
+            const container = document.getElementById('adminMembersList');
             container.innerHTML = '';
+            if (members.length === 0) {
+                container.innerHTML = '<div style="text-align:center; color:var(--text-muted); padding:15px;">لا يوجد أعضاء مطابقين.</div>';
+                return;
+            }
             members.forEach(m => {
                 const item = document.createElement('div');
                 item.className = 'member-row-item';
                 item.innerHTML = `
                     <div>
                         <strong>${m.full_name || 'بدون اسم'}</strong><br>
-                        <span style="font-size: 0.78rem; color: var(--text-muted);">التخصص: ${m.track || 'غير محدد'} | الرتبة: ${m.role}</span>
+                        <span style="font-size: 0.78rem; color: var(--text-muted);">التخصص: ${m.track || 'غير محدد'} | الجوال: ${m.phone || 'غير مسجل'}</span>
                     </div>
                     <div style="display:flex; gap:5px; align-items:center;">
                         <select id="track_${m.id}" style="padding:4px 8px; font-size:0.8rem;">
@@ -730,6 +830,63 @@
                 `;
                 container.appendChild(item);
             });
+        }
+
+        function filterMembersList() {
+            const selectedTrack = document.getElementById('filterTrackSelect').value;
+            if (selectedTrack === 'الكل') {
+                renderMembersList(allMembersData);
+            } else {
+                const filtered = allMembersData.filter(m => m.track === selectedTrack);
+                renderMembersList(filtered);
+            }
+        }
+
+        /* دالة إرسال SMS الجماعي */
+        function sendGroupSMS() {
+            const targetTrack = document.getElementById('smsTargetTrack').value;
+            const msg = document.getElementById('smsMessageText').value.trim();
+
+            if (!msg) {
+                alert('⚠️ يرجى كتابة نص الرسالة أولاً.');
+                return;
+            }
+
+            let filteredMembers = allMembersData;
+            if (targetTrack !== 'جميع المسارات') {
+                filteredMembers = allMembersData.filter(m => m.track === targetTrack);
+            }
+
+            const phoneNumbers = filteredMembers.map(m => m.phone).filter(p => p && p.length >= 9);
+
+            if (phoneNumbers.length === 0) {
+                alert('ℹ️ لم يتم العثور على أرقام جوالات مسجلة للأعضاء في هذا المسار.');
+                return;
+            }
+
+            // تشغيل بروتوكول الرسائل الجماعي للجوال
+            const numbersString = phoneNumbers.join(',');
+            const smsUrl = `sms:${numbersString}?body=${encodeURIComponent(msg)}`;
+            window.location.href = smsUrl;
+        }
+
+        /* دالة تصدير القائمة لملف Excel */
+        function exportMembersToExcel() {
+            if (allMembersData.length === 0) {
+                alert('لا توجد بيانات لتصديرها.');
+                return;
+            }
+            let csvContent = "data:text/csv;charset=utf-8,\uFEFFالاسم,المسار,الرتبة,الجوال\n";
+            allMembersData.forEach(m => {
+                csvContent += `"${m.full_name || ''}","${m.track || ''}","${m.role || ''}","${m.phone || ''}"\n`;
+            });
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `اعضاء_النادي_الاعلامي_${new Date().toISOString().slice(0,10)}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
 
         async function changeMemberTrack(userId) {
@@ -810,6 +967,7 @@
                 const response = await fetch(SCRIPT_URL);
                 const ideas = await response.json();
                 counter.textContent = `إجمالي المشاركات: ${ideas.length}`;
+                document.getElementById('statTotalIdeas').innerText = ideas.length;
                 container.innerHTML = ideas.length === 0 ? '<div style="text-align: center; color: var(--text-muted); padding: 20px;">لا توجد أفكار مسجلة.</div>' : '';
 
                 ideas.reverse().forEach((idea) => {
