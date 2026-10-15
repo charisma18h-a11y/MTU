@@ -3,7 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <!-- وسوم الـ SEO والأرشفة في محرك بحث قوقل -->
     <title>منصة النادي الإعلامي - جامعة الطائف</title>
+    <meta name="description" content="المنصة الرسمية للنادي الإعلامي بجامعة الطائف - تقديم الأفكار، الأرشيف، وإدارة الأعضاء والمسارات الإعلامية.">
+    <meta name="keywords" content="النادي الإعلامي, جامعة الطائف, منصة النادي الإعلامي, MTU, Taif University, النادي الاعلامي جامعة الطائف">
+    <meta name="author" content="خالد أحمد الهلال">
+
+    <!-- وسوم ظهور الرابط بشكل رسمي عند مشاركته في الواتساب أو وسائل التواصل -->
+    <meta property="og:title" content="منصة النادي الإعلامي - جامعة الطائف">
+    <meta property="og:description" content="المنصة الإعلامية التفاعلية الرسمية للنادي الإعلامي بجامعة الطائف.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://charisma18h-a11y.github.io/">
+
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Montserrat:wght@800;900&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
@@ -164,7 +176,7 @@
     </div>
     <div class="bg-overlay"></div>
 
-    <!-- شاشة المصادقة الأصلية (دخول / إنشاء حساب بالبريد الإلكتروني) -->
+    <!-- شاشة المصادقة -->
     <div id="welcomeScreen">
         <div class="mtu-logo-container"><div class="mtu-logo-text">MTU<span class="mtu-dot"></span></div></div>
         <span class="site-badge" style="margin-top: 4px; background: rgba(59, 130, 246, 0.2);">منصة النادي الإعلامي</span>
@@ -181,7 +193,7 @@
                 </div>
                 
                 <div class="form-group" id="phoneGroup" style="display: none;">
-                    <label>رقم الجوال (للتواصل والرسائل النصية):</label>
+                    <label>رقم الجوال:</label>
                     <input type="tel" id="authPhone" placeholder="05XXXXXXXX">
                 </div>
 
@@ -206,7 +218,7 @@
                 <div><span id="switchText">ليس لديك حساب على المنصة؟</span> <a onclick="toggleAuthMode()" id="switchLink">إنشاء حساب جديد</a></div>
                 <hr style="border: 0; border-top: 1px solid var(--border); margin: 8px 0;">
                 <div>
-                    <button type="button" onclick="openClubRegisterModal()" style="background: rgba(59, 130, 246, 0.15); border: 1px solid var(--accent-primary); color: var(--accent-glow); padding: 10px 15px; border-radius: 10px; width: 100%; font-weight: 700; cursor: pointer; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; gap: 6px; transition: 0.3s ease;">
+                    <button type="button" onclick="openClubRegisterModal()" style="background: rgba(59, 130, 246, 0.15); border: 1px solid var(--accent-primary); color: var(--accent-glow); padding: 10px 15px; border-radius: 10px; width: 100%; font-weight: 700; cursor: pointer; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; gap: 6px;">
                         <span>📝 التسجيل في النادي الإعلامي (طلب عضوية)</span>
                     </button>
                 </div>
@@ -214,7 +226,7 @@
         </div>
     </div>
 
-    <!-- استمارة طلب الانضمام للنادي -->
+    <!-- نافذة طلب الانضمام للنادي -->
     <div id="clubRegModal" style="display: none;">
         <div class="mtu-logo-container"><div class="mtu-logo-text">MTU<span class="mtu-dot"></span></div></div>
         <span class="site-badge" style="margin-top: 5px;">استمارة طلب انضمام للنادي الإعلامي</span>
@@ -254,7 +266,7 @@
                 </div>
                 <div class="form-group">
                     <label>نبذة عنك (مهاراتك واهتماماتك):</label>
-                    <textarea id="regBio" placeholder="اكتب نبذة مختصرة عن شغفك وخبراتك..." rows="3" required></textarea>
+                    <textarea id="regBio" placeholder="اكتب نبذة مختصرة عن شغفك..." rows="3" required></textarea>
                 </div>
                 <div style="display: flex; gap: 10px;">
                     <button type="submit" class="btn-submit" id="regSubmitBtn" style="flex: 2;"><span>إرسال طلب الانضمام</span><span>📩</span></button>
@@ -327,7 +339,7 @@
                         <textarea id="inputBio" placeholder="اكتب نبذة عن مهاراتك واهتماماتك الإعلامية..."></textarea>
                     </div>
                     <div class="form-row">
-                        <div class="form-group" id="profileTrackGroup">
+                        <div class="form-group">
                             <label>مسارك في النادي:</label>
                             <select id="inputTrack">
                                 <option value="تصوير وإضاءة">📷 تصوير وإضاءة</option>
@@ -384,7 +396,7 @@
             </div>
 
             <div style="margin-bottom: 15px;">
-                <input type="text" id="searchIdeaInput" oninput="filterIdeasArchive()" placeholder="🔍 ابحث في الأفكار (اسم العنوان، المقترح، أو التفاصيل)..." style="background: rgba(15, 17, 26, 0.9); border-color: var(--border);">
+                <input type="text" id="searchIdeaInput" oninput="filterIdeasArchive()" placeholder="🔍 ابحث في الأفكار..." style="background: rgba(15, 17, 26, 0.9); border-color: var(--border);">
             </div>
 
             <div class="archive-grid" id="archiveContainer"></div>
@@ -426,34 +438,27 @@
                         </div>
                         <div class="form-group">
                             <label>نص الرسالة (دعوة اجتماع / تنبيه):</label>
-                            <input type="text" id="smsMessageText" placeholder="مثال: يرجى حضور اجتماع النادي اليوم الساعة 4 مساءً بالقاعة الرئيسية.">
+                            <input type="text" id="smsMessageText" placeholder="مثال: يرجى حضور اجتماع النادي اليوم...">
                         </div>
                     </div>
                     <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                        <button onclick="sendGroupSMS()" style="background: linear-gradient(135deg, #10b981, #059669); color: #fff; border: none; padding: 10px 18px; border-radius: 8px; font-weight: 800; cursor: pointer; flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px;">
-                            <span>📱 إرسال SMS جماعي</span>
-                        </button>
-                        <button onclick="exportMembersToExcel()" style="background: rgba(59, 130, 246, 0.2); border: 1px solid var(--accent-primary); color: var(--accent-glow); padding: 10px 18px; border-radius: 8px; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 6px;">
-                            <span>📊 تصدير القائمة لـ Excel</span>
-                        </button>
+                        <button onclick="sendGroupSMS()" style="background: linear-gradient(135deg, #10b981, #059669); color: #fff; border: none; padding: 10px 18px; border-radius: 8px; font-weight: 800; cursor: pointer; flex: 1;">📱 إرسال SMS جماعي</button>
+                        <button onclick="exportMembersToExcel()" style="background: rgba(59, 130, 246, 0.2); border: 1px solid var(--accent-primary); color: var(--accent-glow); padding: 10px 18px; border-radius: 8px; font-weight: 800; cursor: pointer;">📊 تصدير لـ Excel</button>
                     </div>
                 </div>
 
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 10px;">
                     <h3 style="font-size: 1rem; color: #fff;">قائمة أعضاء النادي المسجلين:</h3>
-                    <div style="display: flex; align-items: center; gap: 8px;">
-                        <label style="margin: 0; font-size: 0.8rem;">فلترة حسب المسار:</label>
-                        <select id="filterTrackSelect" onchange="filterMembersList()" style="width: auto; padding: 6px 10px; font-size: 0.82rem;">
-                            <option value="الكل">الكل</option>
-                            <option value="تصوير وإضاءة">تصوير وإضاءة</option>
-                            <option value="مونتاج وموشن جرافيك">مونتاج</option>
-                            <option value="إنتاج برامج وبودكاست">بودكاست</option>
-                            <option value="تصميم وهوية بصرية">تصميم</option>
-                            <option value="كتابة وصحافة إعلامية">كتابة</option>
-                            <option value="تقنية المعلومات (IT)">IT</option>
-                            <option value="مشرف المنصة">مشرف المنصة</option>
-                        </select>
-                    </div>
+                    <select id="filterTrackSelect" onchange="filterMembersList()" style="width: auto; padding: 6px 10px; font-size: 0.82rem;">
+                        <option value="الكل">كل المسارات</option>
+                        <option value="تصوير وإضاءة">تصوير وإضاءة</option>
+                        <option value="مونتاج وموشن جرافيك">مونتاج</option>
+                        <option value="إنتاج برامج وبودكاست">بودكاست</option>
+                        <option value="تصميم وهوية بصرية">تصميم</option>
+                        <option value="كتابة وصحافة إعلامية">كتابة</option>
+                        <option value="تقنية المعلومات (IT)">IT</option>
+                        <option value="مشرف المنصة">مشرف المنصة</option>
+                    </select>
                 </div>
 
                 <div id="adminMembersList">جاري جلب الأعضاء...</div>
@@ -468,19 +473,8 @@
         const SUPABASE_ANON_KEY = 'sb_publishable_xw3iN_Cb5eFA125MyBx8TQ_3aTyXjqr';
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         
-        const ADMIN_NAMES = [
-            "خالد الهلال", "خالد أحمد الهلال",
-            "حمزه فرج", "حمزة فرج", "د. حمزه فرج", "د. حمزة فرج",
-            "عبدالرحمن الزهراني", "عبدالرحمن علي الزهراني",
-            "ماجد الشاطري"
-        ];
-
-        const BOARD_NAMES = [
-            "نواف المالكي", "نواف عبد الله المالكي",
-            "حمد الحارثي", "حمد عايض الحارثي",
-            "عبدالله السواط", "عبد الله مزيد السواط",
-            "عبدالرحمن العتيبي", "عبد الرحمن نجم العتيبي"
-        ];
+        const ADMIN_NAMES = ["خالد الهلال", "خالد أحمد الهلال", "حمزه فرج", "حمزة فرج", "د. حمزه فرج", "د. حمزة فرج", "عبدالرحمن الزهراني", "عبدالرحمن علي الزهراني", "ماجد الشاطري"];
+        const BOARD_NAMES = ["نواف المالكي", "نواف عبد الله المالكي", "حمد الحارثي", "حمد عايض الحارثي", "عبدالله السواط", "عبد الله مزيد السواط", "عبدالرحمن العتيبي", "عبد الرحمن نجم العتيبي"];
 
         let currentUser = null;
         let isRegisterMode = false;
@@ -568,7 +562,7 @@
             try {
                 const { error } = await supabaseClient.from('profiles').insert([regData]);
                 if (error) throw error;
-                alert('✅ تم إرسال طلب انضمامك للنادي الإعلامي بنجاح!');
+                alert('✅ تم إرسال طلب انضمامك للنادي بنجاح!');
                 closeClubRegisterModal();
             } catch (err) {
                 errorEl.innerText = '❌ تعذر إرسال الطلب: ' + err.message;
@@ -668,11 +662,9 @@
             if (isAdminCheck) {
                 role = 'admin';
                 track = 'مشرف المنصة';
-                await supabaseClient.from('profiles').update({ role: 'admin', track: 'مشرف المنصة' }).eq('id', user.id);
             } else if (isBoardCheck) {
                 role = 'board';
                 track = 'مجلس الإدارة';
-                await supabaseClient.from('profiles').update({ role: 'board', track: 'مجلس الإدارة' }).eq('id', user.id);
             }
 
             document.getElementById('barUserName').innerText = name;
@@ -715,19 +707,12 @@
                     img.onload = function() {
                         const canvas = document.createElement('canvas');
                         const ctx = canvas.getContext('2d');
-                        const MAX_WIDTH = 200;
-                        const MAX_HEIGHT = 200;
-                        let width = img.width;
-                        let height = img.height;
-
-                        if (width > height) {
-                            if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; }
-                        } else {
-                            if (height > MAX_HEIGHT) { width *= MAX_HEIGHT / height; height = MAX_HEIGHT; }
-                        }
-                        canvas.width = width;
-                        canvas.height = height;
-                        ctx.drawImage(img, 0, 0, width, height);
+                        const MAX = 200;
+                        let w = img.width, h = img.height;
+                        if (w > h) { if (w > MAX) { h *= MAX / w; w = MAX; } }
+                        else { if (h > MAX) { w *= MAX / h; h = MAX; } }
+                        canvas.width = w; canvas.height = h;
+                        ctx.drawImage(img, 0, 0, w, h);
                         uploadedAvatarBase64 = canvas.toDataURL('image/jpeg', 0.7);
                         document.getElementById('avatarPreviewContainer').innerHTML = `<img src="${uploadedAvatarBase64}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">`;
                     };
@@ -753,9 +738,9 @@
             }).eq('id', currentUser.id);
 
             if (error) {
-                alert('❌ تعذر حفظ التعديلات: ' + error.message);
+                alert('❌ تعذر الحفظ: تأكد من إضافة عمود phone في قاعدة البيانات (راجع تعليمات SQL).');
             } else {
-                alert('✅ تم حفظ التعديلات ورقم جوالك بنجاح!');
+                alert('✅ تم حفظ التعديلات بنجاح!');
                 document.getElementById('barUserTrack').innerText = track;
             }
             btn.disabled = false;
@@ -796,7 +781,7 @@
             const container = document.getElementById('adminMembersList');
             container.innerHTML = '';
             if (members.length === 0) {
-                container.innerHTML = '<div style="text-align:center; color:var(--text-muted); padding:15px;">لا يوجد أعضاء مطابقين.</div>';
+                container.innerHTML = '<div style="text-align:center; color:var(--text-muted); padding:15px;">لا يوجد أعضاء.</div>';
                 return;
             }
             members.forEach(m => {
@@ -805,7 +790,7 @@
                 item.innerHTML = `
                     <div>
                         <strong>${m.full_name || 'بدون اسم'}</strong><br>
-                        <span style="font-size: 0.78rem; color: var(--text-muted);">التخصص: ${m.track || 'غير محدد'} | الجوال: ${m.phone || 'غير مسجل'}</span>
+                        <span style="font-size: 0.78rem; color: var(--text-muted);">المسار: ${m.track || 'غير محدد'} | الجوال: ${m.phone || 'غير مسجل'}</span>
                     </div>
                     <div style="display:flex; gap:5px; align-items:center;">
                         <select id="track_${m.id}" style="padding:4px 8px; font-size:0.8rem;">
@@ -829,64 +814,36 @@
             if (selectedTrack === 'الكل') {
                 renderMembersList(allMembersData);
             } else {
-                const filtered = allMembersData.filter(m => m.track === selectedTrack);
-                renderMembersList(filtered);
+                renderMembersList(allMembersData.filter(m => m.track === selectedTrack));
             }
         }
 
         function sendGroupSMS() {
             const targetTrack = document.getElementById('smsTargetTrack').value;
             const msg = document.getElementById('smsMessageText').value.trim();
+            if (!msg) { alert('⚠️ يرجى كتابة نص الرسالة أولاً.'); return; }
 
-            if (!msg) {
-                alert('⚠️ يرجى كتابة نص الرسالة أولاً.');
-                return;
-            }
+            const filtered = targetTrack === 'جميع المسارات' ? allMembersData : allMembersData.filter(m => m.track === targetTrack);
+            const phones = filtered.map(m => m.phone).filter(p => p && p.length >= 9);
+            if (phones.length === 0) { alert('ℹ️ لا توجد أرقام جوالات مسجلة.'); return; }
 
-            let filteredMembers = allMembersData;
-            if (targetTrack !== 'جميع المسارات') {
-                filteredMembers = allMembersData.filter(m => m.track === targetTrack);
-            }
-
-            const phoneNumbers = filteredMembers.map(m => m.phone).filter(p => p && p.length >= 9);
-
-            if (phoneNumbers.length === 0) {
-                alert('ℹ️ لم يتم العثور على أرقام جوالات مسجلة للأعضاء في هذا المسار.');
-                return;
-            }
-
-            const numbersString = phoneNumbers.join(',');
-            const smsUrl = `sms:${numbersString}?body=${encodeURIComponent(msg)}`;
-            window.location.href = smsUrl;
+            window.location.href = `sms:${phones.join(',')}?body=${encodeURIComponent(msg)}`;
         }
 
         function exportMembersToExcel() {
-            if (allMembersData.length === 0) {
-                alert('لا توجد بيانات لتصديرها.');
-                return;
-            }
-            let csvContent = "data:text/csv;charset=utf-8,\uFEFFالاسم,المسار,الرتبة,الجوال\n";
-            allMembersData.forEach(m => {
-                csvContent += `"${m.full_name || ''}","${m.track || ''}","${m.role || ''}","${m.phone || ''}"\n`;
-            });
-            const encodedUri = encodeURI(csvContent);
+            if (allMembersData.length === 0) return;
+            let csv = "data:text/csv;charset=utf-8,\uFEFFالاسم,المسار,الرتبة,الجوال\n";
+            allMembersData.forEach(m => { csv += `"${m.full_name || ''}","${m.track || ''}","${m.role || ''}","${m.phone || ''}"\n`; });
             const link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
-            link.setAttribute("download", `اعضاء_النادي_الاعلامي_${new Date().toISOString().slice(0,10)}.csv`);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+            link.setAttribute("href", encodeURI(csv));
+            link.setAttribute("download", `اعضاء_النادي_${new Date().toISOString().slice(0,10)}.csv`);
+            document.body.appendChild(link); link.click(); document.body.removeChild(link);
         }
 
         async function changeMemberTrack(userId) {
             const newTrack = document.getElementById(`track_${userId}`).value;
             const { error } = await supabaseClient.from('profiles').update({ track: newTrack }).eq('id', userId);
-            if (error) {
-                alert('خطأ في التحديث');
-            } else {
-                alert('✅ تم نقل العضو للمسار الجديد بنجاح!');
-                loadAdminMembers();
-            }
+            if (!error) { alert('✅ تم التحديث بنجاح!'); loadAdminMembers(); }
         }
 
         async function logout() {
@@ -896,9 +853,7 @@
 
         window.addEventListener('DOMContentLoaded', async () => {
             const { data: { session } } = await supabaseClient.auth.getSession();
-            if (session && session.user) {
-                loadUserProfile(session.user);
-            }
+            if (session && session.user) { loadUserProfile(session.user); }
         });
 
         window.switchPage = function(pageId, btnElement) {
@@ -907,9 +862,8 @@
             document.getElementById(pageId).classList.add('active');
             btnElement.classList.add('active');
             window.scrollTo({ top: 0, behavior: 'smooth' });
-
-            if(pageId === 'archivePage') { loadSupabaseIdeas(); }
-            if(pageId === 'adminPage') { loadAdminMembers(); }
+            if (pageId === 'archivePage') loadSupabaseIdeas();
+            if (pageId === 'adminPage') loadAdminMembers();
         };
 
         function getYouTubeEmbedUrl(url) {
@@ -920,31 +874,19 @@
 
         async function submitIdeaToSupabase(e) {
             e.preventDefault();
-            const submitBtn = document.getElementById('submitBtn');
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<span>جاري رفع الصورة والحفظ...</span> ⏳';
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true; btn.innerHTML = '<span>جاري الرفع والحفظ...</span> ⏳';
 
             let imageUrl = '';
-            const imageFileInput = document.getElementById('ideaImageFile');
+            const imgFile = document.getElementById('ideaImageFile').files[0];
 
             try {
-                if (imageFileInput.files && imageFileInput.files[0]) {
-                    const file = imageFileInput.files[0];
-                    const fileExt = file.name.split('.').pop();
-                    const fileName = `${Date.now()}_${Math.random().toString(36).substring(2)}.${fileExt}`;
-                    const filePath = `ideas_images/${fileName}`;
-
-                    const { error: uploadError } = await supabaseClient.storage
-                        .from('media')
-                        .upload(filePath, file);
-
-                    if (uploadError) throw uploadError;
-
-                    const { data: publicUrlData } = supabaseClient.storage
-                        .from('media')
-                        .getPublicUrl(filePath);
-
-                    imageUrl = publicUrlData.publicUrl;
+                if (imgFile) {
+                    const filePath = `ideas_images/${Date.now()}_${imgFile.name}`;
+                    const { error: upErr } = await supabaseClient.storage.from('media').upload(filePath, imgFile);
+                    if (upErr) throw upErr;
+                    const { data: pubData } = supabaseClient.storage.from('media').getPublicUrl(filePath);
+                    imageUrl = pubData.publicUrl;
                 }
 
                 const ideaData = {
@@ -962,15 +904,14 @@
                 const { error } = await supabaseClient.from('ideas').insert([ideaData]);
                 if (error) throw error;
                 
-                alert('✅ تم حفظ الفكرة وصورتها في سحابة Supabase بنجاح!');
+                alert('✅ تم حفظ الفكرة بنجاح!');
                 document.getElementById('ideaForm').reset();
                 document.getElementById('authorName').value = document.getElementById('profileDisplayName').innerText;
                 switchPage('archivePage', document.querySelectorAll('.nav-btn')[3]);
-            } catch (error) {
-                alert('❌ تعذر الحفظ: ' + error.message);
+            } catch (err) {
+                alert('❌ تعذر الحفظ: ' + err.message);
             } finally {
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = '<span>حفظ الفكرة في السحابة</span><span>🚀</span>';
+                btn.disabled = false; btn.innerHTML = '<span>حفظ الفكرة في السحابة</span><span>🚀</span>';
             }
         }
 
@@ -978,13 +919,8 @@
             const container = document.getElementById('archiveContainer');
             const counter = document.getElementById('archiveCount');
             try {
-                container.innerHTML = '<div style="text-align: center; color: var(--text-muted); padding: 20px;">جاري تحميل الأرشيف من السحابة...</div>';
-                
-                const { data: ideas, error } = await supabaseClient
-                    .from('ideas')
-                    .select('*')
-                    .order('created_at', { ascending: false });
-
+                container.innerHTML = '<div style="text-align: center; color: var(--text-muted); padding: 20px;">جاري التحميل...</div>';
+                const { data: ideas, error } = await supabaseClient.from('ideas').select('*').order('created_at', { ascending: false });
                 if (error) throw error;
 
                 allIdeasData = ideas;
@@ -993,14 +929,14 @@
                 if (statTotalIdeas) statTotalIdeas.innerText = ideas.length;
 
                 renderIdeasCards(allIdeasData);
-            } catch (error) {
-                container.innerHTML = '<div style="text-align: center; color: #f85149; padding: 20px;">تعذر جلب الأرشيف من السحابة.</div>';
+            } catch (err) {
+                container.innerHTML = '<div style="text-align: center; color: #f85149; padding: 20px;">تعذر جلب الأرشيف.</div>';
             }
         }
 
         function renderIdeasCards(ideas) {
             const container = document.getElementById('archiveContainer');
-            container.innerHTML = ideas.length === 0 ? '<div style="text-align: center; color: var(--text-muted); padding: 20px;">لا توجد أفكار تطابق البحث.</div>' : '';
+            container.innerHTML = ideas.length === 0 ? '<div style="text-align: center; color: var(--text-muted); padding: 20px;">لا توجد أفكار.</div>' : '';
 
             ideas.forEach((idea) => {
                 const embedUrl = getYouTubeEmbedUrl(idea.video_url);
@@ -1009,22 +945,19 @@
                 card.className = 'idea-card';
                 card.innerHTML = `
                     <div class="idea-header">
-                        <div class="idea-title">${idea.title || 'بدون عنوان'}</div>
+                        <div class="idea-title">${idea.title || ''}</div>
                         <div style="display: flex; gap: 6px; align-items: center;">
                             <span class="status-badge ${statusClass}">${idea.status || 'قيد المراجعة'}</span>
-                            <div class="idea-author">المقترح: ${idea.author || 'مجهول'}</div>
+                            <div class="idea-author">المقترح: ${idea.author || ''}</div>
                         </div>
                     </div>
                     <div class="idea-body">${idea.description || ''}</div>
-                    
                     <div class="idea-details-meta">
-                        <div>📍 <strong>الموقع:</strong> ${idea.location || 'غير محدد'}</div>
-                        <div>👥 <strong>المشاركون:</strong> ${idea.members || 'عام'}</div>
+                        <div>📍 <strong>الموقع:</strong> ${idea.location || ''}</div>
+                        <div>👥 <strong>المشاركون:</strong> ${idea.members || ''}</div>
                     </div>
-
                     ${idea.image_url ? `<div style="margin-top: 10px;"><img src="${idea.image_url}" style="width:100%; max-height:220px; object-fit:cover; border-radius:8px;" onerror="this.style.display='none'"></div>` : ''}
                     ${embedUrl ? `<div class="video-wrapper"><iframe src="${embedUrl}" allowfullscreen></iframe></div>` : ''}
-                    
                     <div style="margin-top: 12px; display: flex; justify-content: space-between; align-items: center;">
                         <button class="like-btn" onclick="likeIdea('${idea.id}', ${idea.likes_count || 0})">
                             <span>👍 تصويت</span> <strong id="like_count_${idea.id}">${idea.likes_count || 0}</strong>
@@ -1038,32 +971,19 @@
 
         function filterIdeasArchive() {
             const query = document.getElementById('searchIdeaInput').value.toLowerCase().trim();
-            if (!query) {
-                renderIdeasCards(allIdeasData);
-                return;
-            }
-            const filtered = allIdeasData.filter(i => 
+            if (!query) { renderIdeasCards(allIdeasData); return; }
+            renderIdeasCards(allIdeasData.filter(i => 
                 (i.title && i.title.toLowerCase().includes(query)) ||
                 (i.author && i.author.toLowerCase().includes(query)) ||
-                (i.description && i.description.toLowerCase().includes(query)) ||
-                (i.location && i.location.toLowerCase().includes(query))
-            );
-            renderIdeasCards(filtered);
+                (i.description && i.description.toLowerCase().includes(query))
+            ));
         }
 
         async function likeIdea(ideaId, currentLikes) {
             const newLikes = currentLikes + 1;
             const countEl = document.getElementById(`like_count_${ideaId}`);
             if (countEl) countEl.innerText = newLikes;
-
-            const { error } = await supabaseClient
-                .from('ideas')
-                .update({ likes_count: newLikes })
-                .eq('id', ideaId);
-
-            if (error) {
-                if (countEl) countEl.innerText = currentLikes;
-            }
+            await supabaseClient.from('ideas').update({ likes_count: newLikes }).eq('id', ideaId);
         }
     </script>
 </body>
