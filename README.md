@@ -8,16 +8,16 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root {
-            --bg-dark: #0a0a0c;
-            --bg-deep: #050507;
-            --bg-card: rgba(18, 18, 24, 0.92);
-            --bg-card-solid: #121218;
+            --bg-dark: #07070a;
+            --bg-deep: #030305;
+            --bg-card: rgba(15, 17, 26, 0.94);
+            --bg-card-solid: #10121a;
             --accent-primary: #3b82f6;
             --accent-glow: #60a5fa;
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
             --border: rgba(255, 255, 255, 0.12);
-            --input-bg: #0c0c10;
+            --input-bg: rgba(8, 10, 18, 0.85);
             --brand-red: #ff4d2d;
             --admin-color: #238636;
             --board-color: #8b5cf6;
@@ -29,28 +29,48 @@
             background-color: var(--bg-dark); color: var(--text-main); line-height: 1.7; padding-bottom: 40px; min-height: 100vh; overflow-x: hidden; width: 100%; position: relative;
         }
 
+        /* --- حاوية فيديو الخلفية المباشر السريع --- */
         .bg-video-container {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -99; overflow: hidden; pointer-events: none; background: #000;
         }
-        .bg-video-container iframe {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(1.35); width: 100vw; height: 56.25vw; min-height: 100vh; min-width: 177.77vh; pointer-events: none; 
-            filter: brightness(0.65) contrast(1.15);
+        .bg-video-container video {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); min-width: 100%; min-height: 100%; width: auto; height: auto; object-fit: cover;
+            filter: brightness(0.5) contrast(1.1);
         }
         .bg-overlay {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(5, 5, 7, 0.75); z-index: -98; pointer-events: none;
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(5, 5, 7, 0.7); z-index: -98; pointer-events: none;
         }
 
-        .mtu-logo-container { display: inline-flex; align-items: center; justify-content: center; margin-bottom: 12px; position: relative; }
-        .mtu-logo-text { font-family: 'Montserrat', sans-serif; font-size: 3rem; font-weight: 900; letter-spacing: -1px; color: #ffffff; line-height: 1; display: flex; align-items: flex-start; position: relative; }
-        .mtu-dot { width: 14px; height: 14px; background-color: var(--brand-red); border-radius: 50%; display: inline-block; margin-left: 2px; margin-top: 2px; box-shadow: 0 0 10px rgba(255, 77, 45, 0.8); }
+        /* --- شاشة تسجيل الدخول المستقلة --- */
+        #welcomeScreen {
+            position: fixed; inset: 0; z-index: 999999; 
+            background: radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.18) 0%, transparent 40%),
+                        radial-gradient(circle at 80% 80%, rgba(255, 77, 45, 0.15) 0%, transparent 40%),
+                        radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.12) 0%, transparent 60%),
+                        #05060a;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; text-align: center; transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); overflow-y: auto;
+        }
 
-        #welcomeScreen, #clubRegModal {
-            position: fixed; inset: 0; z-index: 99999; background: rgba(5, 5, 7, 0.88); backdrop-filter: blur(8px); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; text-align: center; transition: opacity 0.5s ease; overflow-y: auto;
+        #welcomeScreen::before {
+            content: ''; position: absolute; inset: 0;
+            background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 35px 35px; pointer-events: none; opacity: 0.8;
         }
 
         .auth-card {
-            background: var(--bg-card); border: 1px solid var(--border); backdrop-filter: blur(12px); border-radius: 16px; padding: 25px 20px; width: 100%; max-width: 450px; box-shadow: 0 15px 35px rgba(0,0,0,0.8); margin-top: 15px; text-align: right;
+            position: relative; z-index: 2;
+            background: rgba(16, 18, 27, 0.85); 
+            border: 1px solid rgba(255, 255, 255, 0.15); 
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border-radius: 20px; padding: 32px 24px; width: 100%; max-width: 440px; 
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(59, 130, 246, 0.15); 
+            margin-top: 15px; text-align: right;
         }
+
+        .mtu-logo-container { display: inline-flex; align-items: center; justify-content: center; margin-bottom: 8px; position: relative; }
+        .mtu-logo-text { font-family: 'Montserrat', sans-serif; font-size: 3.2rem; font-weight: 900; letter-spacing: -1px; color: #ffffff; line-height: 1; display: flex; align-items: flex-start; position: relative; text-shadow: 0 0 20px rgba(255,255,255,0.2); }
+        .mtu-dot { width: 14px; height: 14px; background-color: var(--brand-red); border-radius: 50%; display: inline-block; margin-left: 2px; margin-top: 2px; box-shadow: 0 0 15px rgba(255, 77, 45, 0.9); }
 
         .quick-nav {
             position: sticky; top: 0; z-index: 1000; background: rgba(15, 15, 20, 0.85); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 10px 12px; display: flex; justify-content: center; gap: 6px; width: 100%; flex-wrap: wrap;
@@ -94,8 +114,10 @@
         @media (min-width: 600px) { .form-row { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); } }
         .form-group { margin-bottom: 14px; text-align: right; }
         label { display: block; margin-bottom: 5px; font-weight: 700; color: #cbd5e1; font-size: 0.85rem; }
-        input, textarea, select { width: 100%; padding: 10px 12px; background-color: var(--input-bg); border: 1px solid var(--border); border-radius: 8px; color: var(--text-main); font-size: 0.9rem; outline: none; }
-        button.btn-submit { background: var(--accent-primary); color: #ffffff; font-weight: 800; font-size: 0.95rem; padding: 12px 20px; border: none; border-radius: 8px; cursor: pointer; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        input, textarea, select { width: 100%; padding: 11px 14px; background-color: var(--input-bg); border: 1px solid var(--border); border-radius: 10px; color: var(--text-main); font-size: 0.9rem; outline: none; transition: border-color 0.3s ease; }
+        input:focus, select:focus, textarea:focus { border-color: var(--accent-glow); box-shadow: 0 0 10px rgba(96, 165, 250, 0.2); }
+        
+        button.btn-submit { background: linear-gradient(135deg, var(--accent-primary), #2563eb); color: #ffffff; font-weight: 800; font-size: 0.95rem; padding: 12px 20px; border: none; border-radius: 10px; cursor: pointer; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 15px rgba(37, 99, 235, 0.35); }
 
         .member-row-item { background: rgba(255,255,255,0.03); border: 1px solid var(--border); padding: 12px; border-radius: 8px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
 
@@ -109,24 +131,34 @@
         .idea-body { color: #cbd5e1; font-size: 0.88rem; margin-bottom: 12px; }
         .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; margin-top: 10px; }
         .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
-        .auth-switch { text-align: center; margin-top: 12px; font-size: 0.85rem; color: var(--text-muted); display: flex; flex-direction: column; gap: 8px; }
+        .auth-switch { text-align: center; margin-top: 14px; font-size: 0.85rem; color: var(--text-muted); display: flex; flex-direction: column; gap: 8px; }
         .auth-switch a { color: var(--accent-glow); cursor: pointer; font-weight: 700; }
         .error-msg { color: #f85149; font-size: 0.8rem; text-align: center; margin-top: 8px; }
         footer { text-align: center; color: var(--text-muted); font-size: 0.8rem; padding-top: 20px; border-top: 1px solid var(--border); margin-top: 25px; }
+
+        #clubRegModal {
+            position: fixed; inset: 0; z-index: 9999999; 
+            background: rgba(3, 4, 8, 0.92); backdrop-filter: blur(15px); 
+            display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; text-align: center;
+        }
     </style>
 </head>
 <body>
 
+    <!-- فيديو خلفية مباشر وسريع جداً مخصص للتصميم الإعلامي -->
     <div class="bg-video-container">
-        <iframe src="https://www.youtube.com/embed/_TkXgy18J_g?autoplay=1&mute=1&controls=0&loop=1&playlist=_TkXgy18J_g&playsinline=1&enablejsapi=1" allow="autoplay; encrypted-media"></iframe>
+        <video autoplay loop muted playsinline preload="auto">
+            <source src="https://assets.mixkit.co/videos/preview/mixkit-abstract-technology-mesh-network-30230-large.mp4" type="video/mp4">
+            <source src="background.mp4" type="video/mp4">
+        </video>
     </div>
     <div class="bg-overlay"></div>
 
-    <!-- شاشة تسجيل الدخول / إنشاء حساب -->
+    <!-- شاشة تسجيل الدخول المستقلة بالكامل -->
     <div id="welcomeScreen">
         <div class="mtu-logo-container"><div class="mtu-logo-text">MTU<span class="mtu-dot"></span></div></div>
-        <span class="site-badge" style="margin-top: 5px;">منصة النادي الإعلامي</span>
-        <h1 id="authMainTitle" style="font-size: 1.3rem; margin-top: 10px;">تسجيل الدخول لمنصة النادي الإعلامي</h1>
+        <span class="site-badge" style="margin-top: 4px; background: rgba(59, 130, 246, 0.2);">منصة النادي الإعلامي</span>
+        <h1 id="authMainTitle" style="font-size: 1.25rem; margin-top: 12px; color: #fff; font-weight: 800;">تسجيل الدخول للمنصة</h1>
         
         <div class="auth-card">
             <form id="authForm" onsubmit="handleSupabaseAuth(event)">
@@ -156,9 +188,9 @@
 
             <div class="auth-switch">
                 <div><span id="switchText">ليس لديك حساب على المنصة؟</span> <a onclick="toggleAuthMode()" id="switchLink">إنشاء حساب جديد</a></div>
-                <hr style="border: 0; border-top: 1px solid var(--border); margin: 6px 0;">
+                <hr style="border: 0; border-top: 1px solid var(--border); margin: 8px 0;">
                 <div>
-                    <button type="button" onclick="openClubRegisterModal()" style="background: rgba(59, 130, 246, 0.15); border: 1px solid var(--accent-primary); color: var(--accent-glow); padding: 8px 15px; border-radius: 8px; width: 100%; font-weight: 700; cursor: pointer; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                    <button type="button" onclick="openClubRegisterModal()" style="background: rgba(59, 130, 246, 0.15); border: 1px solid var(--accent-primary); color: var(--accent-glow); padding: 10px 15px; border-radius: 10px; width: 100%; font-weight: 700; cursor: pointer; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; gap: 6px; transition: 0.3s ease;">
                         <span>📝 التسجيل في النادي الإعلامي (طلب عضوية)</span>
                     </button>
                 </div>
@@ -166,7 +198,7 @@
         </div>
     </div>
 
-    <!-- نافذة طلب العضوية المستقلة (التسجيل الفعلي للنادي) -->
+    <!-- نافذة طلب العضوية المستقلة -->
     <div id="clubRegModal" style="display: none;">
         <div class="mtu-logo-container"><div class="mtu-logo-text">MTU<span class="mtu-dot"></span></div></div>
         <span class="site-badge" style="margin-top: 5px;">استمارة طلب انضمام للنادي الإعلامي</span>
@@ -224,7 +256,7 @@
         </div>
     </div>
 
-    <!-- شريط التنقل العلوي -->
+    <!-- شريط التنقل العلوي للموقع -->
     <nav class="quick-nav">
         <button class="nav-btn active" onclick="switchPage('homePage', this)">🏛️ المجلس</button>
         <button class="nav-btn" onclick="switchPage('profilePage', this)">👤 بروفايلي</button>
@@ -417,7 +449,7 @@
 
         function toggleAuthMode() {
             isRegisterMode = !isRegisterMode;
-            document.getElementById('authMainTitle').innerText = isRegisterMode ? 'إنشاء حساب على المنصة' : 'تسجيل الدخول لمنصة النادي الإعلامي';
+            document.getElementById('authMainTitle').innerText = isRegisterMode ? 'إنشاء حساب على المنصة' : 'تسجيل الدخول للمنصة';
             document.getElementById('authBtnText').innerText = isRegisterMode ? 'إنشاء الحساب' : 'دخول المنصة';
             document.getElementById('fullNameGroup').style.display = isRegisterMode ? 'block' : 'none';
             
@@ -463,7 +495,6 @@
             };
 
             try {
-                // حفظ الطلب عبر جوجل شيت الأرشيف أو جدول الطلبات
                 await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(regData) });
                 alert('✅ تم إرسال طلب انضمامك للنادي الإعلامي بنجاح! سيتم مراجعة بياناتك والتواصل معك قريباً.');
                 closeClubRegisterModal();
@@ -544,6 +575,7 @@
             const welcome = document.getElementById('welcomeScreen');
             if (welcome) {
                 welcome.style.opacity = '0';
+                welcome.style.pointerEvents = 'none';
                 setTimeout(() => welcome.style.display = 'none', 500);
             }
 
