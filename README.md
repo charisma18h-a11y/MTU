@@ -29,7 +29,7 @@
             background-color: var(--bg-dark); color: var(--text-main); line-height: 1.7; padding-bottom: 40px; min-height: 100vh; overflow-x: hidden; width: 100%; position: relative;
         }
 
-        /* --- حاوية فيديو الخلفية المباشر السريع --- */
+        /* --- حاوية فيديو الخلفية --- */
         .bg-video-container {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -99; overflow: hidden; pointer-events: none; background: #000;
         }
@@ -41,7 +41,7 @@
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(5, 5, 7, 0.7); z-index: -98; pointer-events: none;
         }
 
-        /* --- شاشة تسجيل الدخول المستقلة --- */
+        /* --- شاشة تسجيل الدخول --- */
         #welcomeScreen {
             position: fixed; inset: 0; z-index: 999999; 
             background: radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.18) 0%, transparent 40%),
@@ -95,7 +95,6 @@
         .section-title { font-size: 1.15rem; font-weight: 800; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; color: var(--text-main); }
         .section-title span.icon { background: var(--accent-primary); color: #ffffff; width: 30px; height: 30px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; }
 
-        /* كروت الإحصائيات في لوحة المشرف */
         .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 20px; }
         .stat-card { background: rgba(255,255,255,0.03); border: 1px solid var(--border); padding: 15px; border-radius: 12px; text-align: center; }
         .stat-num { font-size: 1.8rem; font-weight: 900; color: var(--accent-glow); margin-top: 5px; }
@@ -151,7 +150,7 @@
 </head>
 <body>
 
-    <!-- فيديو خلفية مباشر وسريع جداً -->
+    <!-- فيديو خلفية مباشر -->
     <div class="bg-video-container">
         <video autoplay loop muted playsinline preload="auto">
             <source src="background.mp4" type="video/mp4">
@@ -176,7 +175,6 @@
                     </div>
                 </div>
                 
-                <!-- حقل رقم الجوال المضاف جديداً لإنشاء الحساب -->
                 <div class="form-group" id="phoneGroup" style="display: none;">
                     <label>رقم الجوال (للتواصل والرسائل النصية):</label>
                     <input type="tel" id="authPhone" placeholder="05XXXXXXXX">
@@ -364,7 +362,7 @@
         <section id="formPage" class="page-section">
             <div class="card">
                 <h2 class="section-title"><span class="icon">💡</span>تقديم فكرة / مشروع جديد</h2>
-                <form id="ideaForm">
+                <form id="ideaForm" onsubmit="submitIdeaToSupabase(event)">
                     <div class="form-row">
                         <div class="form-group"><label>اسم مُقدم الفكرة:</label><input type="text" id="authorName" readonly style="opacity: 0.8;"></div>
                         <div class="form-group"><label>عنوان الفكرة أو المبادرة:</label><input type="text" id="ideaTitle" required></div>
@@ -392,12 +390,11 @@
             <div class="archive-grid" id="archiveContainer"></div>
         </section>
 
-        <!-- لوحة تحكم المشرف المحمية والمتطورة -->
+        <!-- لوحة تحكم المشرف -->
         <section id="adminPage" class="page-section">
             <div class="card">
                 <h2 class="section-title"><span class="icon">⚙️</span>لوحة تحكم المشرف وإدارة الأعضاء</h2>
                 
-                <!-- كروت الإحصائيات السريعة -->
                 <div class="stats-grid">
                     <div class="stat-card">
                         <div class="stat-label">👥 إجمالي الأعضاء</div>
@@ -413,7 +410,6 @@
                     </div>
                 </div>
 
-                <!-- أدوات إدارة الرسائل والتصدير -->
                 <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--border); padding: 15px; border-radius: 12px; margin-bottom: 20px;">
                     <h3 style="font-size: 0.95rem; margin-bottom: 10px; color: var(--accent-glow);">📱 إرسال SMS / تنبيه للاجتماع بضغطة زر:</h3>
                     <div class="form-row" style="margin-bottom: 10px;">
@@ -444,7 +440,6 @@
                     </div>
                 </div>
 
-                <!-- فلترة الأعضاء -->
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 10px;">
                     <h3 style="font-size: 1rem; color: #fff;">قائمة أعضاء النادي المسجلين:</h3>
                     <div style="display: flex; align-items: center; gap: 8px;">
@@ -473,9 +468,7 @@
         const SUPABASE_URL = 'https://hlgvjdknxtywdqjikayz.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_xw3iN_Cb5eFA125MyBx8TQ_3aTyXjqr';
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwN5Ty-lRiwKN9lVy9F94l8C9mxgSK-uDkVT9JStVT0eHnWtETg6CFJRpmw5lObZwV6/exec";
         
-        // المشرفون (Admins)
         const ADMIN_NAMES = [
             "خالد الهلال", "خالد أحمد الهلال",
             "حمزه فرج", "حمزة فرج", "د. حمزه فرج", "د. حمزة فرج",
@@ -483,7 +476,6 @@
             "ماجد الشاطري"
         ];
 
-        // باقي أعضاء مجلس الإدارة
         const BOARD_NAMES = [
             "نواف المالكي", "نواف عبد الله المالكي",
             "حمد الحارثي", "حمد عايض الحارثي",
@@ -565,22 +557,21 @@
             btn.innerHTML = '<span>جاري الإرسال...</span> ⏳';
 
             const regData = {
-                fullName: document.getElementById('regFullName').value.trim(),
-                univEmail: document.getElementById('regUnivEmail').value.trim(),
-                univId: document.getElementById('regUnivId').value.trim(),
+                full_name: document.getElementById('regFullName').value.trim(),
+                email: document.getElementById('regUnivEmail').value.trim(),
                 phone: document.getElementById('regPhone').value.trim(),
                 track: document.getElementById('regTrack').value,
-                previousExperience: document.getElementById('regPreviousExperience').value,
                 bio: document.getElementById('regBio').value.trim(),
-                type: 'طلب عضوية نادي'
+                role: 'member'
             };
 
             try {
-                await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(regData) });
-                alert('✅ تم إرسال طلب انضمامك للنادي الإعلامي بنجاح! سيتم مراجعة بياناتك والتواصل معك قريباً.');
+                const { error } = await supabaseClient.from('profiles').insert([regData]);
+                if (error) throw error;
+                alert('✅ تم إرسال طلب انضمامك للنادي الإعلامي بنجاح!');
                 closeClubRegisterModal();
             } catch (err) {
-                errorEl.innerText = '❌ تعذر إرسال الطلب، تأكد من الاتصال.';
+                errorEl.innerText = '❌ تعذر إرسال الطلب: ' + err.message;
             } finally {
                 btn.disabled = false;
                 btn.innerHTML = '<span>إرسال طلب الانضمام</span><span>📩</span>';
@@ -632,14 +623,7 @@
                         await supabaseClient.from('profiles').upsert({
                             id: data.user.id, full_name: fullName || 'عضو جديد', phone: phone || '', role: assignedRole, track: assignedTrack
                         });
-                        
-                        if (isAdminUser) {
-                            alert(`👑 أهلاً بك يا ${fullName}!\nتم التحقق من هويتك وتعيينك بصلاحية (مشرف - Admin) على المنصة.`);
-                        } else if (isBoardUser) {
-                            alert(`🌟 أهلاً بك يا ${fullName}!\nتم التحقق من هويتك وتعيينك في مجلس الإدارة تلقائياً.`);
-                        } else {
-                            alert('✅ تم إنشاء الحساب بنجاح!');
-                        }
+                        alert('✅ تم إنشاء الحساب بنجاح!');
                     }
                 }
                 const { data: loginData, error: loginError } = await supabaseClient.auth.signInWithPassword({ email, password });
@@ -705,11 +689,6 @@
             document.getElementById('inputTrack').value = track;
             document.getElementById('inputPhone').value = profile?.phone || '';
             document.getElementById('inputPortfolio').value = profile?.portfolio_url || '';
-            
-            if (role === 'admin' || role === 'board') {
-                const profileTrackGroup = document.getElementById('profileTrackGroup');
-                if (profileTrackGroup) profileTrackGroup.style.display = 'none';
-            }
 
             uploadedAvatarBase64 = profile?.avatar_url || '';
             if (uploadedAvatarBase64) {
@@ -797,7 +776,6 @@
 
         function updateDashboardStats() {
             document.getElementById('statTotalMembers').innerText = allMembersData.length;
-            
             const trackCounts = {};
             allMembersData.forEach(m => {
                 const t = m.track || 'غير محدد';
@@ -856,7 +834,6 @@
             }
         }
 
-        /* دالة إرسال SMS الجماعي */
         function sendGroupSMS() {
             const targetTrack = document.getElementById('smsTargetTrack').value;
             const msg = document.getElementById('smsMessageText').value.trim();
@@ -883,7 +860,6 @@
             window.location.href = smsUrl;
         }
 
-        /* دالة تصدير القائمة لملف Excel */
         function exportMembersToExcel() {
             if (allMembersData.length === 0) {
                 alert('لا توجد بيانات لتصديرها.');
@@ -932,7 +908,7 @@
             btnElement.classList.add('active');
             window.scrollTo({ top: 0, behavior: 'smooth' });
 
-            if(pageId === 'archivePage') { loadSheetIdeas(); }
+            if(pageId === 'archivePage') { loadSupabaseIdeas(); }
             if(pageId === 'adminPage') { loadAdminMembers(); }
         };
 
@@ -942,61 +918,73 @@
             return (match && match[2].length === 11) ? `https://www.youtube.com/embed/${match[2]}` : '';
         }
 
-        document.getElementById('ideaForm').addEventListener('submit', async function(e) {
+        /* --- حفظ الفكرة مباشرة في Supabase --- */
+        async function submitIdeaToSupabase(e) {
             e.preventDefault();
             const submitBtn = document.getElementById('submitBtn');
             submitBtn.disabled = true;
-            submitBtn.innerHTML = '<span>جاري الحفظ...</span> ⏳';
+            submitBtn.innerHTML = '<span>جاري الحفظ في السحابة...</span> ⏳';
 
-            const data = {
+            const ideaData = {
                 author: document.getElementById('authorName').value.trim(),
                 title: document.getElementById('ideaTitle').value.trim(),
-                desc: document.getElementById('ideaDescription').value.trim(),
+                description: document.getElementById('ideaDescription').value.trim(),
                 location: document.getElementById('ideaLocation').value.trim(),
                 members: document.getElementById('ideaMembers').value.trim(),
-                imageUrl: document.getElementById('imageUrl').value.trim(),
-                videoUrl: document.getElementById('videoUrl').value.trim()
+                image_url: document.getElementById('imageUrl').value.trim(),
+                video_url: document.getElementById('videoUrl').value.trim()
             };
 
             try {
-                await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
-                alert('✅ تم حفظ الفكرة في السحابة بنجاح!');
-                this.reset();
+                const { error } = await supabaseClient.from('ideas').insert([ideaData]);
+                if (error) throw error;
+                
+                alert('✅ تم حفظ الفكرة في سحابة Supabase بنجاح!');
+                document.getElementById('ideaForm').reset();
                 document.getElementById('authorName').value = document.getElementById('profileDisplayName').innerText;
                 switchPage('archivePage', document.querySelectorAll('.nav-btn')[3]);
             } catch (error) {
-                alert('❌ تعذر الحفظ.');
+                alert('❌ تعذر الحفظ: ' + error.message);
             } finally {
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = '<span>حفظ الفكرة في السحابة</span><span>🚀</span>';
             }
-        });
+        }
 
-        async function loadSheetIdeas() {
+        /* --- جلب الأفكار من Supabase مباشرة --- */
+        async function loadSupabaseIdeas() {
             const container = document.getElementById('archiveContainer');
             const counter = document.getElementById('archiveCount');
             try {
-                container.innerHTML = '<div style="text-align: center; color: var(--text-muted); padding: 20px;">جاري تحميل الأرشيف...</div>';
-                const response = await fetch(SCRIPT_URL);
-                const ideas = await response.json();
-                counter.textContent = `إجمالي المشاركات: ${ideas.length}`;
-                document.getElementById('statTotalIdeas').innerText = ideas.length;
-                container.innerHTML = ideas.length === 0 ? '<div style="text-align: center; color: var(--text-muted); padding: 20px;">لا توجد أفكار مسجلة.</div>' : '';
+                container.innerHTML = '<div style="text-align: center; color: var(--text-muted); padding: 20px;">جاري تحميل الأرشيف من السحابة...</div>';
+                
+                const { data: ideas, error } = await supabaseClient
+                    .from('ideas')
+                    .select('*')
+                    .order('created_at', { ascending: false });
 
-                ideas.reverse().forEach((idea) => {
-                    const embedUrl = getYouTubeEmbedUrl(idea.videoUrl || idea.video);
+                if (error) throw error;
+
+                counter.textContent = `إجمالي المشاركات: ${ideas.length}`;
+                const statTotalIdeas = document.getElementById('statTotalIdeas');
+                if (statTotalIdeas) statTotalIdeas.innerText = ideas.length;
+
+                container.innerHTML = ideas.length === 0 ? '<div style="text-align: center; color: var(--text-muted); padding: 20px;">لا توجد أفكار مسجلة حتى الآن.</div>' : '';
+
+                ideas.forEach((idea) => {
+                    const embedUrl = getYouTubeEmbedUrl(idea.video_url);
                     const card = document.createElement('div');
                     card.className = 'idea-card';
                     card.innerHTML = `
                         <div class="idea-header"><div class="idea-title">${idea.title || 'بدون عنوان'}</div><div class="idea-author">المقترح: ${idea.author || 'مجهول'}</div></div>
-                        <div class="idea-body">${idea.desc || idea.description || ''}</div>
-                        ${idea.imageUrl || idea.image ? `<div style="margin-top: 10px;"><img src="${idea.imageUrl || idea.image}" style="width:100%; max-height:220px; object-fit:cover; border-radius:8px;" onerror="this.style.display='none'"></div>` : ''}
+                        <div class="idea-body">${idea.description || ''}</div>
+                        ${idea.image_url ? `<div style="margin-top: 10px;"><img src="${idea.image_url}" style="width:100%; max-height:220px; object-fit:cover; border-radius:8px;" onerror="this.style.display='none'"></div>` : ''}
                         ${embedUrl ? `<div class="video-wrapper"><iframe src="${embedUrl}" allowfullscreen></iframe></div>` : ''}
                     `;
                     container.appendChild(card);
                 });
             } catch (error) {
-                container.innerHTML = '<div style="text-align: center; color: #f85149; padding: 20px;">تعذر جلب الأرشيف.</div>';
+                container.innerHTML = '<div style="text-align: center; color: #f85149; padding: 20px;">تعذر جلب الأرشيف من السحابة.</div>';
             }
         }
     </script>
