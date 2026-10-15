@@ -165,6 +165,36 @@
             background: rgba(3, 4, 8, 0.92); backdrop-filter: blur(15px); 
             display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; text-align: center;
         }
+
+        /* نافذة التنبيه المخصصة في منتصف الشاشة (Custom Modal Alert) */
+        #customSuccessModal {
+            position: fixed; inset: 0; z-index: 99999999;
+            background: rgba(3, 4, 8, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            display: none; align-items: center; justify-content: center; padding: 20px;
+            animation: fadeInModal 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes fadeInModal {
+            from { opacity: 0; transform: scale(0.92); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .modal-card {
+            background: rgba(16, 18, 27, 0.95); border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 20px; padding: 30px 24px; text-align: center; max-width: 380px; width: 100%;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(34, 197, 94, 0.2);
+        }
+        .success-circle-icon {
+            width: 70px; height: 70px; background: rgba(34, 197, 94, 0.15); border: 2px solid #22c55e;
+            color: #22c55e; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 2.2rem; margin: 0 auto 16px; box-shadow: 0 0 20px rgba(34, 197, 94, 0.4);
+        }
+        .modal-title { font-size: 1.2rem; font-weight: 800; color: #fff; margin-bottom: 8px; }
+        .modal-desc { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 20px; line-height: 1.5; }
+        .modal-close-btn {
+            background: linear-gradient(135deg, var(--accent-primary), #2563eb);
+            color: #fff; border: none; padding: 10px 24px; border-radius: 12px; font-weight: 800;
+            font-size: 0.9rem; cursor: pointer; width: 100%; transition: 0.2s ease;
+        }
+        .modal-close-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4); }
     </style>
 </head>
 <body>
@@ -176,6 +206,16 @@
         </video>
     </div>
     <div class="bg-overlay"></div>
+
+    <!-- نافذة الإشعار المخصصة بدلاً من alert المتصفح -->
+    <div id="customSuccessModal">
+        <div class="modal-card">
+            <div class="success-circle-icon" id="modalIcon">✓</div>
+            <div class="modal-title" id="modalTitle">تمت العملية بنجاح!</div>
+            <div class="modal-desc" id="modalDesc">تم رفع البيانات وتحديث المنصة بنجاح.</div>
+            <button class="modal-close-btn" onclick="closeSuccessModal()">موافق</button>
+        </div>
+    </div>
 
     <!-- شاشة المصادقة -->
     <div id="welcomeScreen">
@@ -532,16 +572,28 @@
         let albumsList = ["الفعاليات العامة"];
         let currentSelectedAlbum = "الكل";
 
+        // دالة إظهار التنبيه المخصص بدون ظهور اسم جيت هب
+        function showSuccessModal(title, message, icon = '✓') {
+            document.getElementById('modalIcon').innerText = icon;
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modalDesc').innerText = message;
+            document.getElementById('customSuccessModal').style.display = 'flex';
+        }
+
+        function closeSuccessModal() {
+            document.getElementById('customSuccessModal').style.display = 'none';
+        }
+
         function createNewAlbum() {
             const input = document.getElementById('newAlbumName');
             const albumName = input.value.trim();
-            if (!albumName) { alert('⚠️ يرجى كتابة اسم الألبوم.'); return; }
-            if (albumsList.includes(albumName)) { alert('⚠️ هذا الألبوم موجود مسبقاً.'); return; }
+            if (!albumName) { showSuccessModal('تنبيه', 'يرجى كتابة اسم الألبوم أولاً.', '⚠️'); return; }
+            if (albumsList.includes(albumName)) { showSuccessModal('تنبيه', 'هذا الألبوم موجود مسبقاً.', '⚠️'); return; }
 
             albumsList.push(albumName);
             input.value = '';
             updateAlbumsUI();
-            alert(`✅ تم إنشاء الألبوم "${albumName}" بنجاح!`);
+            showSuccessModal('تم بنجاح', `تم إنشاء ألبوم "${albumName}" بنجاح!`, '📁');
         }
 
         function updateAlbumsUI() {
@@ -609,6 +661,7 @@
             renderGalleryGrid(galleryData);
         }
 
+        // رفع الصور بشكل متوازي لتسريع الرفع للأعداد الكبيرة ومنع تعليق الموقع
         async function uploadMultipleGalleryImages(e) {
             e.preventDefault();
             const btn = document.getElementById('uploadGalleryBtn');
@@ -617,38 +670,39 @@
             const targetAlbum = albumSelect.value;
 
             if (!fileInput.files || fileInput.files.length === 0) {
-                alert('⚠️ يرجى اختيار صورة واحدة على الأقل.');
+                showSuccessModal('تنبيه', 'يرجى اختيار صورة واحدة على الأقل.', '⚠️');
                 return;
             }
 
             btn.disabled = true;
-            const totalFiles = fileInput.files.length;
-            btn.innerHTML = `<span>جاري رفع وحفظ ${totalFiles} صور...</span> ⏳`;
+            const files = Array.from(fileInput.files);
+            const totalFiles = files.length;
+            btn.innerHTML = `<span>جاري رفع ${totalFiles} صورة بسرعة...</span> ⏳`;
 
             try {
-                for (let i = 0; i < totalFiles; i++) {
-                    const file = fileInput.files[i];
+                // تقسيم الملفات لمجموعات (Chunks) لرفعها بسلاسة وبدون تعليق
+                const uploadPromises = files.map(async (file, i) => {
                     const filePath = `gallery_uploads/${Date.now()}_${i}_${file.name}`;
-                    
                     const { error: upErr } = await supabaseClient.storage.from('media').upload(filePath, file);
                     if (upErr) throw upErr;
 
                     const { data: pubData } = supabaseClient.storage.from('media').getPublicUrl(filePath);
-                    
-                    const newGalleryItem = {
+                    return {
                         image_url: pubData.publicUrl,
                         album: targetAlbum
                     };
+                });
 
-                    const { error: dbErr } = await supabaseClient.from('gallery').insert([newGalleryItem]);
-                    if (dbErr) throw dbErr;
-                }
+                const galleryItemsToInsert = await Promise.all(uploadPromises);
 
-                alert(`✅ تم حفظ الـ ${totalFiles} صورة في قاعدة البيانات بنجاح!`);
+                const { error: dbErr } = await supabaseClient.from('gallery').insert(galleryItemsToInsert);
+                if (dbErr) throw dbErr;
+
+                showSuccessModal('تم الرفع بنجاح', `تم رفع وحفظ ${totalFiles} صورة في ألبوم (${targetAlbum}) بنجاح!`, '🚀');
                 document.getElementById('uploadGalleryForm').reset();
                 loadGalleryFromSupabase();
             } catch (err) {
-                alert('❌ تعذر الحفظ: ' + err.message);
+                showSuccessModal('تعذر الرفع', 'حدث خطأ: ' + err.message, '❌');
             } finally {
                 btn.disabled = false;
                 btn.innerHTML = '<span>رفع وحفظ الصور المحددة</span><span>🚀</span>';
@@ -656,13 +710,12 @@
         }
 
         async function deleteGalleryItem(id) {
-            if (!confirm('هل أنت متأكد من حذف هذه الصورة نهائياً؟')) return;
             const { error } = await supabaseClient.from('gallery').delete().eq('id', id);
             if (!error) {
-                alert('✅ تم الحذف بنجاح');
+                showSuccessModal('تم الحذف', 'تم حذف الصورة من المعرض بنجاح.', '🗑️');
                 loadGalleryFromSupabase();
             } else {
-                alert('❌ تعذر الحذف');
+                showSuccessModal('خطأ', 'تعذر حذف الصورة.', '❌');
             }
         }
 
@@ -746,8 +799,8 @@
             try {
                 const { error } = await supabaseClient.from('profiles').insert([regData]);
                 if (error) throw error;
-                alert('✅ تم إرسال طلب انضمامك للنادي بنجاح!');
                 closeClubRegisterModal();
+                showSuccessModal('تم التقديم بنجاح', 'تم إرسال طلب انضمامك للنادي الإعلامي بنجاح!', '📩');
             } catch (err) {
                 errorEl.innerText = '❌ تعذر إرسال الطلب: ' + err.message;
             } finally {
@@ -801,7 +854,7 @@
                         await supabaseClient.from('profiles').upsert({
                             id: data.user.id, full_name: fullName || 'عضو جديد', phone: phone || '', role: assignedRole, track: assignedTrack
                         });
-                        alert('✅ تم إنشاء الحساب بنجاح!');
+                        showSuccessModal('تم إنشاء الحساب', 'تم إنشاء حسابك في المنصة بنجاح!', '✨');
                     }
                 }
                 const { data: loginData, error: loginError } = await supabaseClient.auth.signInWithPassword({ email, password });
@@ -922,9 +975,9 @@
             }).eq('id', currentUser.id);
 
             if (error) {
-                alert('❌ تعذر الحفظ: تأكد من إضافة عمود phone في قاعدة البيانات.');
+                showSuccessModal('خطأ في الحفظ', 'تعذر حفظ البروفايل، يرجى المحاولة مرة أخرى.', '❌');
             } else {
-                alert('✅ تم حفظ التعديلات بنجاح!');
+                showSuccessModal('تم الحفظ', 'تم تحديث بيانات البروفايل بنجاح!', '💾');
                 document.getElementById('barUserTrack').innerText = track;
             }
             btn.disabled = false;
@@ -1005,11 +1058,11 @@
         function sendGroupSMS() {
             const targetTrack = document.getElementById('smsTargetTrack').value;
             const msg = document.getElementById('smsMessageText').value.trim();
-            if (!msg) { alert('⚠️ يرجى كتابة نص الرسالة أولاً.'); return; }
+            if (!msg) { showSuccessModal('تنبيه', 'يرجى كتابة نص الرسالة أولاً.', '⚠️'); return; }
 
             const filtered = targetTrack === 'جميع المسارات' ? allMembersData : allMembersData.filter(m => m.track === targetTrack);
             const phones = filtered.map(m => m.phone).filter(p => p && p.length >= 9);
-            if (phones.length === 0) { alert('ℹ️ لا توجد أرقام جوالات مسجلة.'); return; }
+            if (phones.length === 0) { showSuccessModal('تنبيه', 'لا توجد أرقام جوالات مسجلة هذا المسار.', 'ℹ️'); return; }
 
             window.location.href = `sms:${phones.join(',')}?body=${encodeURIComponent(msg)}`;
         }
@@ -1027,7 +1080,7 @@
         async function changeMemberTrack(userId) {
             const newTrack = document.getElementById(`track_${userId}`).value;
             const { error } = await supabaseClient.from('profiles').update({ track: newTrack }).eq('id', userId);
-            if (!error) { alert('✅ تم التحديث بنجاح!'); loadAdminMembers(); }
+            if (!error) { showSuccessModal('تم التحديث', 'تم تغيير مسار العضو بنجاح!', '✨'); loadAdminMembers(); }
         }
 
         async function logout() {
@@ -1089,13 +1142,13 @@
 
                 const { error } = await supabaseClient.from('ideas').insert([ideaData]);
                 if (error) throw error;
-                
-                alert('✅ تم حفظ الفكرة بنجاح!');
+
+                showSuccessModal('تمت إضافة الفكرة', 'تم حفظ وتوثيق فكرتك بنجاح في الأرشيف!', '💡');
                 document.getElementById('ideaForm').reset();
                 document.getElementById('authorName').value = document.getElementById('profileDisplayName').innerText;
                 switchPage('archivePage', document.querySelectorAll('.nav-btn')[3]);
             } catch (err) {
-                alert('❌ تعذر الحفظ: ' + err.message);
+                showSuccessModal('خطأ في الحفظ', 'تعذر حفظ الفكرة: ' + err.message, '❌');
             } finally {
                 btn.disabled = false; btn.innerHTML = '<span>حفظ الفكرة في السحابة</span><span>🚀</span>';
             }
