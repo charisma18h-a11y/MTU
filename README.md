@@ -175,6 +175,13 @@
                         🌟 أهلاً بك! تطابق اسمك مع الهيكلة الإدارية، وتم إعفاؤك من المسارات.
                     </div>
                 </div>
+                
+                <!-- حقل رقم الجوال المضاف جديداً لإنشاء الحساب -->
+                <div class="form-group" id="phoneGroup" style="display: none;">
+                    <label>رقم الجوال (للتواصل والرسائل النصية):</label>
+                    <input type="tel" id="authPhone" placeholder="05XXXXXXXX">
+                </div>
+
                 <div class="form-group" id="trackGroup" style="display: none;">
                     <label>اختر مسارك الرئيسي في النادي:</label>
                     <select id="authTrack">
@@ -340,9 +347,13 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label>رابط معرض الأعمال (Portfolio / GitHub):</label>
-                            <input type="url" id="inputPortfolio" placeholder="https://github.com/username">
+                            <label>رقم الجوال:</label>
+                            <input type="tel" id="inputPhone" placeholder="05XXXXXXXX">
                         </div>
+                    </div>
+                    <div class="form-group">
+                        <label>رابط معرض الأعمال (Portfolio / GitHub):</label>
+                        <input type="url" id="inputPortfolio" placeholder="https://github.com/username">
                     </div>
                     <button type="submit" class="btn-submit" id="saveProfileBtn"><span>حفظ التعديلات في البروفايل</span><span>💾</span></button>
                 </form>
@@ -521,6 +532,7 @@
             document.getElementById('authMainTitle').innerText = isRegisterMode ? 'إنشاء حساب على المنصة' : 'تسجيل الدخول للمنصة';
             document.getElementById('authBtnText').innerText = isRegisterMode ? 'إنشاء الحساب' : 'دخول المنصة';
             document.getElementById('fullNameGroup').style.display = isRegisterMode ? 'block' : 'none';
+            document.getElementById('phoneGroup').style.display = isRegisterMode ? 'block' : 'none';
             
             if (!isRegisterMode) {
                 document.getElementById('trackGroup').style.display = 'none';
@@ -580,6 +592,7 @@
             const email = document.getElementById('authEmail').value.trim();
             const password = document.getElementById('authPassword').value.trim();
             const fullName = document.getElementById('authFullName').value.trim();
+            const phone = document.getElementById('authPhone').value.trim();
             const track = document.getElementById('authTrack').value;
             const errorEl = document.getElementById('authError');
             const btn = document.getElementById('authBtn');
@@ -617,7 +630,7 @@
                     
                     if (data.user) {
                         await supabaseClient.from('profiles').upsert({
-                            id: data.user.id, full_name: fullName || 'عضو جديد', role: assignedRole, track: assignedTrack
+                            id: data.user.id, full_name: fullName || 'عضو جديد', phone: phone || '', role: assignedRole, track: assignedTrack
                         });
                         
                         if (isAdminUser) {
@@ -690,6 +703,7 @@
             document.getElementById('authorName').value = name;
             document.getElementById('inputBio').value = profile?.bio || '';
             document.getElementById('inputTrack').value = track;
+            document.getElementById('inputPhone').value = profile?.phone || '';
             document.getElementById('inputPortfolio').value = profile?.portfolio_url || '';
             
             if (role === 'admin' || role === 'board') {
@@ -752,16 +766,17 @@
 
             const bio = document.getElementById('inputBio').value.trim();
             const track = document.getElementById('inputTrack').value;
+            const phone = document.getElementById('inputPhone').value.trim();
             const portfolio_url = document.getElementById('inputPortfolio').value.trim();
 
             const { error } = await supabaseClient.from('profiles').update({
-                bio, track, portfolio_url, avatar_url: uploadedAvatarBase64
+                bio, track, phone, portfolio_url, avatar_url: uploadedAvatarBase64
             }).eq('id', currentUser.id);
 
             if (error) {
                 alert('❌ تعذر حفظ التعديلات: ' + error.message);
             } else {
-                alert('✅ تم حفظ التعديلات وصورتك الشخصية في بروفايلك بنجاح!');
+                alert('✅ تم حفظ التعديلات ورقم جوالك بنجاح!');
                 document.getElementById('barUserTrack').innerText = track;
             }
             btn.disabled = false;
@@ -783,7 +798,6 @@
         function updateDashboardStats() {
             document.getElementById('statTotalMembers').innerText = allMembersData.length;
             
-            // حساب المسار الأكثر إقبالاً
             const trackCounts = {};
             allMembersData.forEach(m => {
                 const t = m.track || 'غير محدد';
@@ -864,7 +878,6 @@
                 return;
             }
 
-            // تشغيل بروتوكول الرسائل الجماعي للجوال
             const numbersString = phoneNumbers.join(',');
             const smsUrl = `sms:${numbersString}?body=${encodeURIComponent(msg)}`;
             window.location.href = smsUrl;
