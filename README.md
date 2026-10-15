@@ -330,7 +330,6 @@
             <div class="card">
                 <h2 class="section-title"><span class="icon">🖼️</span>معرض صور فعاليات النادي</h2>
                 
-                <!-- نموذج الرفع الجماعي وإنشاء الألبومات -->
                 <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--border); padding: 15px; border-radius: 12px; margin-bottom: 20px;">
                     <h3 style="font-size: 0.95rem; margin-bottom: 12px; color: var(--accent-glow);">➕ إدارة المعرض (رفع جماعي وإنشاء ألبومات):</h3>
                     
@@ -353,21 +352,20 @@
                     <form id="uploadGalleryForm" onsubmit="uploadMultipleGalleryImages(event)">
                         <div class="form-row">
                             <div class="form-group" style="grid-column: 1 / -1;">
-                                <label>اختر صور متعددة من الجهاز (يمكنك تحديد أكثر من صورة دفعة واحدة):</label>
+                                <label>اختر صور متعددة من الجهاز (حفظ دائم في سوبابيس):</label>
                                 <input type="file" id="galleryImageFiles" accept="image/*" multiple required style="padding: 8px;">
                             </div>
                         </div>
-                        <button type="submit" class="btn-submit" id="uploadGalleryBtn"><span>رفع الصور المحددة دفعة واحدة</span><span>🚀</span></button>
+                        <button type="submit" class="btn-submit" id="uploadGalleryBtn"><span>رفع وحفظ الصور المحددة</span><span>🚀</span></button>
                     </form>
                 </div>
 
-                <!-- شريط تصفية الألبومات -->
                 <div class="albums-bar" id="albumsBarContainer">
                     <div class="album-chip active" onclick="filterGalleryByAlbum('الكل', this)">📁 الكل</div>
                 </div>
                 
                 <div class="gallery-grid" id="dynamicGalleryContainer">
-                    <div style="text-align: center; color: var(--text-muted); grid-column: 1 / -1; padding: 20px;">جاري تحميل الصور...</div>
+                    <div style="text-align: center; color: var(--text-muted); grid-column: 1 / -1; padding: 20px;">جاري جلب الصور المحفوظة...</div>
                 </div>
             </div>
         </section>
@@ -534,7 +532,6 @@
         let albumsList = ["الفعاليات العامة"];
         let currentSelectedAlbum = "الكل";
 
-        // إدارة الألبومات والمعرض الجماعي
         function createNewAlbum() {
             const input = document.getElementById('newAlbumName');
             const albumName = input.value.trim();
@@ -567,7 +564,7 @@
         async function loadGalleryFromSupabase() {
             const container = document.getElementById('dynamicGalleryContainer');
             try {
-                const { data, error } = await supabaseClient.from('gallery').select('*').order('created_at', { ascending: false });
+                const { data, error } = await supabaseClient.from('gallery').select('*');
                 if (error) throw error;
                 galleryData = data || [];
                 
@@ -579,7 +576,7 @@
                 updateAlbumsUI();
                 renderGalleryGrid(galleryData);
             } catch (err) {
-                container.innerHTML = '<div style="text-align: center; color: var(--text-muted); grid-column: 1 / -1; padding: 20px;">لا توجد صور مرفوعة حتى الآن. ابدأ برفع الصور دفعة وحدة!</div>';
+                container.innerHTML = '<div style="text-align: center; color: var(--text-muted); grid-column: 1 / -1; padding: 20px;">لا توجد صور محفوظة بعد.</div>';
             }
         }
 
@@ -612,7 +609,6 @@
             renderGalleryGrid(galleryData);
         }
 
-        // دالة الرفع المتعدد (مجموعة صور دفعة واحدة)
         async function uploadMultipleGalleryImages(e) {
             e.preventDefault();
             const btn = document.getElementById('uploadGalleryBtn');
@@ -627,7 +623,7 @@
 
             btn.disabled = true;
             const totalFiles = fileInput.files.length;
-            btn.innerHTML = `<span>جاري رفع ${totalFiles} صور...</span> ⏳`;
+            btn.innerHTML = `<span>جاري رفع وحفظ ${totalFiles} صور...</span> ⏳`;
 
             try {
                 for (let i = 0; i < totalFiles; i++) {
@@ -641,26 +637,26 @@
                     
                     const newGalleryItem = {
                         image_url: pubData.publicUrl,
-                        caption: '',
                         album: targetAlbum
                     };
 
-                    await supabaseClient.from('gallery').insert([newGalleryItem]);
+                    const { error: dbErr } = await supabaseClient.from('gallery').insert([newGalleryItem]);
+                    if (dbErr) throw dbErr;
                 }
 
-                alert(`✅ تم رفع الـ ${totalFiles} صورة بنجاح إلى الألبوم "${targetAlbum}"!`);
+                alert(`✅ تم حفظ الـ ${totalFiles} صورة في قاعدة البيانات بنجاح!`);
                 document.getElementById('uploadGalleryForm').reset();
                 loadGalleryFromSupabase();
             } catch (err) {
-                alert('❌ تعذر رفع الصور: ' + err.message);
+                alert('❌ تعذر الحفظ: ' + err.message);
             } finally {
                 btn.disabled = false;
-                btn.innerHTML = '<span>رفع الصور المحددة دفعة واحدة</span><span>🚀</span>';
+                btn.innerHTML = '<span>رفع وحفظ الصور المحددة</span><span>🚀</span>';
             }
         }
 
         async function deleteGalleryItem(id) {
-            if (!confirm('هل أنت متأكد من حذف هذه الصورة؟')) return;
+            if (!confirm('هل أنت متأكد من حذف هذه الصورة نهائياً؟')) return;
             const { error } = await supabaseClient.from('gallery').delete().eq('id', id);
             if (!error) {
                 alert('✅ تم الحذف بنجاح');
