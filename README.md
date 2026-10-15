@@ -29,7 +29,6 @@
             background-color: var(--bg-dark); color: var(--text-main); line-height: 1.7; padding-bottom: 40px; min-height: 100vh; overflow-x: hidden; width: 100%; position: relative;
         }
 
-        /* --- حاوية فيديو الخلفية --- */
         .bg-video-container {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -99; overflow: hidden; pointer-events: none; background: #000;
         }
@@ -41,7 +40,6 @@
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(5, 5, 7, 0.7); z-index: -98; pointer-events: none;
         }
 
-        /* --- شاشة تسجيل الدخول --- */
         #welcomeScreen {
             position: fixed; inset: 0; z-index: 999999; 
             background: radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.18) 0%, transparent 40%),
@@ -126,14 +124,22 @@
 
         .member-row-item { background: rgba(255,255,255,0.03); border: 1px solid var(--border); padding: 12px; border-radius: 8px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
 
-        .archive-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .archive-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px; }
         .archive-counter { background: rgba(59, 130, 246, 0.15); color: var(--accent-glow); padding: 4px 12px; border-radius: 16px; font-size: 0.78rem; font-weight: 700; border: 1px solid rgba(59, 130, 246, 0.3); }
         .archive-grid { display: flex; flex-direction: column; gap: 15px; }
-        .idea-card { background: var(--bg-card-solid); border: 1px solid var(--border); border-radius: 12px; padding: 15px; position: relative; }
-        .idea-header { display: flex; justify-content: space-between; margin-bottom: 8px; flex-wrap: wrap; gap: 6px; }
+        .idea-card { background: var(--bg-card-solid); border: 1px solid var(--border); border-radius: 12px; padding: 16px; position: relative; }
+        .idea-header { display: flex; justify-content: space-between; margin-bottom: 8px; flex-wrap: wrap; gap: 6px; align-items: center; }
         .idea-title { font-size: 1.05rem; font-weight: 800; color: #fff; }
         .idea-author { font-size: 0.75rem; color: var(--accent-glow); background: rgba(59, 130, 246, 0.12); padding: 2px 10px; border-radius: 15px; }
         .idea-body { color: #cbd5e1; font-size: 0.88rem; margin-bottom: 12px; }
+        .idea-details-meta { display: flex; gap: 12px; font-size: 0.78rem; color: var(--text-muted); background: rgba(255,255,255,0.02); padding: 8px 12px; border-radius: 8px; margin-bottom: 10px; flex-wrap: wrap; }
+        .status-badge { font-size: 0.72rem; padding: 3px 8px; border-radius: 6px; font-weight: 700; }
+        .status-pending { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
+        .status-approved { background: rgba(34, 197, 94, 0.15); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.3); }
+        
+        .like-btn { background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: #fff; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; cursor: pointer; transition: 0.2s ease; display: inline-flex; align-items: center; gap: 5px; }
+        .like-btn:hover { background: rgba(59,130,246,0.2); border-color: var(--accent-primary); }
+
         .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; margin-top: 10px; }
         .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
         .auth-switch { text-align: center; margin-top: 14px; font-size: 0.85rem; color: var(--text-muted); display: flex; flex-direction: column; gap: 8px; }
@@ -150,7 +156,6 @@
 </head>
 <body>
 
-    <!-- فيديو خلفية مباشر -->
     <div class="bg-video-container">
         <video autoplay loop muted playsinline preload="auto">
             <source src="background.mp4" type="video/mp4">
@@ -159,7 +164,6 @@
     </div>
     <div class="bg-overlay"></div>
 
-    <!-- شاشة تسجيل الدخول المستقلة بالكامل -->
     <div id="welcomeScreen">
         <div class="mtu-logo-container"><div class="mtu-logo-text">MTU<span class="mtu-dot"></span></div></div>
         <span class="site-badge" style="margin-top: 4px; background: rgba(59, 130, 246, 0.2);">منصة النادي الإعلامي</span>
@@ -209,7 +213,6 @@
         </div>
     </div>
 
-    <!-- نافذة طلب العضوية المستقلة -->
     <div id="clubRegModal" style="display: none;">
         <div class="mtu-logo-container"><div class="mtu-logo-text">MTU<span class="mtu-dot"></span></div></div>
         <span class="site-badge" style="margin-top: 5px;">استمارة طلب انضمام للنادي الإعلامي</span>
@@ -267,7 +270,6 @@
         </div>
     </div>
 
-    <!-- شريط التنقل العلوي للموقع -->
     <nav class="quick-nav">
         <button class="nav-btn active" onclick="switchPage('homePage', this)">🏛️ المجلس</button>
         <button class="nav-btn" onclick="switchPage('profilePage', this)">👤 بروفايلي</button>
@@ -284,14 +286,12 @@
 
     <div class="container">
 
-        <!-- شريط الحالة والترحيب الشخصي -->
         <div class="card" style="padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
             <div>👤 أهلاً بك: <strong id="barUserName" style="color: var(--accent-glow);">...</strong></div>
             <div>المسار: <span id="barUserTrack" style="background: rgba(59,130,246,0.15); padding: 2px 10px; border-radius: 10px; border: 1px solid rgba(59,130,246,0.3);">عضو</span></div>
             <div>الرتبة: <span id="barUserRole" style="background: rgba(35,134,54,0.15); padding: 2px 10px; border-radius: 10px; color: #4ade80;">عضو</span></div>
         </div>
 
-        <!-- صفحة المجلس -->
         <section id="homePage" class="page-section active">
             <div class="card">
                 <h2 class="section-title"><span class="icon">👥</span>مجلس النادي وهيكلة الإدارة</h2>
@@ -316,7 +316,6 @@
             </div>
         </section>
 
-        <!-- صفحة بروفايلي الشخصي -->
         <section id="profilePage" class="page-section">
             <div class="card profile-header-card">
                 <div class="avatar-container">
@@ -358,7 +357,7 @@
             </div>
         </section>
 
-        <!-- صفحة تقديم فكرة -->
+        <!-- صفحة تقديم فكرة مع رفع صورة مباشر من الجهاز -->
         <section id="formPage" class="page-section">
             <div class="card">
                 <h2 class="section-title"><span class="icon">💡</span>تقديم فكرة / مشروع جديد</h2>
@@ -373,24 +372,30 @@
                         <div class="form-group"><label>المسارات والمشاركون:</label><input type="text" id="ideaMembers" required></div>
                     </div>
                     <div class="form-row">
-                        <div class="form-group"><label>رابط صورة/تصميم (اختياري):</label><input type="url" id="imageUrl"></div>
-                        <div class="form-group"><label>رابط فيديو يوتيوب (اختياري):</label><input type="url" id="videoUrl"></div>
+                        <div class="form-group">
+                            <label>صورة توضيحية للفكرة (اختر ملف من الجوال):</label>
+                            <input type="file" id="ideaImageFile" accept="image/*" style="padding: 8px;">
+                        </div>
+                        <div class="form-group"><label>رابط فيديو يوتيوب (اختياري):</label><input type="url" id="videoUrl" placeholder="https://youtube.com/..."></div>
                     </div>
                     <button type="submit" class="btn-submit" id="submitBtn"><span>حفظ الفكرة في السحابة</span><span>🚀</span></button>
                 </form>
             </div>
         </section>
 
-        <!-- صفحة الأرشيف -->
         <section id="archivePage" class="page-section">
             <div class="archive-header">
-                <h2 class="section-title" style="margin-bottom: 0;"><span class="icon">📁</span>الأرشيف</h2>
+                <h2 class="section-title" style="margin-bottom: 0;"><span class="icon">📁</span>أرشيف الفعاليات والمشاريع</h2>
                 <span class="archive-counter" id="archiveCount">جاري التحميل...</span>
             </div>
+
+            <div style="margin-bottom: 15px;">
+                <input type="text" id="searchIdeaInput" oninput="filterIdeasArchive()" placeholder="🔍 ابحث في الأفكار (اسم العنوان، المقترح، أو التفاصيل)..." style="background: rgba(15, 17, 26, 0.9); border-color: var(--border);">
+            </div>
+
             <div class="archive-grid" id="archiveContainer"></div>
         </section>
 
-        <!-- لوحة تحكم المشرف -->
         <section id="adminPage" class="page-section">
             <div class="card">
                 <h2 class="section-title"><span class="icon">⚙️</span>لوحة تحكم المشرف وإدارة الأعضاء</h2>
@@ -487,6 +492,7 @@
         let isRegisterMode = false;
         let uploadedAvatarBase64 = '';
         let allMembersData = [];
+        let allIdeasData = [];
 
         function checkBoardIdentity(val) {
             if (!isRegisterMode) return;
@@ -918,28 +924,54 @@
             return (match && match[2].length === 11) ? `https://www.youtube.com/embed/${match[2]}` : '';
         }
 
-        /* --- حفظ الفكرة مباشرة في Supabase --- */
+        /* --- حفظ الفكرة مع رفع الصورة مباشرة لسحابة Supabase Storage --- */
         async function submitIdeaToSupabase(e) {
             e.preventDefault();
             const submitBtn = document.getElementById('submitBtn');
             submitBtn.disabled = true;
-            submitBtn.innerHTML = '<span>جاري الحفظ في السحابة...</span> ⏳';
+            submitBtn.innerHTML = '<span>جاري رفع الصورة والحفظ...</span> ⏳';
 
-            const ideaData = {
-                author: document.getElementById('authorName').value.trim(),
-                title: document.getElementById('ideaTitle').value.trim(),
-                description: document.getElementById('ideaDescription').value.trim(),
-                location: document.getElementById('ideaLocation').value.trim(),
-                members: document.getElementById('ideaMembers').value.trim(),
-                image_url: document.getElementById('imageUrl').value.trim(),
-                video_url: document.getElementById('videoUrl').value.trim()
-            };
+            let imageUrl = '';
+            const imageFileInput = document.getElementById('ideaImageFile');
 
             try {
+                // إذا تم اختيار ملف صورة، قم برفعه لـ Supabase Storage (media)
+                if (imageFileInput.files && imageFileInput.files[0]) {
+                    const file = imageFileInput.files[0];
+                    const fileExt = file.name.split('.').pop();
+                    const fileName = `${Date.now()}_${Math.random().toString(36.substring(2))}.${fileExt}`;
+                    const filePath = `ideas_images/${fileName}`;
+
+                    const { data: uploadData, error: uploadError } = await supabaseClient.storage
+                        .from('media')
+                        .upload(filePath, file);
+
+                    if (uploadError) throw uploadError;
+
+                    // استخراج الرابط العام للوقت الفعلي
+                    const { data: publicUrlData } = supabaseClient.storage
+                        .from('media')
+                        .getPublicUrl(filePath);
+
+                    imageUrl = publicUrlData.publicUrl;
+                }
+
+                const ideaData = {
+                    author: document.getElementById('authorName').value.trim(),
+                    title: document.getElementById('ideaTitle').value.trim(),
+                    description: document.getElementById('ideaDescription').value.trim(),
+                    location: document.getElementById('ideaLocation').value.trim(),
+                    members: document.getElementById('ideaMembers').value.trim(),
+                    image_url: imageUrl,
+                    video_url: document.getElementById('videoUrl').value.trim(),
+                    status: 'قيد المراجعة',
+                    likes_count: 0
+                };
+
                 const { error } = await supabaseClient.from('ideas').insert([ideaData]);
                 if (error) throw error;
                 
-                alert('✅ تم حفظ الفكرة في سحابة Supabase بنجاح!');
+                alert('✅ تم حفظ الفكرة وصورتها في سحابة Supabase بنجاح!');
                 document.getElementById('ideaForm').reset();
                 document.getElementById('authorName').value = document.getElementById('profileDisplayName').innerText;
                 switchPage('archivePage', document.querySelectorAll('.nav-btn')[3]);
@@ -951,7 +983,6 @@
             }
         }
 
-        /* --- جلب الأفكار من Supabase مباشرة --- */
         async function loadSupabaseIdeas() {
             const container = document.getElementById('archiveContainer');
             const counter = document.getElementById('archiveCount');
@@ -965,26 +996,82 @@
 
                 if (error) throw error;
 
+                allIdeasData = ideas;
                 counter.textContent = `إجمالي المشاركات: ${ideas.length}`;
                 const statTotalIdeas = document.getElementById('statTotalIdeas');
                 if (statTotalIdeas) statTotalIdeas.innerText = ideas.length;
 
-                container.innerHTML = ideas.length === 0 ? '<div style="text-align: center; color: var(--text-muted); padding: 20px;">لا توجد أفكار مسجلة حتى الآن.</div>' : '';
-
-                ideas.forEach((idea) => {
-                    const embedUrl = getYouTubeEmbedUrl(idea.video_url);
-                    const card = document.createElement('div');
-                    card.className = 'idea-card';
-                    card.innerHTML = `
-                        <div class="idea-header"><div class="idea-title">${idea.title || 'بدون عنوان'}</div><div class="idea-author">المقترح: ${idea.author || 'مجهول'}</div></div>
-                        <div class="idea-body">${idea.description || ''}</div>
-                        ${idea.image_url ? `<div style="margin-top: 10px;"><img src="${idea.image_url}" style="width:100%; max-height:220px; object-fit:cover; border-radius:8px;" onerror="this.style.display='none'"></div>` : ''}
-                        ${embedUrl ? `<div class="video-wrapper"><iframe src="${embedUrl}" allowfullscreen></iframe></div>` : ''}
-                    `;
-                    container.appendChild(card);
-                });
+                renderIdeasCards(allIdeasData);
             } catch (error) {
                 container.innerHTML = '<div style="text-align: center; color: #f85149; padding: 20px;">تعذر جلب الأرشيف من السحابة.</div>';
+            }
+        }
+
+        function renderIdeasCards(ideas) {
+            const container = document.getElementById('archiveContainer');
+            container.innerHTML = ideas.length === 0 ? '<div style="text-align: center; color: var(--text-muted); padding: 20px;">لا توجد أفكار تطابق البحث.</div>' : '';
+
+            ideas.forEach((idea) => {
+                const embedUrl = getYouTubeEmbedUrl(idea.video_url);
+                const statusClass = idea.status === 'معتمدة' ? 'status-approved' : 'status-pending';
+                const card = document.createElement('div');
+                card.className = 'idea-card';
+                card.innerHTML = `
+                    <div class="idea-header">
+                        <div class="idea-title">${idea.title || 'بدون عنوان'}</div>
+                        <div style="display: flex; gap: 6px; align-items: center;">
+                            <span class="status-badge ${statusClass}">${idea.status || 'قيد المراجعة'}</span>
+                            <div class="idea-author">المقترح: ${idea.author || 'مجهول'}</div>
+                        </div>
+                    </div>
+                    <div class="idea-body">${idea.description || ''}</div>
+                    
+                    <div class="idea-details-meta">
+                        <div>📍 <strong>الموقع:</strong> ${idea.location || 'غير محدد'}</div>
+                        <div>👥 <strong>المشاركون:</strong> ${idea.members || 'عام'}</div>
+                    </div>
+
+                    ${idea.image_url ? `<div style="margin-top: 10px;"><img src="${idea.image_url}" style="width:100%; max-height:220px; object-fit:cover; border-radius:8px;" onerror="this.style.display='none'"></div>` : ''}
+                    ${embedUrl ? `<div class="video-wrapper"><iframe src="${embedUrl}" allowfullscreen></iframe></div>` : ''}
+                    
+                    <div style="margin-top: 12px; display: flex; justify-content: space-between; align-items: center;">
+                        <button class="like-btn" onclick="likeIdea('${idea.id}', ${idea.likes_count || 0})">
+                            <span>👍 تصويت</span> <strong id="like_count_${idea.id}">${idea.likes_count || 0}</strong>
+                        </button>
+                        <span style="font-size: 0.72rem; color: var(--text-muted);">${new Date(idea.created_at).toLocaleDateString('ar-SA')}</span>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function filterIdeasArchive() {
+            const query = document.getElementById('searchIdeaInput').value.toLowerCase().trim();
+            if (!query) {
+                renderIdeasCards(allIdeasData);
+                return;
+            }
+            const filtered = allIdeasData.filter(i => 
+                (i.title && i.title.toLowerCase().includes(query)) ||
+                (i.author && i.author.toLowerCase().includes(query)) ||
+                (i.description && i.description.toLowerCase().includes(query)) ||
+                (i.location && i.location.toLowerCase().includes(query))
+            );
+            renderIdeasCards(filtered);
+        }
+
+        async function likeIdea(ideaId, currentLikes) {
+            const newLikes = currentLikes + 1;
+            const countEl = document.getElementById(`like_count_${ideaId}`);
+            if (countEl) countEl.innerText = newLikes;
+
+            const { error } = await supabaseClient
+                .from('ideas')
+                .update({ likes_count: newLikes })
+                .eq('id', ideaId);
+
+            if (error) {
+                if (countEl) countEl.innerText = currentLikes;
             }
         }
     </script>
