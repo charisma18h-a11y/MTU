@@ -1,5 +1,6 @@
  # MTU
 <html lang="ar" dir="rtl">
+ <meta name="google-site-verification" content="_tKWW0ai4kGwcfk6Vww3dS0Yr0gQhIMxOKaG0Goc7Cs" />
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
