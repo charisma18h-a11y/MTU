@@ -321,7 +321,7 @@
             </div>
         </section>
 
-        <!-- صفحة معرض الصور الشبكي (التوليد التلقائي مع الحماية) -->
+        <!-- صفحة معرض الصور الشبكي (التوليد التلقائي) -->
         <section id="galleryPage" class="page-section">
             <div class="card">
                 <h2 class="section-title"><span class="icon">🖼️</span>معرض صور فعاليات ومشاريع النادي</h2>
@@ -490,7 +490,7 @@
         let allMembersData = [];
         let allIdeasData = [];
 
-        // توليد الـ 60 صورة تلقائياً مع معالجة الأخطاء
+        // توليد الـ 60 صورة تلقائياً
         function renderClubGallery() {
             const container = document.getElementById('clubGalleryContainer');
             if (!container) return;
@@ -965,7 +965,7 @@
             container.innerHTML = ideas.length === 0 ? '<div style="text-align: center; color: var(--text-muted); padding: 20px;">لا توجد أفكار.</div>' : '';
 
             ideas.forEach((idea) => {
-                const, embedUrl = getYouTubeEmbedUrl(idea.video_url); // تم مراجعة الفاصلة الزائدة هنا
+                const embedUrl = getYouTubeEmbedUrl(idea.video_url);
                 const statusClass = idea.status === 'معتمدة' ? 'status-approved' : 'status-pending';
                 const card = document.createElement('div');
                 card.className = 'idea-card';
