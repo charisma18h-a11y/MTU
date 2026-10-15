@@ -1,21 +1,17 @@
  # MTU
 <html lang="ar" dir="rtl">
 <head>
- <meta name="google-site-verification" content="_tKWW0ai4kGwcfk6Vww3dS0Yr0gQhIMxOKaG0Goc7Cs" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
+    <!-- وسم إثبات الملكية لـ Google Search Console -->
+    <meta name="google-site-verification" content="_tKWW0ai4kGwcfk6Vww3dS0Yr0gQhIMxOKaG0Goc7Cs" />
+
     <!-- وسوم الـ SEO والأرشفة في محرك بحث قوقل -->
     <title>منصة النادي الإعلامي - جامعة الطائف</title>
     <meta name="description" content="المنصة الرسمية للنادي الإعلامي بجامعة الطائف - تقديم الأفكار، الأرشيف، وإدارة الأعضاء والمسارات الإعلامية.">
-    <meta name="keywords" content="النادي الإعلامي, جامعة الطائف, منصة النادي الإعلامي, MTU, Taif University, النادي الاعلامي جامعة الطائف">
+    <meta name="keywords" content="النادي الإعلامي, جامعة الطائف, منصة النادي الإعلامي, MTU, Taif University">
     <meta name="author" content="خالد أحمد الهلال">
-
-    <!-- وسوم ظهور الرابط بشكل رسمي عند مشاركته في الواتساب أو وسائل التواصل -->
-    <meta property="og:title" content="منصة النادي الإعلامي - جامعة الطائف">
-    <meta property="og:description" content="المنصة الإعلامية التفاعلية الرسمية للنادي الإعلامي بجامعة الطائف.">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://charisma18h-a11y.github.io/">
 
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Montserrat:wght@800;900&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -60,13 +56,6 @@
                         radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.12) 0%, transparent 60%),
                         #05060a;
             display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; text-align: center; transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); overflow-y: auto;
-        }
-
-        #welcomeScreen::before {
-            content: ''; position: absolute; inset: 0;
-            background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-                              linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-            background-size: 35px 35px; pointer-events: none; opacity: 0.8;
         }
 
         .auth-card {
@@ -149,6 +138,13 @@
         .status-badge { font-size: 0.72rem; padding: 3px 8px; border-radius: 6px; font-weight: 700; }
         .status-pending { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
         .status-approved { background: rgba(34, 197, 94, 0.15); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.3); }
+
+        /* معرض الصور الشبكي (Gallery) */
+        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; margin-top: 15px; }
+        .gallery-item { background: var(--bg-card-solid); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; transition: transform 0.3s ease; cursor: pointer; }
+        .gallery-item:hover { transform: translateY(-4px); border-color: var(--accent-primary); }
+        .gallery-item img { width: 100%; height: 160px; object-fit: cover; display: block; }
+        .gallery-caption { padding: 8px; font-size: 0.78rem; color: #cbd5e1; text-align: center; font-weight: 700; }
         
         .like-btn { background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: #fff; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; cursor: pointer; transition: 0.2s ease; display: inline-flex; align-items: center; gap: 5px; }
         .like-btn:hover { background: rgba(59,130,246,0.2); border-color: var(--accent-primary); }
@@ -283,6 +279,7 @@
         <button class="nav-btn" onclick="switchPage('profilePage', this)">👤 بروفايلي</button>
         <button class="nav-btn" onclick="switchPage('formPage', this)">💡 تقديم فكرة</button>
         <button class="nav-btn" onclick="switchPage('archivePage', this)">📁 الأرشيف</button>
+        <button class="nav-btn" onclick="switchPage('galleryPage', this)">🖼️ معرض الصور</button>
         <button class="nav-btn" id="adminNavBtn" style="display: none; background: rgba(35, 134, 54, 0.2); border-color: var(--admin-color);" onclick="switchPage('adminPage', this)">⚙️ المشرف</button>
         <button class="nav-btn" onclick="logout()" style="background: rgba(248, 81, 73, 0.15); border-color: rgba(248, 81, 73, 0.3); color: #f85149;">🚪 خروج</button>
     </nav>
@@ -320,6 +317,18 @@
                             <div class="board-role">مسؤول تقنية المعلومات (IT)</div><div class="board-name">خالد أحمد الهلال</div>
                         </div>
                     </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- صفحة معرض الصور الشبكي (التوليد التلقائي لـ 60 صورة) -->
+        <section id="galleryPage" class="page-section">
+            <div class="card">
+                <h2 class="section-title"><span class="icon">🖼️</span>معرض صور فعاليات ومشاريع النادي (60 صورة)</h2>
+                <p style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 15px;">أرشيف فعاليات النادي الإعلامي بجامعة الطائف:</p>
+                
+                <div class="gallery-grid" id="clubGalleryContainer">
+                    <!-- يتم توليد الصور تلقائياً هنا بواسطة الجافاسكريبت -->
                 </div>
             </div>
         </section>
@@ -482,6 +491,25 @@
         let uploadedAvatarBase64 = '';
         let allMembersData = [];
         let allIdeasData = [];
+
+        // توليد الـ 60 صورة تلقائياً في المعرض
+        function renderClubGallery() {
+            const container = document.getElementById('clubGalleryContainer');
+            if (!container) return;
+            container.innerHTML = '';
+
+            // فرضا أن الصور مسمية من 1 إلى 60 (مثل: 1.jpg, 2.jpg ... الخ داخل مجلد images)
+            // ملاحظة: إذا كانت صيغ الصور png أو امتداد آخر تقدر تغيره هنا بسهولة
+            for (let i = 1; i <= 60; i++) {
+                const item = document.createElement('div');
+                item.className = 'gallery-item';
+                item.innerHTML = `
+                    <img src="images/${i}.jpg" alt="فعالية النادي ${i}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=600&q=80'">
+                    <div class="gallery-caption">فعالية النادي #${i}</div>
+                `;
+                container.appendChild(item);
+            }
+        }
 
         function checkBoardIdentity(val) {
             if (!isRegisterMode) return;
@@ -739,7 +767,7 @@
             }).eq('id', currentUser.id);
 
             if (error) {
-                alert('❌ تعذر الحفظ: تأكد من إضافة عمود phone في قاعدة البيانات (راجع تعليمات SQL).');
+                alert('❌ تعذر الحفظ: تأكد من إضافة عمود phone في قاعدة البيانات.');
             } else {
                 alert('✅ تم حفظ التعديلات بنجاح!');
                 document.getElementById('barUserTrack').innerText = track;
@@ -791,7 +819,7 @@
                 item.innerHTML = `
                     <div>
                         <strong>${m.full_name || 'بدون اسم'}</strong><br>
-                        <span style="font-size: 0.78rem; color: var(--text-muted);">المسار: ${m.track || 'غير محدد'} | الجوال: ${m.phone || 'غير مسجل'}</span>
+                        <span style="font-size: 0.78rem; color: var(--text-muted);">المسار: ${m.track \vert{}\vert{} 'غير محدد'} \vert{} الجوال: ${m.phone || 'غير مسجل'}</span>
                     </div>
                     <div style="display:flex; gap:5px; align-items:center;">
                         <select id="track_${m.id}" style="padding:4px 8px; font-size:0.8rem;">
@@ -834,7 +862,7 @@
         function exportMembersToExcel() {
             if (allMembersData.length === 0) return;
             let csv = "data:text/csv;charset=utf-8,\uFEFFالاسم,المسار,الرتبة,الجوال\n";
-            allMembersData.forEach(m => { csv += `"${m.full_name || ''}","${m.track || ''}","${m.role || ''}","${m.phone || ''}"\n`; });
+            allMembersData.forEach(m => { csv += `"${m.full_name \vert{}\vert{} ''}","${m.track || ''}","${m.role \vert{}\vert{} ''}","${m.phone || ''}"\n`; });
             const link = document.createElement("a");
             link.setAttribute("href", encodeURI(csv));
             link.setAttribute("download", `اعضاء_النادي_${new Date().toISOString().slice(0,10)}.csv`);
@@ -853,6 +881,7 @@
         }
 
         window.addEventListener('DOMContentLoaded', async () => {
+            renderClubGallery(); // تشغيل مولد الصور التلقائي للمعرض
             const { data: { session } } = await supabaseClient.auth.getSession();
             if (session && session.user) { loadUserProfile(session.user); }
         });
@@ -952,40 +981,4 @@
                             <div class="idea-author">المقترح: ${idea.author || ''}</div>
                         </div>
                     </div>
-                    <div class="idea-body">${idea.description || ''}</div>
-                    <div class="idea-details-meta">
-                        <div>📍 <strong>الموقع:</strong> ${idea.location || ''}</div>
-                        <div>👥 <strong>المشاركون:</strong> ${idea.members || ''}</div>
-                    </div>
-                    ${idea.image_url ? `<div style="margin-top: 10px;"><img src="${idea.image_url}" style="width:100%; max-height:220px; object-fit:cover; border-radius:8px;" onerror="this.style.display='none'"></div>` : ''}
-                    ${embedUrl ? `<div class="video-wrapper"><iframe src="${embedUrl}" allowfullscreen></iframe></div>` : ''}
-                    <div style="margin-top: 12px; display: flex; justify-content: space-between; align-items: center;">
-                        <button class="like-btn" onclick="likeIdea('${idea.id}', ${idea.likes_count || 0})">
-                            <span>👍 تصويت</span> <strong id="like_count_${idea.id}">${idea.likes_count || 0}</strong>
-                        </button>
-                        <span style="font-size: 0.72rem; color: var(--text-muted);">${new Date(idea.created_at).toLocaleDateString('ar-SA')}</span>
-                    </div>
-                `;
-                container.appendChild(card);
-            });
-        }
-
-        function filterIdeasArchive() {
-            const query = document.getElementById('searchIdeaInput').value.toLowerCase().trim();
-            if (!query) { renderIdeasCards(allIdeasData); return; }
-            renderIdeasCards(allIdeasData.filter(i => 
-                (i.title && i.title.toLowerCase().includes(query)) ||
-                (i.author && i.author.toLowerCase().includes(query)) ||
-                (i.description && i.description.toLowerCase().includes(query))
-            ));
-        }
-
-        async function likeIdea(ideaId, currentLikes) {
-            const newLikes = currentLikes + 1;
-            const countEl = document.getElementById(`like_count_${ideaId}`);
-            if (countEl) countEl.innerText = newLikes;
-            await supabaseClient.from('ideas').update({ likes_count: newLikes }).eq('id', ideaId);
-        }
-    </script>
-</body>
-</html>
+                    <div class="idea
