@@ -142,8 +142,6 @@
 
         .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; margin-top: 10px; }
         .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
-        .auth-switch { text-align: center; margin-top: 14px; font-size: 0.85rem; color: var(--text-muted); display: flex; flex-direction: column; gap: 8px; }
-        .auth-switch a { color: var(--accent-glow); cursor: pointer; font-weight: 700; }
         .error-msg { color: #f85149; font-size: 0.8rem; text-align: center; margin-top: 8px; }
         footer { text-align: center; color: var(--text-muted); font-size: 0.8rem; padding-top: 20px; border-top: 1px solid var(--border); margin-top: 25px; }
 
@@ -167,26 +165,26 @@
     <div id="welcomeScreen">
         <div class="mtu-logo-container"><div class="mtu-logo-text">MTU<span class="mtu-dot"></span></div></div>
         <span class="site-badge" style="margin-top: 4px; background: rgba(59, 130, 246, 0.2);">منصة النادي الإعلامي</span>
-        <h1 id="authMainTitle" style="font-size: 1.25rem; margin-top: 12px; color: #fff; font-weight: 800;">تسجيل الدخول للمنصة</h1>
+        <h1 style="font-size: 1.25rem; margin-top: 12px; color: #fff; font-weight: 800;">تسجيل الدخول الفوري للمنصة</h1>
         
         <div class="auth-card">
-            <form id="authForm" onsubmit="handleSupabaseAuth(event)">
-                <div class="form-group" id="fullNameGroup" style="display: none;">
+            <form id="authForm" onsubmit="handleDirectLogin(event)">
+                <div class="form-group">
                     <label>الاسم الرباعي:</label>
-                    <input type="text" id="authFullName" placeholder="اكتب اسمك الرباعي هنا" oninput="checkBoardIdentity(this.value)">
+                    <input type="text" id="loginFullName" placeholder="اكتب اسمك (مثال: خالد أحمد الهلال)" required oninput="checkBoardIdentity(this.value)">
                     <div id="boardNotice" style="display: none; font-size: 0.8rem; color: #8b5cf6; margin-top: 5px; font-weight: bold; background: rgba(139, 92, 246, 0.15); padding: 6px 10px; border-radius: 6px; border: 1px solid rgba(139, 92, 246, 0.3);">
-                        🌟 أهلاً بك! تطابق اسمك مع الهيكلة الإدارية، وتم إعفاؤك من المسارات.
+                        🌟 أهلاً بك! تم التعرف على هويتك الإدارية تلقائياً.
                     </div>
                 </div>
-                
-                <div class="form-group" id="phoneGroup" style="display: none;">
-                    <label>رقم الجوال (للتواصل والرسائل النصية):</label>
-                    <input type="tel" id="authPhone" placeholder="05XXXXXXXX">
+
+                <div class="form-group">
+                    <label>رقم الجوال:</label>
+                    <input type="tel" id="loginPhone" placeholder="05XXXXXXXX" required>
                 </div>
 
-                <div class="form-group" id="trackGroup" style="display: none;">
+                <div class="form-group" id="trackGroup">
                     <label>اختر مسارك الرئيسي في النادي:</label>
-                    <select id="authTrack">
+                    <select id="loginTrack">
                         <option value="تصوير وإضاءة">📷 تصوير وإضاءة</option>
                         <option value="مونتاج وموشن جرافيك">🎬 مونتاج وموشن جرافيك</option>
                         <option value="إنتاج برامج وبودكاست">🎙️ إنتاج برامج وبودكاست</option>
@@ -195,24 +193,20 @@
                         <option value="تقنية المعلومات (IT)">💻 تقنية المعلومات (IT)</option>
                     </select>
                 </div>
-                <div class="form-group"><label>البريد الإلكتروني:</label><input type="email" id="authEmail" placeholder="name@example.com" required></div>
-                <div class="form-group"><label>كلمة المرور:</label><input type="password" id="authPassword" placeholder="••••••••" required></div>
-                <button type="submit" class="btn-submit" id="authBtn"><span id="authBtnText">دخول المنصة</span><span>🚀</span></button>
+
+                <button type="submit" class="btn-submit" id="authBtn"><span>دخول المنصة فوراً</span><span>🚀</span></button>
                 <div id="authError" class="error-msg"></div>
             </form>
 
-            <div class="auth-switch">
-                <div><span id="switchText">ليس لديك حساب على المنصة؟</span> <a onclick="toggleAuthMode()" id="switchLink">إنشاء حساب جديد</a></div>
-                <hr style="border: 0; border-top: 1px solid var(--border); margin: 8px 0;">
-                <div>
-                    <button type="button" onclick="openClubRegisterModal()" style="background: rgba(59, 130, 246, 0.15); border: 1px solid var(--accent-primary); color: var(--accent-glow); padding: 10px 15px; border-radius: 10px; width: 100%; font-weight: 700; cursor: pointer; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; gap: 6px; transition: 0.3s ease;">
-                        <span>📝 التسجيل في النادي الإعلامي (طلب عضوية)</span>
-                    </button>
-                </div>
+            <div style="text-align: center; margin-top: 14px;">
+                <button type="button" onclick="openClubRegisterModal()" style="background: rgba(59, 130, 246, 0.15); border: 1px solid var(--accent-primary); color: var(--accent-glow); padding: 10px 15px; border-radius: 10px; width: 100%; font-weight: 700; cursor: pointer; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                    <span>📝 التسجيل في النادي الإعلامي (طلب عضوية)</span>
+                </button>
             </div>
         </div>
     </div>
 
+    <!-- نافذة طلب الانضمام للنادي -->
     <div id="clubRegModal" style="display: none;">
         <div class="mtu-logo-container"><div class="mtu-logo-text">MTU<span class="mtu-dot"></span></div></div>
         <span class="site-badge" style="margin-top: 5px;">استمارة طلب انضمام للنادي الإعلامي</span>
@@ -251,15 +245,8 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>هل قد شاركت في أحد مسارات الإعلام من قبل؟</label>
-                    <select id="regPreviousExperience">
-                        <option value="نعم">نعم، لدي مشاركات سابقة</option>
-                        <option value="لا">لا، هذه بدايتي</option>
-                    </select>
-                </div>
-                <div class="form-group">
                     <label>نبذة عنك (مهاراتك واهتماماتك):</label>
-                    <textarea id="regBio" placeholder="اكتب نبذة مختصرة عن شغفك وخبراتك..." rows="3" required></textarea>
+                    <textarea id="regBio" placeholder="اكتب نبذة مختصرة عن شغفك..." rows="3" required></textarea>
                 </div>
                 <div style="display: flex; gap: 10px;">
                     <button type="submit" class="btn-submit" id="regSubmitBtn" style="flex: 2;"><span>إرسال طلب الانضمام</span><span>📩</span></button>
@@ -332,7 +319,7 @@
                         <textarea id="inputBio" placeholder="اكتب نبذة عن مهاراتك واهتماماتك الإعلامية..."></textarea>
                     </div>
                     <div class="form-row">
-                        <div class="form-group" id="profileTrackGroup">
+                        <div class="form-group">
                             <label>مسارك في النادي:</label>
                             <select id="inputTrack">
                                 <option value="تصوير وإضاءة">📷 تصوير وإضاءة</option>
@@ -357,7 +344,6 @@
             </div>
         </section>
 
-        <!-- صفحة تقديم فكرة مع رفع صورة مباشر من الجهاز -->
         <section id="formPage" class="page-section">
             <div class="card">
                 <h2 class="section-title"><span class="icon">💡</span>تقديم فكرة / مشروع جديد</h2>
@@ -390,7 +376,7 @@
             </div>
 
             <div style="margin-bottom: 15px;">
-                <input type="text" id="searchIdeaInput" oninput="filterIdeasArchive()" placeholder="🔍 ابحث في الأفكار (اسم العنوان، المقترح، أو التفاصيل)..." style="background: rgba(15, 17, 26, 0.9); border-color: var(--border);">
+                <input type="text" id="searchIdeaInput" oninput="filterIdeasArchive()" placeholder="🔍 ابحث في الأفكار (العنوان، المقترح، أو التفاصيل)..." style="background: rgba(15, 17, 26, 0.9); border-color: var(--border);">
             </div>
 
             <div class="archive-grid" id="archiveContainer"></div>
@@ -432,34 +418,27 @@
                         </div>
                         <div class="form-group">
                             <label>نص الرسالة (دعوة اجتماع / تنبيه):</label>
-                            <input type="text" id="smsMessageText" placeholder="مثال: يرجى حضور اجتماع النادي اليوم الساعة 4 مساءً بالقاعة الرئيسية.">
+                            <input type="text" id="smsMessageText" placeholder="مثال: يرجى حضور اجتماع النادي اليوم الساعة 4 مساءً.">
                         </div>
                     </div>
                     <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                        <button onclick="sendGroupSMS()" style="background: linear-gradient(135deg, #10b981, #059669); color: #fff; border: none; padding: 10px 18px; border-radius: 8px; font-weight: 800; cursor: pointer; flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px;">
-                            <span>📱 إرسال SMS جماعي</span>
-                        </button>
-                        <button onclick="exportMembersToExcel()" style="background: rgba(59, 130, 246, 0.2); border: 1px solid var(--accent-primary); color: var(--accent-glow); padding: 10px 18px; border-radius: 8px; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 6px;">
-                            <span>📊 تصدير القائمة لـ Excel</span>
-                        </button>
+                        <button onclick="sendGroupSMS()" style="background: linear-gradient(135deg, #10b981, #059669); color: #fff; border: none; padding: 10px 18px; border-radius: 8px; font-weight: 800; cursor: pointer; flex: 1;">📱 إرسال SMS جماعي</button>
+                        <button onclick="exportMembersToExcel()" style="background: rgba(59, 130, 246, 0.2); border: 1px solid var(--accent-primary); color: var(--accent-glow); padding: 10px 18px; border-radius: 8px; font-weight: 800; cursor: pointer;">📊 تصدير لـ Excel</button>
                     </div>
                 </div>
 
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 10px;">
                     <h3 style="font-size: 1rem; color: #fff;">قائمة أعضاء النادي المسجلين:</h3>
-                    <div style="display: flex; align-items: center; gap: 8px;">
-                        <label style="margin: 0; font-size: 0.8rem;">فلترة حسب المسار:</label>
-                        <select id="filterTrackSelect" onchange="filterMembersList()" style="width: auto; padding: 6px 10px; font-size: 0.82rem;">
-                            <option value="الكل">الكل</option>
-                            <option value="تصوير وإضاءة">تصوير وإضاءة</option>
-                            <option value="مونتاج وموشن جرافيك">مونتاج</option>
-                            <option value="إنتاج برامج وبودكاست">بودكاست</option>
-                            <option value="تصميم وهوية بصرية">تصميم</option>
-                            <option value="كتابة وصحافة إعلامية">كتابة</option>
-                            <option value="تقنية المعلومات (IT)">IT</option>
-                            <option value="مشرف المنصة">مشرف المنصة</option>
-                        </select>
-                    </div>
+                    <select id="filterTrackSelect" onchange="filterMembersList()" style="width: auto; padding: 6px 10px; font-size: 0.82rem;">
+                        <option value="الكل">كل المسارات</option>
+                        <option value="تصوير وإضاءة">تصوير وإضاءة</option>
+                        <option value="مونتاج وموشن جرافيك">مونتاج</option>
+                        <option value="إنتاج برامج وبودكاست">بودكاست</option>
+                        <option value="تصميم وهوية بصرية">تصميم</option>
+                        <option value="كتابة وصحافة إعلامية">كتابة</option>
+                        <option value="تقنية المعلومات (IT)">IT</option>
+                        <option value="مشرف المنصة">مشرف المنصة</option>
+                    </select>
                 </div>
 
                 <div id="adminMembersList">جاري جلب الأعضاء...</div>
@@ -474,28 +453,15 @@
         const SUPABASE_ANON_KEY = 'sb_publishable_xw3iN_Cb5eFA125MyBx8TQ_3aTyXjqr';
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         
-        const ADMIN_NAMES = [
-            "خالد الهلال", "خالد أحمد الهلال",
-            "حمزه فرج", "حمزة فرج", "د. حمزه فرج", "د. حمزة فرج",
-            "عبدالرحمن الزهراني", "عبدالرحمن علي الزهراني",
-            "ماجد الشاطري"
-        ];
+        const ADMIN_NAMES = ["خالد الهلال", "خالد أحمد الهلال", "حمزه فرج", "حمزة فرج", "د. حمزه فرج", "د. حمزة فرج", "عبدالرحمن الزهراني", "عبدالرحمن علي الزهراني", "ماجد الشاطري"];
+        const BOARD_NAMES = ["نواف المالكي", "نواف عبد الله المالكي", "حمد الحارثي", "حمد عايض الحارثي", "عبدالله السواط", "عبد الله مزيد السواط", "عبدالرحمن العتيبي", "عبد الرحمن نجم العتيبي"];
 
-        const BOARD_NAMES = [
-            "نواف المالكي", "نواف عبد الله المالكي",
-            "حمد الحارثي", "حمد عايض الحارثي",
-            "عبدالله السواط", "عبد الله مزيد السواط",
-            "عبدالرحمن العتيبي", "عبد الرحمن نجم العتيبي"
-        ];
-
-        let currentUser = null;
-        let isRegisterMode = false;
+        let currentUserData = null;
         let uploadedAvatarBase64 = '';
         let allMembersData = [];
         let allIdeasData = [];
 
         function checkBoardIdentity(val) {
-            if (!isRegisterMode) return;
             const trackGroup = document.getElementById('trackGroup');
             const boardNotice = document.getElementById('boardNotice');
             const cleanVal = val.trim().replace(/\s+/g, ' ');
@@ -525,25 +491,6 @@
             }
         }
 
-        function toggleAuthMode() {
-            isRegisterMode = !isRegisterMode;
-            document.getElementById('authMainTitle').innerText = isRegisterMode ? 'إنشاء حساب على المنصة' : 'تسجيل الدخول للمنصة';
-            document.getElementById('authBtnText').innerText = isRegisterMode ? 'إنشاء الحساب' : 'دخول المنصة';
-            document.getElementById('fullNameGroup').style.display = isRegisterMode ? 'block' : 'none';
-            document.getElementById('phoneGroup').style.display = isRegisterMode ? 'block' : 'none';
-            
-            if (!isRegisterMode) {
-                document.getElementById('trackGroup').style.display = 'none';
-                document.getElementById('boardNotice').style.display = 'none';
-            } else {
-                checkBoardIdentity(document.getElementById('authFullName').value);
-            }
-
-            document.getElementById('switchText').innerText = isRegisterMode ? 'لديك حساب بالفعل؟' : 'ليس لديك حساب على المنصة؟';
-            document.getElementById('switchLink').innerText = isRegisterMode ? 'تسجيل الدخول' : 'إنشاء حساب جديد';
-            document.getElementById('authError').innerText = '';
-        }
-
         function openClubRegisterModal() {
             document.getElementById('clubRegModal').style.display = 'flex';
         }
@@ -551,7 +498,6 @@
         function closeClubRegisterModal() {
             document.getElementById('clubRegModal').style.display = 'none';
             document.getElementById('clubRegisterForm').reset();
-            document.getElementById('regError').innerText = '';
         }
 
         async function submitClubRegistration(e) {
@@ -563,6 +509,7 @@
             btn.innerHTML = '<span>جاري الإرسال...</span> ⏳';
 
             const regData = {
+                id: 'reg_' + Date.now(),
                 full_name: document.getElementById('regFullName').value.trim(),
                 email: document.getElementById('regUnivEmail').value.trim(),
                 phone: document.getElementById('regPhone').value.trim(),
@@ -574,7 +521,7 @@
             try {
                 const { error } = await supabaseClient.from('profiles').insert([regData]);
                 if (error) throw error;
-                alert('✅ تم إرسال طلب انضمامك للنادي الإعلامي بنجاح!');
+                alert('✅ تم إرسال طلب انضمامك للنادي بنجاح!');
                 closeClubRegisterModal();
             } catch (err) {
                 errorEl.innerText = '❌ تعذر إرسال الطلب: ' + err.message;
@@ -584,66 +531,61 @@
             }
         }
 
-        async function handleSupabaseAuth(e) {
+        async function handleDirectLogin(e) {
             e.preventDefault();
-            const email = document.getElementById('authEmail').value.trim();
-            const password = document.getElementById('authPassword').value.trim();
-            const fullName = document.getElementById('authFullName').value.trim();
-            const phone = document.getElementById('authPhone').value.trim();
-            const track = document.getElementById('authTrack').value;
+            const fullName = document.getElementById('loginFullName').value.trim();
+            const phone = document.getElementById('loginPhone').value.trim();
+            const track = document.getElementById('loginTrack').value;
             const errorEl = document.getElementById('authError');
             const btn = document.getElementById('authBtn');
 
             errorEl.innerText = '';
             btn.disabled = true;
-            btn.innerHTML = '<span>جاري المعالجة...</span> ⏳';
+            btn.innerHTML = '<span>جاري الدخول للمنصة...</span> ⏳';
 
             try {
-                if (isRegisterMode) {
-                    const isAdminUser = ADMIN_NAMES.some(name => {
-                        const parts = name.split(' ');
-                        return fullName.includes(parts[0]) && fullName.includes(parts[parts.length - 1]);
-                    });
-                    const isBoardUser = BOARD_NAMES.some(name => {
-                        const parts = name.split(' ');
-                        return fullName.includes(parts[0]) && fullName.includes(parts[parts.length - 1]);
-                    });
-                    
-                    let assignedRole = 'member';
-                    let assignedTrack = track;
+                const isAdminUser = ADMIN_NAMES.some(name => {
+                    const parts = name.split(' ');
+                    return fullName.includes(parts[0]) && fullName.includes(parts[parts.length - 1]);
+                });
+                const isBoardUser = BOARD_NAMES.some(name => {
+                    const parts = name.split(' ');
+                    return fullName.includes(parts[0]) && fullName.includes(parts[parts.length - 1]);
+                });
+                
+                let assignedRole = 'member';
+                let assignedTrack = track;
 
-                    if (isAdminUser) {
-                        assignedRole = 'admin';
-                        assignedTrack = 'مشرف المنصة';
-                    } else if (isBoardUser) {
-                        assignedRole = 'board';
-                        assignedTrack = 'مجلس الإدارة';
-                    }
-
-                    const { data, error } = await supabaseClient.auth.signUp({
-                        email, password, options: { data: { full_name: fullName } }
-                    });
-                    if (error) throw error;
-                    
-                    if (data.user) {
-                        await supabaseClient.from('profiles').upsert({
-                            id: data.user.id, full_name: fullName || 'عضو جديد', phone: phone || '', role: assignedRole, track: assignedTrack
-                        });
-                        alert('✅ تم إنشاء الحساب بنجاح!');
-                    }
+                if (isAdminUser) {
+                    assignedRole = 'admin';
+                    assignedTrack = 'مشرف المنصة';
+                } else if (isBoardUser) {
+                    assignedRole = 'board';
+                    assignedTrack = 'مجلس الإدارة';
                 }
-                const { data: loginData, error: loginError } = await supabaseClient.auth.signInWithPassword({ email, password });
-                if (loginError) throw loginError;
-                if (loginData.user) loadUserProfile(loginData.user);
+
+                const userData = {
+                    id: 'user_' + phone.replace(/\D/g, ''),
+                    full_name: fullName,
+                    phone: phone,
+                    role: assignedRole,
+                    track: assignedTrack
+                };
+
+                const { error } = await supabaseClient.from('profiles').upsert([userData]);
+                if (error) throw error;
+
+                currentUserData = userData;
+                localStorage.setItem('mtu_media_user', JSON.stringify(userData));
+                setupUserInterface(userData);
             } catch (err) {
-                errorEl.innerText = err.message || 'خطأ في المصادقة.';
+                errorEl.innerText = '❌ تعذر الدخول: ' + err.message;
                 btn.disabled = false;
-                btn.innerHTML = '<span>تأكيد</span> 🚀';
+                btn.innerHTML = '<span>دخول المنصة فوراً</span><span>🚀</span>';
             }
         }
 
-        async function loadUserProfile(user) {
-            currentUser = user;
+        function setupUserInterface(profile) {
             const welcome = document.getElementById('welcomeScreen');
             if (welcome) {
                 welcome.style.opacity = '0';
@@ -651,61 +593,31 @@
                 setTimeout(() => welcome.style.display = 'none', 500);
             }
 
-            const { data: profile } = await supabaseClient
-                .from('profiles')
-                .select('*')
-                .eq('id', user.id)
-                .maybeSingle();
-
-            const name = profile?.full_name || user.email.split('@')[0];
-            let role = profile?.role || 'member';
-            let track = profile?.track || 'عام';
-
-            const isAdminCheck = ADMIN_NAMES.some(aName => {
-                const parts = aName.split(' ');
-                return name.includes(parts[0]) && name.includes(parts[parts.length - 1]);
-            });
-
-            const isBoardCheck = BOARD_NAMES.some(bName => {
-                const parts = bName.split(' ');
-                return name.includes(parts[0]) && name.includes(parts[parts.length - 1]);
-            });
-
-            if (isAdminCheck) {
-                role = 'admin';
-                track = 'مشرف المنصة';
-                await supabaseClient.from('profiles').update({ role: 'admin', track: 'مشرف المنصة' }).eq('id', user.id);
-            } else if (isBoardCheck) {
-                role = 'board';
-                track = 'مجلس الإدارة';
-                await supabaseClient.from('profiles').update({ role: 'board', track: 'مجلس الإدارة' }).eq('id', user.id);
-            }
-
-            document.getElementById('barUserName').innerText = name;
-            document.getElementById('barUserTrack').innerText = track;
+            document.getElementById('barUserName').innerText = profile.full_name;
+            document.getElementById('barUserTrack').innerText = profile.track;
             
             let roleDisplay = 'عضو';
-            if (role === 'admin') roleDisplay = 'مشرف (Admin)';
-            else if (role === 'board') roleDisplay = 'مجلس الإدارة';
+            if (profile.role === 'admin') roleDisplay = 'مشرف (Admin)';
+            else if (profile.role === 'board') roleDisplay = 'مجلس الإدارة';
             document.getElementById('barUserRole').innerText = roleDisplay;
             
-            document.getElementById('profileDisplayName').innerText = name;
-            document.getElementById('authorName').value = name;
-            document.getElementById('inputBio').value = profile?.bio || '';
-            document.getElementById('inputTrack').value = track;
-            document.getElementById('inputPhone').value = profile?.phone || '';
-            document.getElementById('inputPortfolio').value = profile?.portfolio_url || '';
+            document.getElementById('profileDisplayName').innerText = profile.full_name;
+            document.getElementById('authorName').value = profile.full_name;
+            document.getElementById('inputBio').value = profile.bio || '';
+            document.getElementById('inputTrack').value = profile.track;
+            document.getElementById('inputPhone').value = profile.phone || '';
+            document.getElementById('inputPortfolio').value = profile.portfolio_url || '';
 
-            uploadedAvatarBase64 = profile?.avatar_url || '';
+            uploadedAvatarBase64 = profile.avatar_url || '';
             if (uploadedAvatarBase64) {
                 document.getElementById('avatarPreviewContainer').innerHTML = `<img src="${uploadedAvatarBase64}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">`;
             }
 
-            if (role === 'admin') {
+            if (profile.role === 'admin') {
                 document.getElementById('profileRoleBadge').innerText = 'مشرف (Admin)';
                 document.getElementById('adminNavBtn').style.display = 'inline-flex';
                 loadAdminMembers();
-            } else if (role === 'board') {
+            } else if (profile.role === 'board') {
                 document.getElementById('profileRoleBadge').innerText = 'عضو مجلس الإدارة 🌟';
             } else {
                 document.getElementById('profileRoleBadge').innerText = 'عضو (Member)';
@@ -721,19 +633,12 @@
                     img.onload = function() {
                         const canvas = document.createElement('canvas');
                         const ctx = canvas.getContext('2d');
-                        const MAX_WIDTH = 200;
-                        const MAX_HEIGHT = 200;
-                        let width = img.width;
-                        let height = img.height;
-
-                        if (width > height) {
-                            if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; }
-                        } else {
-                            if (height > MAX_HEIGHT) { width *= MAX_HEIGHT / height; height = MAX_HEIGHT; }
-                        }
-                        canvas.width = width;
-                        canvas.height = height;
-                        ctx.drawImage(img, 0, 0, width, height);
+                        const MAX = 200;
+                        let w = img.width, h = img.height;
+                        if (w > h) { if (w > MAX) { h *= MAX / w; w = MAX; } }
+                        else { if (h > MAX) { w *= MAX / h; h = MAX; } }
+                        canvas.width = w; canvas.height = h;
+                        ctx.drawImage(img, 0, 0, w, h);
                         uploadedAvatarBase64 = canvas.toDataURL('image/jpeg', 0.7);
                         document.getElementById('avatarPreviewContainer').innerHTML = `<img src="${uploadedAvatarBase64}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">`;
                     };
@@ -744,7 +649,7 @@
 
         async function updateProfile(e) {
             e.preventDefault();
-            if (!currentUser) return;
+            if (!currentUserData) return;
             const btn = document.getElementById('saveProfileBtn');
             btn.disabled = true;
             btn.innerHTML = '<span>جاري الحفظ...</span> ⏳';
@@ -754,15 +659,22 @@
             const phone = document.getElementById('inputPhone').value.trim();
             const portfolio_url = document.getElementById('inputPortfolio').value.trim();
 
+            currentUserData.bio = bio;
+            currentUserData.track = track;
+            currentUserData.phone = phone;
+            currentUserData.portfolio_url = portfolio_url;
+            currentUserData.avatar_url = uploadedAvatarBase64;
+
             const { error } = await supabaseClient.from('profiles').update({
                 bio, track, phone, portfolio_url, avatar_url: uploadedAvatarBase64
-            }).eq('id', currentUser.id);
+            }).eq('id', currentUserData.id);
 
             if (error) {
-                alert('❌ تعذر حفظ التعديلات: ' + error.message);
+                alert('❌ تعذر الحفظ: ' + error.message);
             } else {
-                alert('✅ تم حفظ التعديلات ورقم جوالك بنجاح!');
+                alert('✅ تم حفظ التعديلات بنجاح!');
                 document.getElementById('barUserTrack').innerText = track;
+                localStorage.setItem('mtu_media_user', JSON.stringify(currentUserData));
             }
             btn.disabled = false;
             btn.innerHTML = '<span>حفظ التعديلات في البروفايل</span><span>💾</span>';
@@ -802,7 +714,7 @@
             const container = document.getElementById('adminMembersList');
             container.innerHTML = '';
             if (members.length === 0) {
-                container.innerHTML = '<div style="text-align:center; color:var(--text-muted); padding:15px;">لا يوجد أعضاء مطابقين.</div>';
+                container.innerHTML = '<div style="text-align:center; color:var(--text-muted); padding:15px;">لا يوجد أعضاء.</div>';
                 return;
             }
             members.forEach(m => {
@@ -811,11 +723,11 @@
                 item.innerHTML = `
                     <div>
                         <strong>${m.full_name || 'بدون اسم'}</strong><br>
-                        <span style="font-size: 0.78rem; color: var(--text-muted);">التخصص: ${m.track || 'غير محدد'} | الجوال: ${m.phone || 'غير مسجل'}</span>
+                        <span style="font-size: 0.78rem; color: var(--text-muted);">المسار: ${m.track || 'غير محدد'} | الجوال: ${m.phone || 'غير مسجل'}</span>
                     </div>
                     <div style="display:flex; gap:5px; align-items:center;">
                         <select id="track_${m.id}" style="padding:4px 8px; font-size:0.8rem;">
-                            <option value="تصوير وإضاءة" ${m.track==='تصوير وإضاءة'?'selected':''}>تصوير وإضاءة</option>
+                            <option value="تصوير وإضاءة" ${m.track==='تصوير وإضاءة'?'selected':''}>تصوير</option>
                             <option value="مونتاج وموشن جرافيك" ${m.track==='مونتاج وموشن جرافيك'?'selected':''}>مونتاج</option>
                             <option value="إنتاج برامج وبودكاست" ${m.track==='إنتاج برامج وبودكاست'?'selected':''}>بودكاست</option>
                             <option value="تصميم وهوية بصرية" ${m.track==='تصميم وهوية بصرية'?'selected':''}>تصميم</option>
@@ -835,76 +747,46 @@
             if (selectedTrack === 'الكل') {
                 renderMembersList(allMembersData);
             } else {
-                const filtered = allMembersData.filter(m => m.track === selectedTrack);
-                renderMembersList(filtered);
+                renderMembersList(allMembersData.filter(m => m.track === selectedTrack));
             }
         }
 
         function sendGroupSMS() {
             const targetTrack = document.getElementById('smsTargetTrack').value;
             const msg = document.getElementById('smsMessageText').value.trim();
+            if (!msg) { alert('⚠️ يرجى كتابة نص الرسالة أولاً.'); return; }
 
-            if (!msg) {
-                alert('⚠️ يرجى كتابة نص الرسالة أولاً.');
-                return;
-            }
+            const filtered = targetTrack === 'جميع المسارات' ? allMembersData : allMembersData.filter(m => m.track === targetTrack);
+            const phones = filtered.map(m => m.phone).filter(p => p && p.length >= 9);
+            if (phones.length === 0) { alert('ℹ️ لا توجد أرقام جوالات مسجلة.'); return; }
 
-            let filteredMembers = allMembersData;
-            if (targetTrack !== 'جميع المسارات') {
-                filteredMembers = allMembersData.filter(m => m.track === targetTrack);
-            }
-
-            const phoneNumbers = filteredMembers.map(m => m.phone).filter(p => p && p.length >= 9);
-
-            if (phoneNumbers.length === 0) {
-                alert('ℹ️ لم يتم العثور على أرقام جوالات مسجلة للأعضاء في هذا المسار.');
-                return;
-            }
-
-            const numbersString = phoneNumbers.join(',');
-            const smsUrl = `sms:${numbersString}?body=${encodeURIComponent(msg)}`;
-            window.location.href = smsUrl;
+            window.location.href = `sms:${phones.join(',')}?body=${encodeURIComponent(msg)}`;
         }
 
         function exportMembersToExcel() {
-            if (allMembersData.length === 0) {
-                alert('لا توجد بيانات لتصديرها.');
-                return;
-            }
-            let csvContent = "data:text/csv;charset=utf-8,\uFEFFالاسم,المسار,الرتبة,الجوال\n";
-            allMembersData.forEach(m => {
-                csvContent += `"${m.full_name || ''}","${m.track || ''}","${m.role || ''}","${m.phone || ''}"\n`;
-            });
-            const encodedUri = encodeURI(csvContent);
+            if (allMembersData.length === 0) return;
+            let csv = "data:text/csv;charset=utf-8,\uFEFFالاسم,المسار,الرتبة,الجوال\n";
+            allMembersData.forEach(m => { csv += `"${m.full_name || ''}","${m.track || ''}","${m.role || ''}","${m.phone || ''}"\n`; });
             const link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
-            link.setAttribute("download", `اعضاء_النادي_الاعلامي_${new Date().toISOString().slice(0,10)}.csv`);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+            link.setAttribute("href", encodeURI(csv));
+            link.setAttribute("download", `اعضاء_النادي_${new Date().toISOString().slice(0,10)}.csv`);
+            document.body.appendChild(link); link.click(); document.body.removeChild(link);
         }
 
         async function changeMemberTrack(userId) {
             const newTrack = document.getElementById(`track_${userId}`).value;
             const { error } = await supabaseClient.from('profiles').update({ track: newTrack }).eq('id', userId);
-            if (error) {
-                alert('خطأ في التحديث');
-            } else {
-                alert('✅ تم نقل العضو للمسار الجديد بنجاح!');
-                loadAdminMembers();
-            }
+            if (!error) { alert('✅ تم التحديث بنجاح!'); loadAdminMembers(); }
         }
 
-        async function logout() {
-            await supabaseClient.auth.signOut();
+        function logout() {
+            localStorage.removeItem('mtu_media_user');
             window.location.reload();
         }
 
-        window.addEventListener('DOMContentLoaded', async () => {
-            const { data: { session } } = await supabaseClient.auth.getSession();
-            if (session && session.user) {
-                loadUserProfile(session.user);
-            }
+        window.addEventListener('DOMContentLoaded', () => {
+            const saved = localStorage.getItem('mtu_media_user');
+            if (saved) { currentUserData = JSON.parse(saved); setupUserInterface(currentUserData); }
         });
 
         window.switchPage = function(pageId, btnElement) {
@@ -913,9 +795,8 @@
             document.getElementById(pageId).classList.add('active');
             btnElement.classList.add('active');
             window.scrollTo({ top: 0, behavior: 'smooth' });
-
-            if(pageId === 'archivePage') { loadSupabaseIdeas(); }
-            if(pageId === 'adminPage') { loadAdminMembers(); }
+            if (pageId === 'archivePage') loadSupabaseIdeas();
+            if (pageId === 'adminPage') loadAdminMembers();
         };
 
         function getYouTubeEmbedUrl(url) {
@@ -924,36 +805,21 @@
             return (match && match[2].length === 11) ? `https://www.youtube.com/embed/${match[2]}` : '';
         }
 
-        /* --- حفظ الفكرة مع رفع الصورة مباشرة لسحابة Supabase Storage --- */
         async function submitIdeaToSupabase(e) {
             e.preventDefault();
-            const submitBtn = document.getElementById('submitBtn');
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<span>جاري رفع الصورة والحفظ...</span> ⏳';
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true; btn.innerHTML = '<span>جاري الرفع والحفظ...</span> ⏳';
 
             let imageUrl = '';
-            const imageFileInput = document.getElementById('ideaImageFile');
+            const imgFile = document.getElementById('ideaImageFile').files[0];
 
             try {
-                // إذا تم اختيار ملف صورة، قم برفعه لـ Supabase Storage (media)
-                if (imageFileInput.files && imageFileInput.files[0]) {
-                    const file = imageFileInput.files[0];
-                    const fileExt = file.name.split('.').pop();
-                    const fileName = `${Date.now()}_${Math.random().toString(36.substring(2))}.${fileExt}`;
-                    const filePath = `ideas_images/${fileName}`;
-
-                    const { data: uploadData, error: uploadError } = await supabaseClient.storage
-                        .from('media')
-                        .upload(filePath, file);
-
-                    if (uploadError) throw uploadError;
-
-                    // استخراج الرابط العام للوقت الفعلي
-                    const { data: publicUrlData } = supabaseClient.storage
-                        .from('media')
-                        .getPublicUrl(filePath);
-
-                    imageUrl = publicUrlData.publicUrl;
+                if (imgFile) {
+                    const filePath = `ideas_images/${Date.now()}_${imgFile.name}`;
+                    const { error: upErr } = await supabaseClient.storage.from('media').upload(filePath, imgFile);
+                    if (upErr) throw upErr;
+                    const { data: pubData } = supabaseClient.storage.from('media').getPublicUrl(filePath);
+                    imageUrl = pubData.publicUrl;
                 }
 
                 const ideaData = {
@@ -971,15 +837,14 @@
                 const { error } = await supabaseClient.from('ideas').insert([ideaData]);
                 if (error) throw error;
                 
-                alert('✅ تم حفظ الفكرة وصورتها في سحابة Supabase بنجاح!');
+                alert('✅ تم حفظ الفكرة بنجاح!');
                 document.getElementById('ideaForm').reset();
-                document.getElementById('authorName').value = document.getElementById('profileDisplayName').innerText;
+                document.getElementById('authorName').value = currentUserData.full_name;
                 switchPage('archivePage', document.querySelectorAll('.nav-btn')[3]);
-            } catch (error) {
-                alert('❌ تعذر الحفظ: ' + error.message);
+            } catch (err) {
+                alert('❌ تعذر الحفظ: ' + err.message);
             } finally {
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = '<span>حفظ الفكرة في السحابة</span><span>🚀</span>';
+                btn.disabled = false; btn.innerHTML = '<span>حفظ الفكرة في السحابة</span><span>🚀</span>';
             }
         }
 
@@ -987,13 +852,8 @@
             const container = document.getElementById('archiveContainer');
             const counter = document.getElementById('archiveCount');
             try {
-                container.innerHTML = '<div style="text-align: center; color: var(--text-muted); padding: 20px;">جاري تحميل الأرشيف من السحابة...</div>';
-                
-                const { data: ideas, error } = await supabaseClient
-                    .from('ideas')
-                    .select('*')
-                    .order('created_at', { ascending: false });
-
+                container.innerHTML = '<div style="text-align: center; color: var(--text-muted); padding: 20px;">جاري التحميل...</div>';
+                const { data: ideas, error } = await supabaseClient.from('ideas').select('*').order('created_at', { ascending: false });
                 if (error) throw error;
 
                 allIdeasData = ideas;
@@ -1002,14 +862,14 @@
                 if (statTotalIdeas) statTotalIdeas.innerText = ideas.length;
 
                 renderIdeasCards(allIdeasData);
-            } catch (error) {
-                container.innerHTML = '<div style="text-align: center; color: #f85149; padding: 20px;">تعذر جلب الأرشيف من السحابة.</div>';
+            } catch (err) {
+                container.innerHTML = '<div style="text-align: center; color: #f85149; padding: 20px;">تعذر جلب الأرشيف.</div>';
             }
         }
 
         function renderIdeasCards(ideas) {
             const container = document.getElementById('archiveContainer');
-            container.innerHTML = ideas.length === 0 ? '<div style="text-align: center; color: var(--text-muted); padding: 20px;">لا توجد أفكار تطابق البحث.</div>' : '';
+            container.innerHTML = ideas.length === 0 ? '<div style="text-align: center; color: var(--text-muted); padding: 20px;">لا توجد أفكار.</div>' : '';
 
             ideas.forEach((idea) => {
                 const embedUrl = getYouTubeEmbedUrl(idea.video_url);
@@ -1018,22 +878,19 @@
                 card.className = 'idea-card';
                 card.innerHTML = `
                     <div class="idea-header">
-                        <div class="idea-title">${idea.title || 'بدون عنوان'}</div>
+                        <div class="idea-title">${idea.title || ''}</div>
                         <div style="display: flex; gap: 6px; align-items: center;">
                             <span class="status-badge ${statusClass}">${idea.status || 'قيد المراجعة'}</span>
-                            <div class="idea-author">المقترح: ${idea.author || 'مجهول'}</div>
+                            <div class="idea-author">المقترح: ${idea.author || ''}</div>
                         </div>
                     </div>
                     <div class="idea-body">${idea.description || ''}</div>
-                    
                     <div class="idea-details-meta">
-                        <div>📍 <strong>الموقع:</strong> ${idea.location || 'غير محدد'}</div>
-                        <div>👥 <strong>المشاركون:</strong> ${idea.members || 'عام'}</div>
+                        <div>📍 <strong>الموقع:</strong> ${idea.location || ''}</div>
+                        <div>👥 <strong>المشاركون:</strong> ${idea.members || ''}</div>
                     </div>
-
                     ${idea.image_url ? `<div style="margin-top: 10px;"><img src="${idea.image_url}" style="width:100%; max-height:220px; object-fit:cover; border-radius:8px;" onerror="this.style.display='none'"></div>` : ''}
                     ${embedUrl ? `<div class="video-wrapper"><iframe src="${embedUrl}" allowfullscreen></iframe></div>` : ''}
-                    
                     <div style="margin-top: 12px; display: flex; justify-content: space-between; align-items: center;">
                         <button class="like-btn" onclick="likeIdea('${idea.id}', ${idea.likes_count || 0})">
                             <span>👍 تصويت</span> <strong id="like_count_${idea.id}">${idea.likes_count || 0}</strong>
@@ -1047,32 +904,19 @@
 
         function filterIdeasArchive() {
             const query = document.getElementById('searchIdeaInput').value.toLowerCase().trim();
-            if (!query) {
-                renderIdeasCards(allIdeasData);
-                return;
-            }
-            const filtered = allIdeasData.filter(i => 
+            if (!query) { renderIdeasCards(allIdeasData); return; }
+            renderIdeasCards(allIdeasData.filter(i => 
                 (i.title && i.title.toLowerCase().includes(query)) ||
                 (i.author && i.author.toLowerCase().includes(query)) ||
-                (i.description && i.description.toLowerCase().includes(query)) ||
-                (i.location && i.location.toLowerCase().includes(query))
-            );
-            renderIdeasCards(filtered);
+                (i.description && i.description.toLowerCase().includes(query))
+            ));
         }
 
         async function likeIdea(ideaId, currentLikes) {
             const newLikes = currentLikes + 1;
             const countEl = document.getElementById(`like_count_${ideaId}`);
             if (countEl) countEl.innerText = newLikes;
-
-            const { error } = await supabaseClient
-                .from('ideas')
-                .update({ likes_count: newLikes })
-                .eq('id', ideaId);
-
-            if (error) {
-                if (countEl) countEl.innerText = currentLikes;
-            }
+            await supabaseClient.from('ideas').update({ likes_count: newLikes }).eq('id', ideaId);
         }
     </script>
 </body>
