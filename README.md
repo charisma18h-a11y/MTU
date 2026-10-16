@@ -866,31 +866,34 @@
             const loadingId = 'loading_' + Date.now();
             chatContainer.innerHTML += `
                 <div id="${loadingId}" style="background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.2); padding: 12px; border-radius: 10px; max-width: 85%; align-self: flex-start; color: var(--accent-glow); font-size: 0.9rem;">
-                    جاري صياغة الرد وتحليله... ⏳
+                    جاري التفكير والرد عبر نموذج Gemini الذكي... ⏳
                 </div>
             `;
             chatContainer.scrollTop = chatContainer.scrollHeight;
 
             try {
-                let aiReply = "";
-                const t = userText.toLowerCase();
+                // مفتاح API الصحيح والكامل الخاص بك
+                const apiKey = "AQ.Ab8RN6K56DQY3EOQTE9yvbTC5lJ2R7peClbikCHj540TmEF9EQ";
+                const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
 
-                // توليد ردود ذكية ومتنوعة كأنك تحدث شخصاً حقيقياً
-                if (t.includes('فكرة') || t.includes('مشروع') || t.includes('اقترح')) {
-                    aiReply = `أهلاً بك يا خالد! فكرة ممتازة جداً. أقترح أن نقوم بتوثيقها عبر تصوير فيديو قصير بمسار البودكاست، ثم رفعها في قسم الأرشيف ليطلع عليها مجلس الإدارة والمشرف.`;
-                } else if (t.includes('تقرير') || t.includes('اكتب') || t.includes('صيغ')) {
-                    aiReply = `حسناً يا خالد، إليك صياغة التقرير: يعلن النادي الإعلامي بجامعة الطائف عن نجاح الفعاليات وتفعيل دور الأعضاء في كافة المسارات بدقة واحترافية عالية.`;
-                } else if (t.includes('خطأ') || t.includes('كود') || t.includes('مشكلة') || t.includes('دعم')) {
-                    aiReply = `لا تشيل هم يا خالد، بخصوص الدعم الفني: تأكد من فحص الاتصال بقاعدة بيانات سوبابيس (Supabase) والتحقق من الدوال البرمجية في الصفحة لتعمل بسلاسة.`;
-                } else if (t.includes('اسمك') || t.includes('من أنت')) {
-                    aiReply = `أنا مساعدك الذكي المخصص لمنصة النادي الإعلامي بجامعة الطائف، وموجود هنا دائماً لدعمك وتطوير المنصة معك!`;
-                } else if (t.includes('كيف حالك') || t.includes('وش اخبارك')) {
-                    aiReply = `أنا بخير ولله الحمد يا خالد، وجاهز معك لنعمل على إنجاز مهام النادي بأفضل صورة ممكنة!`;
-                } else {
-                    aiReply = `استلمت رسالتك يا خالد: "${userText}". بناءً على ذلك، أنصح بالتنسيق المستمر بين فرق العمل والمسارات لضمان نجاح أعمال النادي الإعلامي.`;
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{
+                            parts: [{ text: "أنت مساعد ذكي ومحترف لمنصة النادي الإعلامي بجامعة الطائف (MTU). تحدث باللغة العربية بأسلوب ودود ومساعد ومناقش دائم. رد على كلام المستخدم التالي: " + userText }]
+                        }]
+                    })
+                });
+
+                const data = await response.json();
+                document.getElementById(loadingId).remove();
+
+                let aiReply = "عذراً، لم أتمكن من استلام الرد بشكل صحيح.";
+                if (data.candidates && data.candidates[0].content.parts[0].text) {
+                    aiReply = data.candidates[0].content.parts[0].text;
                 }
 
-                document.getElementById(loadingId).remove();
                 chatContainer.innerHTML += `
                     <div style="background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.2); padding: 12px; border-radius: 10px; max-width: 85%; align-self: flex-start; color: #fff; font-size: 0.9rem;">
                         <strong>المساعد الذكي:</strong> ${aiReply.replace(/\n/g, '<br>')}
@@ -905,12 +908,11 @@
                 document.getElementById(loadingId).remove();
                 chatContainer.innerHTML += `
                     <div style="background: rgba(248,81,73,0.1); border: 1px solid rgba(248,81,73,0.3); padding: 12px; border-radius: 10px; max-width: 85%; align-self: flex-start; color: #f85149; font-size: 0.9rem;">
-                        عذراً، حدث خطأ في معالجة الطلب.
+                        عذراً، حدث خطأ في الاتصال بخدمة Gemini.
                     </div>
                 `;
             }
         }
-        // ---------------------------------------------
 
         function checkBoardIdentity(val) {
             if (!isRegisterMode) return;
