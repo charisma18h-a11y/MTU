@@ -420,7 +420,7 @@
                 </div>
 
                 <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 15px;">
-                    مساعدك الذكي لتحسين الأفكار الإعلامية، تقديم الدعم الفني للموقع، كتابة ومراجعة التقارير، واكتشاف الأخطاء. يمكنك الكتابة أو التحدث الصوتي مباشرة!
+                    مساعدك الذكي لتحسين الأفكار الإعلامية، تقديم الدعم الفني للموقع، كتابة ومراجعة التقارير، واكتشاف الأخطاء. يمكنك الكتابة أو الضغط على زر الميكروفون للتحدث الصوتي مباشرة!
                 </p>
 
                 <!-- أزرار الخدمات السريعة -->
@@ -440,10 +440,10 @@
 
                 <!-- شريط الإدخال والتحكم الصوتي -->
                 <form id="aiChatForm" onsubmit="sendAiMessage(event)" style="display: flex; gap: 10px; align-items: center;">
-                    <button type="button" id="micBtn" onclick="toggleSpeechRecognition()" title="التحدث الصوتي" style="background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: #fff; width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; cursor: pointer; transition: 0.3s;">
+                    <button type="button" id="micBtn" onclick="toggleSpeechRecognition()" title="التحدث الصوتي المباشر" style="background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: #fff; width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; cursor: pointer; transition: 0.3s;">
                         🎙️
                     </button>
-                    <input type="text" id="aiInputMessage" placeholder="اكتب رسالتك أو استفسارك هنا..." style="flex: 1; padding: 12px 16px; border-radius: 12px;">
+                    <input type="text" id="aiInputMessage" placeholder="اكتب رسالتك أو اضغط الميكروفون للتحدث..." style="flex: 1; padding: 12px 16px; border-radius: 12px;">
                     <button type="submit" class="btn-submit" style="width: auto; padding: 12px 22px; border-radius: 12px;">إرسال 🚀</button>
                 </form>
             </div>
@@ -754,7 +754,7 @@
             }
         }
 
-        // --- دوال المساعد الذكي والصوت السعودي ---
+        // --- دوال المساعد الذكي والصوت التفاعلي الحقيقي ---
         let isVoiceOutputEnabled = true;
         let recognition = null;
         let isRecording = false;
@@ -774,8 +774,10 @@
 
         function toggleSpeechRecognition() {
             const micBtn = document.getElementById('micBtn');
-            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-                showSuccessModal('تنبيه', 'متصفحك لا يدعم الإدخال الصوتي مباشرة، يمكنك استخدام الكتابة.', '⚠️');
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            
+            if (!SpeechRecognition) {
+                showSuccessModal('تنبيه', 'متصفحك لا يدعم الميكروفون المباشر، يرجى استخدام متصفح كروم (Chrome).', '⚠️');
                 return;
             }
 
@@ -786,7 +788,6 @@
                 return;
             }
 
-            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             recognition = new SpeechRecognition();
             recognition.lang = 'ar-SA';
             recognition.interimResults = false;
@@ -801,6 +802,7 @@
             recognition.onresult = function(event) {
                 const speechToText = event.results[0][0].transcript;
                 document.getElementById('aiInputMessage').value = speechToText;
+                sendAiMessage(new Event('submit'));
             };
 
             recognition.onerror = function() {
@@ -819,16 +821,18 @@
         function speakSaudiVoice(text) {
             if (!isVoiceOutputEnabled || !('speechSynthesis' in window)) return;
             window.speechSynthesis.cancel();
+            
             const utterance = new SpeechSynthesisUtterance(text);
             utterance.lang = 'ar-SA';
             utterance.rate = 1.0;
-            utterance.pitch = 0.9;
+            utterance.pitch = 0.95;
 
             const voices = window.speechSynthesis.getVoices();
-            const saudiVoice = voices.find(v => v.lang === 'ar-SA' || v.lang.includes('ar'));
-            if (saudiVoice) {
-                utterance.voice = saudiVoice;
+            const arabicVoice = voices.find(v => v.lang === 'ar-SA' || v.lang.startsWith('ar'));
+            if (arabicVoice) {
+                utterance.voice = arabicVoice;
             }
+
             window.speechSynthesis.speak(utterance);
         }
 
@@ -858,22 +862,22 @@
 
             try {
                 let aiReply = "";
-                const lower = userText.toLowerCase();
+                const t = userText.toLowerCase();
 
-                if (lower.includes('فكرة') || lower.includes('مشروع')) {
-                    aiReply = "أهلاً بك يا خالد! بناءً على طلبك لتحسين الفكرة، أقترح تطويرها عبر ربطها بورش عمل تفاعلية وتطبيق عملي ميداني لمنتسبي النادي الإعلامي بجامعة الطائف، مع توثيق المخرجات في الأرشيف الرقمي للمنصة.";
-                } else if (lower.includes('دعم') || lower.includes('مشكلة') || lower.includes('كود')) {
-                    aiReply = "من الناحية الفنية، تأكد من تحديث الجداول في سوبابيس (Supabase) والتحقق من الصلاحيات لمنع أي تعارض في الرفع الجماعي للصور أو البيانات.";
-                } else if (lower.includes('تقرير') || lower.includes('كتابة')) {
-                    aiReply = "إليك مقترح لصياغة التقرير: يبدأ بمقدمة توثيقية عن نشاط النادي، يليها عرض المخرجات والإحصائيات الخاصة بالأعضاء والفعاليات، ويختتم بتوصيات تطويرية للمرحلة القادمة.";
+                if (t.includes('فكرة') || t.includes('مشروع') || t.includes('اقترح')) {
+                    aiReply = `أهلاً بك يا خالد. بخصوص فكرتك (${userText})، لتحسينها وجعلها مميزة في النادي الإعلامي بجامعة الطائف، أقترح: 1. عمل نموذج تجريبي مصغر. 2. ربطها بمسارات النادي (تصوير، مونتاج، أو تقنية معلومات). 3. تحديد جدول زمن لحقيقتها على المنصة.`;
+                } else if (t.includes('تقرير') || t.includes('اكتب') || t.includes('صيغ')) {
+                    aiReply = `إليك الهيكل الاحترافي لكتابة التقرير المطلوب:\n- العنوان الرئيسي والهدف.\n- مقدمة توثيقية عن نشاطات النادي.\n- تفاصيل الإنجازات والأرقام (عدد المشاركين والفعاليات).\n- التوصيات والخطوات المستقبلية.`;
+                } else if (t.includes('خطأ') || t.includes('كود') || t.includes('مشكلة') || t.includes('دعم')) {
+                    aiReply = `لتقديم الدعم الفني وفحص الأخطاء بدقة: تأكد من مراجعة حقول قاعدة البيانات في Supabase، والتحقق من جلب الجلسة (Session) قبل تنفيذ عمليات الرفع أو التعديل لضمان عدم حدوث استثناءات برمجية.`;
                 } else {
-                    aiReply = `لقد استلمت استفسارك حول "${userText}". بصفتي مستشارك الذكي في النادي الإعلامي، أنصحك بترتيب الخطوات وتفعيل التواصل المستمر بين مسارات النادي لضمان أعلى جودة في التنفيذ.`;
+                    aiReply = `بصفتي مساعدك الذكي في منصة النادي الإعلامي، استلمت استفسارك "${userText}"؛ وأنصحك بتنسيق الجهود بين أعضاء الفريق ومتابعة الأرشيف الرقمي لضمان أعلى جودة تنفيذية.`;
                 }
 
                 document.getElementById(loadingId).remove();
                 chatContainer.innerHTML += `
                     <div style="background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.2); padding: 12px; border-radius: 10px; max-width: 85%; align-self: flex-start; color: #fff; font-size: 0.9rem;">
-                        <strong>المساعد الذكي:</strong> ${aiReply}
+                        <strong>المساعد الذكي:</strong> ${aiReply.replace(/\n/g, '<br>')}
                     </div>
                 `;
                 chatContainer.scrollTop = chatContainer.scrollHeight;
@@ -883,7 +887,7 @@
                 document.getElementById(loadingId).remove();
                 chatContainer.innerHTML += `
                     <div style="background: rgba(248,81,73,0.1); border: 1px solid rgba(248,81,73,0.3); padding: 12px; border-radius: 10px; max-width: 85%; align-self: flex-start; color: #f85149; font-size: 0.9rem;">
-                        عذراً، حدث خطأ أثناء معالجة الطلب.
+                        حدث خطأ في الاتصال. يرجى المحاولة مرة أخرى.
                     </div>
                 `;
             }
