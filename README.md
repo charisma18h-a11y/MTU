@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
     <!-- وسم إثبات الملكية لـ Google Search Console -->
     <meta name="google-site-verification" content="_tKWW0ai4kGwcfk6Vww3dS0Yr0gQhIMxOKaG0Goc7Cs" />
 
@@ -195,6 +196,7 @@
     </style>
 </head>
 <body>
+
     <div class="bg-video-container">
         <video autoplay loop muted playsinline preload="auto">
             <source src="background.mp4" type="video/mp4">
@@ -410,7 +412,8 @@
             <div class="card" style="padding: 24px; min-height: 75vh; display: flex; flex-direction: column;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
                     <h2 class="section-title" style="margin-bottom: 0;"><span class="icon">🤖</span>مساعد الذكاء الاصطناعي - النادي الإعلامي</h2>
-                    <div style="display: flex; gap: 8px; align-items: center;">
+                    <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+                        <button type="button" onclick="clearAiConversation()" style="background:rgba(248,81,73,.12);border:1px solid rgba(248,81,73,.35);color:#ff8b82;padding:6px 12px;border-radius:20px;font-size:.8rem;font-weight:700;cursor:pointer;">🧹 محادثة جديدة</button>
                         <button type="button" id="voiceToggleBtn" onclick="toggleVoiceOutput()" style="background: rgba(59,130,246,0.15); border: 1px solid var(--accent-primary); color: var(--accent-glow); padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 5px;">
                             🔊 الصوت: <span id="voiceStatusText">مفعل (صوت واضح وفصيح)</span>
                         </button>
@@ -432,7 +435,7 @@
                 <!-- صندوق المحادثة الواسع -->
                 <div id="aiChatContainer" style="flex: 1; background: rgba(5,6,10,0.6); border: 1px solid var(--border); border-radius: 12px; padding: 15px; height: 420px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; margin-bottom: 15px;">
                     <div style="background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.2); padding: 12px; border-radius: 10px; max-width: 85%; align-self: flex-start; color: #fff; font-size: 0.9rem;">
-                        أهلاً بك يا خالد! أنا مساعدك الذكي في منصة النادي الإعلامي بجامعة الطائف. تفضل بطرح أي سؤال أو فكرة وسأجيبك فوراً صوتياً وكتابياً! 🎙️✨
+                        جاري تجهيز المحادثة...
                     </div>
                 </div>
 
@@ -596,6 +599,11 @@
         const SUPABASE_URL = 'https://hlgvjdknxtywdqjikayz.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_xw3iN_Cb5eFA125MyBx8TQ_3aTyXjqr';
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        supabaseClient.auth.onAuthStateChange((_event, session) => {
+            // currentUser is also managed by the existing application auth flow.
+            if (session && session.user) currentUser = session.user;
+            if (typeof loadAiConversation === 'function') loadAiConversation();
+        });
         
         const ADMIN_NAMES = ["خالد الهلال", "خالد أحمد الهلال", "حمزه فرج", "حمزة فرج", "د. حمزه فرج", "د. حمزة فرج", "عبدالرحمن الزهراني", "عبدالرحمن علي الزهراني", "ماجد الشاطري"];
         const BOARD_NAMES = ["نواف المالكي", "نواف عبد الله المالكي", "حمد الحارثي", "حمد عايض الحارثي", "عبدالله السواط", "عبد الله مزيد السواط", "عبدالرحمن العتيبي", "عبد الرحمن نجم العتيبي"];
@@ -843,72 +851,185 @@
             };
         }
 
-        // مولد الردود الذكية المتنوعة حسب السياق (ليست رداً واحداً)
-        async function sendAiMessage(e) {
-            e.preventDefault();
-            const input = document.getElementById('aiInputMessage');
-            const chatContainer = document.getElementById('aiChatContainer');
-            const userText = input.value.trim();
-            
-            if (!userText) return;
+        // محادثة مستمرة مع سجل سياق، عبر Supabase Edge Function آمن
+        const AI_HISTORY_LIMIT = 24;
+        let aiConversationHistory = [];
+        let aiRequestInProgress = false;
 
-            // إضافة رسالة العضو
-            chatContainer.innerHTML += `
-                <div style="background: rgba(255,255,255,0.06); padding: 12px; border-radius: 10px; max-width: 85%; align-self: flex-end; color: #fff; font-size: 0.9rem;">
-                    <strong>أنت:</strong> ${userText}
-                </div>
-            `;
-            input.value = '';
-            chatContainer.scrollTop = chatContainer.scrollHeight;
+        function getAiStorageKey() {
+            const userId = currentUser && currentUser.id ? currentUser.id : 'guest';
+            return `mtu_ai_chat_v1_${userId}`;
+        }
 
-            const loadingId = 'loading_' + Date.now();
-            chatContainer.innerHTML += `
-                <div id="${loadingId}" style="background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.2); padding: 12px; border-radius: 10px; max-width: 85%; align-self: flex-start; color: var(--accent-glow); font-size: 0.9rem;">
-                    جاري صياغة الرد وتحليله... ⏳
-                </div>
-            `;
-            chatContainer.scrollTop = chatContainer.scrollHeight;
-
+        function loadAiConversation() {
             try {
-                let aiReply = "";
-                const t = userText.toLowerCase();
+                const saved = JSON.parse(localStorage.getItem(getAiStorageKey()) || '[]');
+                aiConversationHistory = Array.isArray(saved)
+                    ? saved.filter(m => m && ['user', 'assistant'].includes(m.role) && typeof m.content === 'string').slice(-AI_HISTORY_LIMIT)
+                    : [];
+            } catch (_) {
+                aiConversationHistory = [];
+            }
+            renderAiConversation();
+        }
 
-                // توليد ردود ذكية ومتنوعة كأنك تحدث شخصاً حقيقياً
-                if (t.includes('فكرة') || t.includes('مشروع') || t.includes('اقترح')) {
-                    aiReply = `أهلاً بك يا خالد! فكرة ممتازة جداً. أقترح أن نقوم بتوثيقها عبر تصوير فيديو قصير بمسار البودكاست، ثم رفعها في قسم الأرشيف ليطلع عليها مجلس الإدارة والمشرف.`;
-                } else if (t.includes('تقرير') || t.includes('اكتب') || t.includes('صيغ')) {
-                    aiReply = `حسناً يا خالد، إليك صياغة التقرير: يعلن النادي الإعلامي بجامعة الطائف عن نجاح الفعاليات وتفعيل دور الأعضاء في كافة المسارات بدقة واحترافية عالية.`;
-                } else if (t.includes('خطأ') || t.includes('كود') || t.includes('مشكلة') || t.includes('دعم')) {
-                    aiReply = `لا تشيل هم يا خالد، بخصوص الدعم الفني: تأكد من فحص الاتصال بقاعدة بيانات سوبابيس (Supabase) والتحقق من الدوال البرمجية في الصفحة لتعمل بسلاسة.`;
-                } else if (t.includes('اسمك') || t.includes('من أنت')) {
-                    aiReply = `أنا مساعدك الذكي المخصص لمنصة النادي الإعلامي بجامعة الطائف، وموجود هنا دائماً لدعمك وتطوير المنصة معك!`;
-                } else if (t.includes('كيف حالك') || t.includes('وش اخبارك')) {
-                    aiReply = `أنا بخير ولله الحمد يا خالد، وجاهز معك لنعمل على إنجاز مهام النادي بأفضل صورة ممكنة!`;
-                } else {
-                    aiReply = `استلمت رسالتك يا خالد: "${userText}". بناءً على ذلك، أنصح بالتنسيق المستمر بين فرق العمل والمسارات لضمان نجاح أعمال النادي الإعلامي.`;
-                }
-
-                document.getElementById(loadingId).remove();
-                chatContainer.innerHTML += `
-                    <div style="background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.2); padding: 12px; border-radius: 10px; max-width: 85%; align-self: flex-start; color: #fff; font-size: 0.9rem;">
-                        <strong>المساعد الذكي:</strong> ${aiReply.replace(/\n/g, '<br>')}
-                    </div>
-                `;
-                chatContainer.scrollTop = chatContainer.scrollHeight;
-                
-                // نطق الرد بصوت واضح وفصيح
-                speakSaudiVoice(aiReply);
-
+        function saveAiConversation() {
+            try {
+                localStorage.setItem(getAiStorageKey(), JSON.stringify(aiConversationHistory.slice(-AI_HISTORY_LIMIT)));
             } catch (err) {
-                document.getElementById(loadingId).remove();
-                chatContainer.innerHTML += `
-                    <div style="background: rgba(248,81,73,0.1); border: 1px solid rgba(248,81,73,0.3); padding: 12px; border-radius: 10px; max-width: 85%; align-self: flex-start; color: #f85149; font-size: 0.9rem;">
-                        عذراً، حدث خطأ في معالجة الطلب.
-                    </div>
-                `;
+                console.warn('تعذر حفظ سجل المحادثة محلياً:', err);
             }
         }
+
+        function appendChatBubble(role, content, options = {}) {
+            const chatContainer = document.getElementById('aiChatContainer');
+            const bubble = document.createElement('div');
+            const isUser = role === 'user';
+            bubble.style.cssText = [
+                'padding:12px',
+                'border-radius:10px',
+                'max-width:90%',
+                'align-self:' + (isUser ? 'flex-end' : 'flex-start'),
+                'color:#fff',
+                'font-size:.9rem',
+                'white-space:pre-wrap',
+                'overflow-wrap:anywhere',
+                isUser
+                    ? 'background:rgba(255,255,255,.06);border:1px solid var(--border)'
+                    : 'background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.2)'
+            ].join(';');
+
+            if (options.id) bubble.id = options.id;
+
+            const label = document.createElement('strong');
+            label.textContent = isUser ? 'أنت: ' : 'المساعد الذكي: ';
+            bubble.appendChild(label);
+            bubble.appendChild(document.createTextNode(content));
+            chatContainer.appendChild(bubble);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+            return bubble;
+        }
+
+        function renderAiConversation() {
+            const chatContainer = document.getElementById('aiChatContainer');
+            if (!chatContainer) return;
+            chatContainer.replaceChildren();
+
+            if (aiConversationHistory.length === 0) {
+                appendChatBubble('assistant', 'أهلاً بك! أنا مساعد منصة النادي الإعلامي. أقدر أساعدك في الأفكار والتقارير والدعم الفني، ونقدر نكمل الحديث خطوة بخطوة. وش ودك نبدأ فيه؟');
+                return;
+            }
+
+            aiConversationHistory.forEach(message => appendChatBubble(message.role, message.content));
+        }
+
+        function clearAiConversation() {
+            if (aiRequestInProgress) {
+                showSuccessModal('لحظة واحدة', 'انتظر حتى ينتهي الرد الحالي قبل مسح المحادثة.', '⏳');
+                return;
+            }
+            aiConversationHistory = [];
+            saveAiConversation();
+            renderAiConversation();
+            if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+        }
+
+        function setAiPrompt(prefixText) {
+            const input = document.getElementById('aiInputMessage');
+            input.value = prefixText;
+            input.focus();
+        }
+
+        async function sendAiMessage(e) {
+            e.preventDefault();
+            if (aiRequestInProgress) return;
+
+            const input = document.getElementById('aiInputMessage');
+            const chatContainer = document.getElementById('aiChatContainer');
+            const sendButton = document.querySelector('#aiChatForm button[type="submit"]');
+            const userText = input.value.trim();
+            if (!userText) return;
+
+            // لا نستخدم innerHTML مع نص المستخدم لتجنب إدخال HTML غير موثوق.
+            aiConversationHistory.push({ role: 'user', content: userText });
+            aiConversationHistory = aiConversationHistory.slice(-AI_HISTORY_LIMIT);
+            saveAiConversation();
+            appendChatBubble('user', userText);
+            input.value = '';
+
+            const loadingId = 'ai-loading-' + Date.now();
+            const loadingBubble = appendChatBubble('assistant', 'أفكر في رد مناسب... ⏳', { id: loadingId });
+            loadingBubble.style.opacity = '0.75';
+            aiRequestInProgress = true;
+            input.disabled = true;
+            if (sendButton) {
+                sendButton.disabled = true;
+                sendButton.style.opacity = '0.65';
+            }
+
+            try {
+                // تستدعي هذه الدالة Supabase Edge Function؛ لا تضع مفتاح مزود الذكاء الاصطناعي في المتصفح.
+                const messagesForModel = aiConversationHistory.slice(-16).map(({ role, content }) => ({ role, content }));
+                const { data, error } = await supabaseClient.functions.invoke('ai-chat', {
+                    body: { messages: messagesForModel }
+                });
+
+                if (error) {
+                    let detail = error.message || 'تعذر الاتصال بخدمة الذكاء الاصطناعي.';
+                    try {
+                        if (error.context && typeof error.context.json === 'function') {
+                            const body = await error.context.json();
+                            if (body && body.error) detail = body.error;
+                        }
+                    } catch (_) {}
+                    throw new Error(detail);
+                }
+
+                const aiReply = data && typeof data.reply === 'string' ? data.reply.trim() : '';
+                if (!aiReply) throw new Error('وصل رد فارغ من خدمة الذكاء الاصطناعي.');
+
+                const loadingEl = document.getElementById(loadingId);
+                if (loadingEl) loadingEl.remove();
+
+                aiConversationHistory.push({ role: 'assistant', content: aiReply });
+                aiConversationHistory = aiConversationHistory.slice(-AI_HISTORY_LIMIT);
+                saveAiConversation();
+                appendChatBubble('assistant', aiReply);
+                speakSaudiVoice(aiReply);
+            } catch (err) {
+                const loadingEl = document.getElementById(loadingId);
+                if (loadingEl) loadingEl.remove();
+
+                // إزالة رسالة المستخدم من سجل السياق إذا فشل الطلب حتى لا يتراكم سياق غير مكتمل.
+                const lastMessage = aiConversationHistory[aiConversationHistory.length - 1];
+                if (lastMessage && lastMessage.role === 'user' && lastMessage.content === userText) {
+                    aiConversationHistory.pop();
+                    saveAiConversation();
+                }
+
+                const message = (err && err.message) ? err.message : 'حدث خطأ غير معروف.';
+                appendChatBubble('assistant',
+                    'ما قدرت أتصل بخدمة الذكاء الاصطناعي حالياً. تأكد من نشر Supabase Edge Function باسم ai-chat وإضافة أسرار الخدمة حسب ملف SETUP_AI.md.\\n\\nالتفاصيل: ' + message);
+                console.error('AI chat error:', err);
+            } finally {
+                aiRequestInProgress = false;
+                input.disabled = false;
+                if (sendButton) {
+                    sendButton.disabled = false;
+                    sendButton.style.opacity = '1';
+                }
+                input.focus();
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            }
+        }
+
         // ---------------------------------------------
+
+
+        // تهيئة سجل المحادثة عند فتح الصفحة. سجل كل حساب مفصول محلياً حسب معرفه.
+        document.addEventListener('DOMContentLoaded', () => {
+            loadAiConversation();
+        });
 
         function checkBoardIdentity(val) {
             if (!isRegisterMode) return;
