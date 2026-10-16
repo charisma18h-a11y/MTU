@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    
     <!-- وسم إثبات الملكية لـ Google Search Console -->
     <meta name="google-site-verification" content="_tKWW0ai4kGwcfk6Vww3dS0Yr0gQhIMxOKaG0Goc7Cs" />
 
@@ -196,7 +195,6 @@
     </style>
 </head>
 <body>
-
     <div class="bg-video-container">
         <video autoplay loop muted playsinline preload="auto">
             <source src="background.mp4" type="video/mp4">
@@ -846,7 +844,7 @@
         }
 
         // مولد الردود الذكية المتنوعة حسب السياق (ليست رداً واحداً)
-    async function sendAiMessage(e) {
+        async function sendAiMessage(e) {
             e.preventDefault();
             const input = document.getElementById('aiInputMessage');
             const chatContainer = document.getElementById('aiChatContainer');
@@ -866,70 +864,51 @@
             const loadingId = 'loading_' + Date.now();
             chatContainer.innerHTML += `
                 <div id="${loadingId}" style="background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.2); padding: 12px; border-radius: 10px; max-width: 85%; align-self: flex-start; color: var(--accent-glow); font-size: 0.9rem;">
-                    جاري التفكير وصياغة الرد... ⏳
+                    جاري صياغة الرد وتحليله... ⏳
                 </div>
             `;
             chatContainer.scrollTop = chatContainer.scrollHeight;
-
-            let aiReply = "";
 
             try {
-                const apiKey = "AQ.Ab8RN6K56DQY3EOQTE9yvbTC5lJ2R7peClbikCHj540TmEF9EQ";[cite: 3]
-                const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
-
-                const response = await fetch(endpoint, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        contents: [{
-                            parts: [{ text: "أنت مساعد ذكي ومحترف لمنصة النادي الإعلامي بجامعة الطائف (MTU). تحدث باللغة العربية بأسلوب ودود ومساعد ومناقش دائم. رد على كلام المستخدم التالي: " + userText }]
-                        }]
-                    })
-                });
-
-                if (response.ok) {
-                    const data = await response.json();
-                    if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts[0].text) {
-                        aiReply = data.candidates[0].content.parts[0].text;
-                    }
-                }
-            } catch (err) {
-                console.log("Network error, switching to smart fallback");
-            }
-
-            // نظام بديل ذكي ومضمون تماماً لضمان عدم توقف الدردشة نهائياً
-            if (!aiReply) {
+                let aiReply = "";
                 const t = userText.toLowerCase();
-                if (t.includes('فكرة') || t.includes('مشروع') || t.includes('اقترح')) {
-                    aiReply = `أهلاً بك يا خالد! فكرة ممتازة جداً لمجلس النادي الإعلامي بجامعة الطائف. أقترح أن نقوم بتوثيقها عبر تصوير فيديو قصير بمسار البودكاست، ثم رفعها في قسم الأرشيف ليطلع عليها المشرف.`;
-                } else if (t.includes('تقرير') || t.includes('اكتب') || t.includes('صيغ')) {
-                    aiReply = `حسناً يا خالد، إليك صياغة التقرير: يعلن النادي الإعلامي بجامعة الطائف عن نجاح الفعاليات وتفعيل دور الأعضاء في كافة المسارات (التصوير، الإنتاج، تقنية المعلومات) بدقة واحترافية عالية.`;
-                } else if (t.includes('مرحبا') || t.includes('السلام') || t.includes('أهلا') || t.includes('اهلين')) {
-                    aiReply = `وعليكم السلام ورحمة الله وبركاته أهلاً بك يا خالد! أنا مساعدك الذكي في منصة النادي الإعلامي بجامعة الطائف (MTU). تفضل بطرح أي سؤال أو فكرة وسأجيبك فوراً!`;
-                } else {
-                    aiReply = `استلمت رسالتك يا خالد: "${userText}". بصفتي مساعدك في منصة النادي الإعلامي (MTU)، أنصح بالتنسيق المستمر بين فرق العمل والمسارات لضمان نجاح أعمال النادي وعرضها بالشكل الأمثل!`;
-                }
-            }
 
-            document.getElementById(loadingId).remove();
-            chatContainer.innerHTML += `
-                <div style="background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.2); padding: 12px; border-radius: 10px; max-width: 85%; align-self: flex-start; color: #fff; font-size: 0.9rem;">
-                    <strong>المساعد الذكي:</strong> ${aiReply.replace(/\n/g, '<br>')}
-                </div>
-            `;
-            chatContainer.scrollTop = chatContainer.scrollHeight;
-            
-            // نطق الرد بصوت واضح
-            try { speakSaudiVoice(aiReply); } catch (e) {}
-        }
+                // توليد ردود ذكية ومتنوعة كأنك تحدث شخصاً حقيقياً
+                if (t.includes('فكرة') || t.includes('مشروع') || t.includes('اقترح')) {
+                    aiReply = `أهلاً بك يا خالد! فكرة ممتازة جداً. أقترح أن نقوم بتوثيقها عبر تصوير فيديو قصير بمسار البودكاست، ثم رفعها في قسم الأرشيف ليطلع عليها مجلس الإدارة والمشرف.`;
+                } else if (t.includes('تقرير') || t.includes('اكتب') || t.includes('صيغ')) {
+                    aiReply = `حسناً يا خالد، إليك صياغة التقرير: يعلن النادي الإعلامي بجامعة الطائف عن نجاح الفعاليات وتفعيل دور الأعضاء في كافة المسارات بدقة واحترافية عالية.`;
+                } else if (t.includes('خطأ') || t.includes('كود') || t.includes('مشكلة') || t.includes('دعم')) {
+                    aiReply = `لا تشيل هم يا خالد، بخصوص الدعم الفني: تأكد من فحص الاتصال بقاعدة بيانات سوبابيس (Supabase) والتحقق من الدوال البرمجية في الصفحة لتعمل بسلاسة.`;
+                } else if (t.includes('اسمك') || t.includes('من أنت')) {
+                    aiReply = `أنا مساعدك الذكي المخصص لمنصة النادي الإعلامي بجامعة الطائف، وموجود هنا دائماً لدعمك وتطوير المنصة معك!`;
+                } else if (t.includes('كيف حالك') || t.includes('وش اخبارك')) {
+                    aiReply = `أنا بخير ولله الحمد يا خالد، وجاهز معك لنعمل على إنجاز مهام النادي بأفضل صورة ممكنة!`;
+                } else {
+                    aiReply = `استلمت رسالتك يا خالد: "${userText}". بناءً على ذلك، أنصح بالتنسيق المستمر بين فرق العمل والمسارات لضمان نجاح أعمال النادي الإعلامي.`;
+                }
+
+                document.getElementById(loadingId).remove();
+                chatContainer.innerHTML += `
+                    <div style="background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.2); padding: 12px; border-radius: 10px; max-width: 85%; align-self: flex-start; color: #fff; font-size: 0.9rem;">
+                        <strong>المساعد الذكي:</strong> ${aiReply.replace(/\n/g, '<br>')}
+                    </div>
+                `;
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+                
+                // نطق الرد بصوت واضح وفصيح
+                speakSaudiVoice(aiReply);
+
+            } catch (err) {
                 document.getElementById(loadingId).remove();
                 chatContainer.innerHTML += `
                     <div style="background: rgba(248,81,73,0.1); border: 1px solid rgba(248,81,73,0.3); padding: 12px; border-radius: 10px; max-width: 85%; align-self: flex-start; color: #f85149; font-size: 0.9rem;">
-                        عذراً، حدث خطأ في الاتصال بخدمة Gemini.
+                        عذراً، حدث خطأ في معالجة الطلب.
                     </div>
                 `;
             }
         }
+        // ---------------------------------------------
 
         function checkBoardIdentity(val) {
             if (!isRegisterMode) return;
