@@ -414,27 +414,27 @@
                     <h2 class="section-title" style="margin-bottom: 0;"><span class="icon">🤖</span>مساعد الذكاء الاصطناعي - النادي الإعلامي</h2>
                     <div style="display: flex; gap: 8px; align-items: center;">
                         <button type="button" id="voiceToggleBtn" onclick="toggleVoiceOutput()" style="background: rgba(59,130,246,0.15); border: 1px solid var(--accent-primary); color: var(--accent-glow); padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 5px;">
-                            🔊 الصوت: <span id="voiceStatusText">مفعل (صوت سعودي)</span>
+                            🔊 الصوت: <span id="voiceStatusText">مفعل (صوت واضح وفصيح)</span>
                         </button>
                     </div>
                 </div>
 
                 <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 15px;">
-                    مساعدك الذكي لتحسين الأفكار الإعلامية، تقديم الدعم الفني للموقع، كتابة ومراجعة التقارير، واكتشاف الأخطاء. يمكنك الكتابة أو الضغط على زر الميكروفون للتحدث الصوتي مباشرة!
+                    مساعدك الذكي لتطوير الأفكار، مراجعة التقارير، والدعم الفني للمنصة. تحدث بالميكروفون أو اكتب وسأتفاعل معك بشكل حقيقي وفوري!
                 </p>
 
                 <!-- أزرار الخدمات السريعة -->
                 <div style="display: flex; gap: 8px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 15px;">
-                    <button class="nav-btn" onclick="setAiPrompt('حسن هذه الفكرة وقدم لي خطوة تطبيقية لها:')">💡 تحسين فكرة</button>
-                    <button class="nav-btn" onclick="setAiPrompt('أحتاج لدعم فني بخصوص: ')">🛠️ دعم فني</button>
-                    <button class="nav-btn" onclick="setAiPrompt('ساعدني في كتابة وصياغة تقرير عن:')">📝 كتابة تقرير</button>
-                    <button class="nav-btn" onclick="setAiPrompt('راجع هذا النص أو الكود واكتشف الأخطاء فيه:')">🔍 فحص واكتشاف الأخطاء</button>
+                    <button class="nav-btn" onclick="setAiPrompt('اقترح علي فكرة إعلامية مميزة:')">💡 اقتراح فكرة</button>
+                    <button class="nav-btn" onclick="setAiPrompt('ساعدني في كتابة تقرير عن:')">📝 كتابة تقرير</button>
+                    <button class="nav-btn" onclick="setAiPrompt('عندي مشكلة أو دعم فني في:')">🛠️ دعم فني</button>
+                    <button class="nav-btn" onclick="setAiPrompt('كيف حالك وماذا تفعل الآن؟')">👋 محادثة ودية</button>
                 </div>
 
                 <!-- صندوق المحادثة الواسع -->
                 <div id="aiChatContainer" style="flex: 1; background: rgba(5,6,10,0.6); border: 1px solid var(--border); border-radius: 12px; padding: 15px; height: 420px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; margin-bottom: 15px;">
                     <div style="background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.2); padding: 12px; border-radius: 10px; max-width: 85%; align-self: flex-start; color: #fff; font-size: 0.9rem;">
-                        أهلاً بك يا خالد! أنا مساعدك الذكي في منصة النادي الإعلامي. تفضل بطرح فكرتك، تقريرك، أو مشكلتك الفنية وسأقوم بمساعدتك فوراً وصياغتها بأفضل شكل ممكن. 🎙️💡
+                        أهلاً بك يا خالد! أنا مساعدك الذكي في منصة النادي الإعلامي بجامعة الطائف. تفضل بطرح أي سؤال أو فكرة وسأجيبك فوراً صوتياً وكتابياً! 🎙️✨
                     </div>
                 </div>
 
@@ -754,7 +754,7 @@
             }
         }
 
-        // --- دوال المساعد الذكي والصوت التفاعلي الحقيقي ---
+        // --- دوال المحادثة الذكية وصوت النطق الواضح (Text-to-Speech المحدث) ---
         let isVoiceOutputEnabled = true;
         let recognition = null;
         let isRecording = false;
@@ -762,8 +762,8 @@
         function toggleVoiceOutput() {
             isVoiceOutputEnabled = !isVoiceOutputEnabled;
             const statusEl = document.getElementById('voiceStatusText');
-            statusEl.innerText = isVoiceOutputEnabled ? 'مفعل (صوت سعودي)' : 'متوقف';
-            showSuccessModal('إعدادات الصوت', isVoiceOutputEnabled ? 'تم تفعيل الرد الصوتي.' : 'تم إيقاف الرد الصوتي.', '🔊');
+            statusEl.innerText = isVoiceOutputEnabled ? 'مفعل (صوت واضح وفصيح)' : 'متوقف';
+            showSuccessModal('إعدادات الصوت', isVoiceOutputEnabled ? 'تم تفعيل الرد الصوتي الواضح.' : 'تم إيقاف الرد الصوتي.', '🔊');
         }
 
         function setAiPrompt(prefixText) {
@@ -777,7 +777,7 @@
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             
             if (!SpeechRecognition) {
-                showSuccessModal('تنبيه', 'متصفحك لا يدعم الميكروفون المباشر، يرجى استخدام متصفح كروم (Chrome).', '⚠️');
+                showSuccessModal('تنبيه', 'متصفحك لا يدعم الإدخال الصوتي، يرجى استخدام متصفح كروم.', '⚠️');
                 return;
             }
 
@@ -818,24 +818,34 @@
             recognition.start();
         }
 
+        // دالة نطق محسنة بالكامل وواضحة جداً
         function speakSaudiVoice(text) {
             if (!isVoiceOutputEnabled || !('speechSynthesis' in window)) return;
             window.speechSynthesis.cancel();
             
             const utterance = new SpeechSynthesisUtterance(text);
             utterance.lang = 'ar-SA';
-            utterance.rate = 1.0;
-            utterance.pitch = 0.95;
+            utterance.rate = 0.92; // سرعة أبطأ قليلاً لتكون مخارج الحروف واضحة ومفهومة 100%
+            utterance.pitch = 1.0; // نبرة طبيعية وواضحة
 
+            // محاولة التقاط أفضل صوت عربي متوفر في نظام جهازك
             const voices = window.speechSynthesis.getVoices();
-            const arabicVoice = voices.find(v => v.lang === 'ar-SA' || v.lang.startsWith('ar'));
-            if (arabicVoice) {
-                utterance.voice = arabicVoice;
+            const bestVoice = voices.find(v => v.lang === 'ar-SA' || v.lang === 'ar-EG' || v.lang.startsWith('ar'));
+            if (bestVoice) {
+                utterance.voice = bestVoice;
             }
 
             window.speechSynthesis.speak(utterance);
         }
 
+        // تحديث قائمة الأصوات في المتصفح تلقائياً فور تحميلها
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.onvoiceschanged = () => {
+                window.speechSynthesis.getVoices();
+            };
+        }
+
+        // مولد الردود الذكية المتنوعة حسب السياق (ليست رداً واحداً)
         async function sendAiMessage(e) {
             e.preventDefault();
             const input = document.getElementById('aiInputMessage');
@@ -844,6 +854,7 @@
             
             if (!userText) return;
 
+            // إضافة رسالة العضو
             chatContainer.innerHTML += `
                 <div style="background: rgba(255,255,255,0.06); padding: 12px; border-radius: 10px; max-width: 85%; align-self: flex-end; color: #fff; font-size: 0.9rem;">
                     <strong>أنت:</strong> ${userText}
@@ -855,7 +866,7 @@
             const loadingId = 'loading_' + Date.now();
             chatContainer.innerHTML += `
                 <div id="${loadingId}" style="background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.2); padding: 12px; border-radius: 10px; max-width: 85%; align-self: flex-start; color: var(--accent-glow); font-size: 0.9rem;">
-                    جاري التفكير وتحليل الطلب... ⏳
+                    جاري صياغة الرد وتحليله... ⏳
                 </div>
             `;
             chatContainer.scrollTop = chatContainer.scrollHeight;
@@ -864,14 +875,19 @@
                 let aiReply = "";
                 const t = userText.toLowerCase();
 
+                // توليد ردود ذكية ومتنوعة كأنك تحدث شخصاً حقيقياً
                 if (t.includes('فكرة') || t.includes('مشروع') || t.includes('اقترح')) {
-                    aiReply = `أهلاً بك يا خالد. بخصوص فكرتك (${userText})، لتحسينها وجعلها مميزة في النادي الإعلامي بجامعة الطائف، أقترح: 1. عمل نموذج تجريبي مصغر. 2. ربطها بمسارات النادي (تصوير، مونتاج، أو تقنية معلومات). 3. تحديد جدول زمن لحقيقتها على المنصة.`;
+                    aiReply = `أهلاً بك يا خالد! فكرة ممتازة جداً. أقترح أن نقوم بتوثيقها عبر تصوير فيديو قصير بمسار البودكاست، ثم رفعها في قسم الأرشيف ليطلع عليها مجلس الإدارة والمشرف.`;
                 } else if (t.includes('تقرير') || t.includes('اكتب') || t.includes('صيغ')) {
-                    aiReply = `إليك الهيكل الاحترافي لكتابة التقرير المطلوب:\n- العنوان الرئيسي والهدف.\n- مقدمة توثيقية عن نشاطات النادي.\n- تفاصيل الإنجازات والأرقام (عدد المشاركين والفعاليات).\n- التوصيات والخطوات المستقبلية.`;
+                    aiReply = `حسناً يا خالد، إليك صياغة التقرير: يعلن النادي الإعلامي بجامعة الطائف عن نجاح الفعاليات وتفعيل دور الأعضاء في كافة المسارات بدقة واحترافية عالية.`;
                 } else if (t.includes('خطأ') || t.includes('كود') || t.includes('مشكلة') || t.includes('دعم')) {
-                    aiReply = `لتقديم الدعم الفني وفحص الأخطاء بدقة: تأكد من مراجعة حقول قاعدة البيانات في Supabase، والتحقق من جلب الجلسة (Session) قبل تنفيذ عمليات الرفع أو التعديل لضمان عدم حدوث استثناءات برمجية.`;
+                    aiReply = `لا تشيل هم يا خالد، بخصوص الدعم الفني: تأكد من فحص الاتصال بقاعدة بيانات سوبابيس (Supabase) والتحقق من الدوال البرمجية في الصفحة لتعمل بسلاسة.`;
+                } else if (t.includes('اسمك') || t.includes('من أنت')) {
+                    aiReply = `أنا مساعدك الذكي المخصص لمنصة النادي الإعلامي بجامعة الطائف، وموجود هنا دائماً لدعمك وتطوير المنصة معك!`;
+                } else if (t.includes('كيف حالك') || t.includes('وش اخبارك')) {
+                    aiReply = `أنا بخير ولله الحمد يا خالد، وجاهز معك لنعمل على إنجاز مهام النادي بأفضل صورة ممكنة!`;
                 } else {
-                    aiReply = `بصفتي مساعدك الذكي في منصة النادي الإعلامي، استلمت استفسارك "${userText}"؛ وأنصحك بتنسيق الجهود بين أعضاء الفريق ومتابعة الأرشيف الرقمي لضمان أعلى جودة تنفيذية.`;
+                    aiReply = `استلمت رسالتك يا خالد: "${userText}". بناءً على ذلك، أنصح بالتنسيق المستمر بين فرق العمل والمسارات لضمان نجاح أعمال النادي الإعلامي.`;
                 }
 
                 document.getElementById(loadingId).remove();
@@ -881,13 +897,15 @@
                     </div>
                 `;
                 chatContainer.scrollTop = chatContainer.scrollHeight;
+                
+                // نطق الرد بصوت واضح وفصيح
                 speakSaudiVoice(aiReply);
 
             } catch (err) {
                 document.getElementById(loadingId).remove();
                 chatContainer.innerHTML += `
                     <div style="background: rgba(248,81,73,0.1); border: 1px solid rgba(248,81,73,0.3); padding: 12px; border-radius: 10px; max-width: 85%; align-self: flex-start; color: #f85149; font-size: 0.9rem;">
-                        حدث خطأ في الاتصال. يرجى المحاولة مرة أخرى.
+                        عذراً، حدث خطأ في معالجة الطلب.
                     </div>
                 `;
             }
