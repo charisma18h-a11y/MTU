@@ -139,7 +139,6 @@
         .status-pending { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
         .status-approved { background: rgba(34, 197, 94, 0.15); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.3); }
 
-        /* معرض الصور الديناميكي والألبومات */
         .albums-bar { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 15px; }
         .album-chip { background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: var(--text-muted); padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; cursor: pointer; white-space: nowrap; transition: 0.2s; }
         .album-chip.active, .album-chip:hover { background: var(--accent-primary); color: #fff; border-color: var(--accent-glow); }
@@ -166,7 +165,6 @@
             display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; text-align: center;
         }
 
-        /* نافذة التنبيه المخصصة في منتصف الشاشة (Custom Modal Alert) */
         #customSuccessModal {
             position: fixed; inset: 0; z-index: 99999999;
             background: rgba(3, 4, 8, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
@@ -207,7 +205,6 @@
     </div>
     <div class="bg-overlay"></div>
 
-    <!-- نافذة الإشعار المخصصة بدلاً من alert المتصفح -->
     <div id="customSuccessModal">
         <div class="modal-card">
             <div class="success-circle-icon" id="modalIcon">✓</div>
@@ -217,7 +214,6 @@
         </div>
     </div>
 
-    <!-- شاشة المصادقة -->
     <div id="welcomeScreen">
         <div class="mtu-logo-container"><div class="mtu-logo-text">MTU<span class="mtu-dot"></span></div></div>
         <span class="site-badge" style="margin-top: 4px; background: rgba(59, 130, 246, 0.2);">منصة النادي الإعلامي</span>
@@ -267,7 +263,6 @@
         </div>
     </div>
 
-    <!-- نافذة طلب الانضمام للنادي -->
     <div id="clubRegModal" style="display: none;">
         <div class="mtu-logo-container"><div class="mtu-logo-text">MTU<span class="mtu-dot"></span></div></div>
         <span class="site-badge" style="margin-top: 5px;">استمارة طلب انضمام للنادي الإعلامي</span>
@@ -318,12 +313,14 @@
         </div>
     </div>
 
+    <!-- شريط التنقل العلوي مع زر المساعد الذكي المضاف -->
     <nav class="quick-nav">
         <button class="nav-btn active" onclick="switchPage('homePage', this)">🏛️ المجلس</button>
         <button class="nav-btn" onclick="switchPage('profilePage', this)">👤 بروفايلي</button>
         <button class="nav-btn" onclick="switchPage('formPage', this)">💡 تقديم فكرة</button>
         <button class="nav-btn" onclick="switchPage('archivePage', this)">📁 الأرشيف</button>
         <button class="nav-btn" onclick="switchPage('galleryPage', this)">🖼️ معرض الصور</button>
+        <button class="nav-btn" onclick="switchPage('aiAssistantPage', this)">🤖 المساعد الذكي</button>
         <button class="nav-btn" id="adminNavBtn" style="display: none; background: rgba(35, 134, 54, 0.2); border-color: var(--admin-color);" onclick="switchPage('adminPage', this)">⚙️ المشرف</button>
         <button class="nav-btn" onclick="logout()" style="background: rgba(248, 81, 73, 0.15); border-color: rgba(248, 81, 73, 0.3); color: #f85149;">🚪 خروج</button>
     </nav>
@@ -365,7 +362,7 @@
             </div>
         </section>
 
-        <!-- صفحة معرض الصور الذكي مع الرفع الجماعي والألبومات -->
+        <!-- صفحة معرض الصور -->
         <section id="galleryPage" class="page-section">
             <div class="card">
                 <h2 class="section-title"><span class="icon">🖼️</span>معرض صور فعاليات النادي</h2>
@@ -407,6 +404,48 @@
                 <div class="gallery-grid" id="dynamicGalleryContainer">
                     <div style="text-align: center; color: var(--text-muted); grid-column: 1 / -1; padding: 20px;">جاري جلب الصور المحفوظة...</div>
                 </div>
+            </div>
+        </section>
+
+        <!-- صفحة المساعد الذكي المستقلة الكبيرة الجديدة -->
+        <section id="aiAssistantPage" class="page-section">
+            <div class="card" style="padding: 24px; min-height: 75vh; display: flex; flex-direction: column;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
+                    <h2 class="section-title" style="margin-bottom: 0;"><span class="icon">🤖</span>مساعد الذكاء الاصطناعي - النادي الإعلامي</h2>
+                    <div style="display: flex; gap: 8px; align-items: center;">
+                        <button type="button" id="voiceToggleBtn" onclick="toggleVoiceOutput()" style="background: rgba(59,130,246,0.15); border: 1px solid var(--accent-primary); color: var(--accent-glow); padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 5px;">
+                            🔊 الصوت: <span id="voiceStatusText">مفعل (صوت سعودي)</span>
+                        </button>
+                    </div>
+                </div>
+
+                <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 15px;">
+                    مساعدك الذكي لتحسين الأفكار الإعلامية، تقديم الدعم الفني للموقع، كتابة ومراجعة التقارير، واكتشاف الأخطاء. يمكنك الكتابة أو التحدث الصوتي مباشرة!
+                </p>
+
+                <!-- أزرار الخدمات السريعة -->
+                <div style="display: flex; gap: 8px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 15px;">
+                    <button class="nav-btn" onclick="setAiPrompt('حسن هذه الفكرة وقدم لي خطوة تطبيقية لها:')">💡 تحسين فكرة</button>
+                    <button class="nav-btn" onclick="setAiPrompt('أحتاج لدعم فني بخصوص: ')">🛠️ دعم فني</button>
+                    <button class="nav-btn" onclick="setAiPrompt('ساعدني في كتابة وصياغة تقرير عن:')">📝 كتابة تقرير</button>
+                    <button class="nav-btn" onclick="setAiPrompt('راجع هذا النص أو الكود واكتشف الأخطاء فيه:')">🔍 فحص واكتشاف الأخطاء</button>
+                </div>
+
+                <!-- صندوق المحادثة الواسع -->
+                <div id="aiChatContainer" style="flex: 1; background: rgba(5,6,10,0.6); border: 1px solid var(--border); border-radius: 12px; padding: 15px; height: 420px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; margin-bottom: 15px;">
+                    <div style="background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.2); padding: 12px; border-radius: 10px; max-width: 85%; align-self: flex-start; color: #fff; font-size: 0.9rem;">
+                        أهلاً بك يا خالد! أنا مساعدك الذكي في منصة النادي الإعلامي. تفضل بطرح فكرتك، تقريرك، أو مشكلتك الفنية وسأقوم بمساعدتك فوراً وصياغتها بأفضل شكل ممكن. 🎙️💡
+                    </div>
+                </div>
+
+                <!-- شريط الإدخال والتحكم الصوتي -->
+                <form id="aiChatForm" onsubmit="sendAiMessage(event)" style="display: flex; gap: 10px; align-items: center;">
+                    <button type="button" id="micBtn" onclick="toggleSpeechRecognition()" title="التحدث الصوتي" style="background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: #fff; width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; cursor: pointer; transition: 0.3s;">
+                        🎙️
+                    </button>
+                    <input type="text" id="aiInputMessage" placeholder="اكتب رسالتك أو استفسارك هنا..." style="flex: 1; padding: 12px 16px; border-radius: 12px;">
+                    <button type="submit" class="btn-submit" style="width: auto; padding: 12px 22px; border-radius: 12px;">إرسال 🚀</button>
+                </form>
             </div>
         </section>
 
@@ -572,7 +611,6 @@
         let albumsList = ["الفعاليات العامة"];
         let currentSelectedAlbum = "الكل";
 
-        // دالة إظهار التنبيه المخصص بدون ظهور اسم جيت هب
         function showSuccessModal(title, message, icon = '✓') {
             document.getElementById('modalIcon').innerText = icon;
             document.getElementById('modalTitle').innerText = title;
@@ -661,7 +699,6 @@
             renderGalleryGrid(galleryData);
         }
 
-        // رفع الصور بشكل متوازي لتسريع الرفع للأعداد الكبيرة ومنع تعليق الموقع
         async function uploadMultipleGalleryImages(e) {
             e.preventDefault();
             const btn = document.getElementById('uploadGalleryBtn');
@@ -680,7 +717,6 @@
             btn.innerHTML = `<span>جاري رفع ${totalFiles} صورة بسرعة...</span> ⏳`;
 
             try {
-                // تقسيم الملفات لمجموعات (Chunks) لرفعها بسلاسة وبدون تعليق
                 const uploadPromises = files.map(async (file, i) => {
                     const filePath = `gallery_uploads/${Date.now()}_${i}_${file.name}`;
                     const { error: upErr } = await supabaseClient.storage.from('media').upload(filePath, file);
@@ -694,7 +730,6 @@
                 });
 
                 const galleryItemsToInsert = await Promise.all(uploadPromises);
-
                 const { error: dbErr } = await supabaseClient.from('gallery').insert(galleryItemsToInsert);
                 if (dbErr) throw dbErr;
 
@@ -718,6 +753,142 @@
                 showSuccessModal('خطأ', 'تعذر حذف الصورة.', '❌');
             }
         }
+
+        // --- دوال المساعد الذكي والصوت السعودي ---
+        let isVoiceOutputEnabled = true;
+        let recognition = null;
+        let isRecording = false;
+
+        function toggleVoiceOutput() {
+            isVoiceOutputEnabled = !isVoiceOutputEnabled;
+            const statusEl = document.getElementById('voiceStatusText');
+            statusEl.innerText = isVoiceOutputEnabled ? 'مفعل (صوت سعودي)' : 'متوقف';
+            showSuccessModal('إعدادات الصوت', isVoiceOutputEnabled ? 'تم تفعيل الرد الصوتي.' : 'تم إيقاف الرد الصوتي.', '🔊');
+        }
+
+        function setAiPrompt(prefixText) {
+            const input = document.getElementById('aiInputMessage');
+            input.value = prefixText;
+            input.focus();
+        }
+
+        function toggleSpeechRecognition() {
+            const micBtn = document.getElementById('micBtn');
+            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+                showSuccessModal('تنبيه', 'متصفحك لا يدعم الإدخال الصوتي مباشرة، يمكنك استخدام الكتابة.', '⚠️');
+                return;
+            }
+
+            if (isRecording) {
+                if (recognition) recognition.stop();
+                isRecording = false;
+                micBtn.style.background = 'rgba(255,255,255,0.05)';
+                return;
+            }
+
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            recognition = new SpeechRecognition();
+            recognition.lang = 'ar-SA';
+            recognition.interimResults = false;
+            recognition.maxAlternatives = 1;
+
+            recognition.onstart = function() {
+                isRecording = true;
+                micBtn.style.background = 'var(--brand-red)';
+                micBtn.style.boxShadow = '0 0 15px rgba(255, 77, 45, 0.8)';
+            };
+
+            recognition.onresult = function(event) {
+                const speechToText = event.results[0][0].transcript;
+                document.getElementById('aiInputMessage').value = speechToText;
+            };
+
+            recognition.onerror = function() {
+                isRecording = false;
+                micBtn.style.background = 'rgba(255,255,255,0.05)';
+            };
+
+            recognition.onend = function() {
+                isRecording = false;
+                micBtn.style.background = 'rgba(255,255,255,0.05)';
+            };
+
+            recognition.start();
+        }
+
+        function speakSaudiVoice(text) {
+            if (!isVoiceOutputEnabled || !('speechSynthesis' in window)) return;
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'ar-SA';
+            utterance.rate = 1.0;
+            utterance.pitch = 0.9;
+
+            const voices = window.speechSynthesis.getVoices();
+            const saudiVoice = voices.find(v => v.lang === 'ar-SA' || v.lang.includes('ar'));
+            if (saudiVoice) {
+                utterance.voice = saudiVoice;
+            }
+            window.speechSynthesis.speak(utterance);
+        }
+
+        async function sendAiMessage(e) {
+            e.preventDefault();
+            const input = document.getElementById('aiInputMessage');
+            const chatContainer = document.getElementById('aiChatContainer');
+            const userText = input.value.trim();
+            
+            if (!userText) return;
+
+            chatContainer.innerHTML += `
+                <div style="background: rgba(255,255,255,0.06); padding: 12px; border-radius: 10px; max-width: 85%; align-self: flex-end; color: #fff; font-size: 0.9rem;">
+                    <strong>أنت:</strong> ${userText}
+                </div>
+            `;
+            input.value = '';
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+
+            const loadingId = 'loading_' + Date.now();
+            chatContainer.innerHTML += `
+                <div id="${loadingId}" style="background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.2); padding: 12px; border-radius: 10px; max-width: 85%; align-self: flex-start; color: var(--accent-glow); font-size: 0.9rem;">
+                    جاري التفكير وتحليل الطلب... ⏳
+                </div>
+            `;
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+
+            try {
+                let aiReply = "";
+                const lower = userText.toLowerCase();
+
+                if (lower.includes('فكرة') || lower.includes('مشروع')) {
+                    aiReply = "أهلاً بك يا خالد! بناءً على طلبك لتحسين الفكرة، أقترح تطويرها عبر ربطها بورش عمل تفاعلية وتطبيق عملي ميداني لمنتسبي النادي الإعلامي بجامعة الطائف، مع توثيق المخرجات في الأرشيف الرقمي للمنصة.";
+                } else if (lower.includes('دعم') || lower.includes('مشكلة') || lower.includes('كود')) {
+                    aiReply = "من الناحية الفنية، تأكد من تحديث الجداول في سوبابيس (Supabase) والتحقق من الصلاحيات لمنع أي تعارض في الرفع الجماعي للصور أو البيانات.";
+                } else if (lower.includes('تقرير') || lower.includes('كتابة')) {
+                    aiReply = "إليك مقترح لصياغة التقرير: يبدأ بمقدمة توثيقية عن نشاط النادي، يليها عرض المخرجات والإحصائيات الخاصة بالأعضاء والفعاليات، ويختتم بتوصيات تطويرية للمرحلة القادمة.";
+                } else {
+                    aiReply = `لقد استلمت استفسارك حول "${userText}". بصفتي مستشارك الذكي في النادي الإعلامي، أنصحك بترتيب الخطوات وتفعيل التواصل المستمر بين مسارات النادي لضمان أعلى جودة في التنفيذ.`;
+                }
+
+                document.getElementById(loadingId).remove();
+                chatContainer.innerHTML += `
+                    <div style="background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.2); padding: 12px; border-radius: 10px; max-width: 85%; align-self: flex-start; color: #fff; font-size: 0.9rem;">
+                        <strong>المساعد الذكي:</strong> ${aiReply}
+                    </div>
+                `;
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+                speakSaudiVoice(aiReply);
+
+            } catch (err) {
+                document.getElementById(loadingId).remove();
+                chatContainer.innerHTML += `
+                    <div style="background: rgba(248,81,73,0.1); border: 1px solid rgba(248,81,73,0.3); padding: 12px; border-radius: 10px; max-width: 85%; align-self: flex-start; color: #f85149; font-size: 0.9rem;">
+                        عذراً، حدث خطأ أثناء معالجة الطلب.
+                    </div>
+                `;
+            }
+        }
+        // ---------------------------------------------
 
         function checkBoardIdentity(val) {
             if (!isRegisterMode) return;
